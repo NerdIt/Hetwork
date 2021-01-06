@@ -1,0 +1,9 @@
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\bin\Debug\Hetwork.exe.config
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\bin\Debug\Hetwork.exe
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\bin\Debug\Hetwork.pdb
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.csproj.CoreCompileInputs.cache
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.exe
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.pdb
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.NodeGraph.resources
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.csproj.GenerateResource.cache
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.NodeForm.resources
