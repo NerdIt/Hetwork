@@ -103,7 +103,7 @@ namespace Hetwork
             {
                 leftMouseDown = true;
 
-                NodeVisual nv = nodes.FirstOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 25));
+                NodeVisual nv = nodes.FirstOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 17.5));
                 if (nv == null)
                     nv = nodes.FirstOrDefault(x => x.IsWithinRect(new Rectangle(x.X, x.Y, x.Width, x.Height), e.Location));
 
@@ -144,8 +144,16 @@ namespace Hetwork
             {
                 foreach(NodeVisual nv in draggingNodes)
                 {
-                    nv.X += (int)(offset.X / graphZoom);
-                    nv.Y += (int)(offset.Y / graphZoom);
+                    if (graphZoom == 1)
+                    {
+                        nv.X += offset.X;
+                        nv.Y += offset.Y;
+                    }
+                    else
+                    {
+                        nv.X = (int)(e.Location.X / graphZoom);
+                        nv.Y = (int)(e.Location.Y / graphZoom);
+                    }
                 }
             }
 
