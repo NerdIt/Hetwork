@@ -36,6 +36,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.Name = "NodeGraph";
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintControl);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NodeGraph_KeyPress);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.NodeGraph_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.NodeGraph_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.NodeGraph_MouseUp);
             this.ResumeLayout(false);
 
         }
