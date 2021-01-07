@@ -26,6 +26,16 @@ namespace Hetwork
         {
             
         }
+
+        public virtual bool IsWithinCircle(Point center, Point mouse, double radius)
+        {
+            return false;
+        }
+
+        public virtual bool IsWithinRect(Rectangle rect, Point mouse)
+        {
+            return false;
+        }
     }
 
     public class FolderNode : NodeVisual
@@ -90,6 +100,16 @@ namespace Hetwork
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
             g.DrawString(percText, stringFont, new SolidBrush(Color.FromArgb(255, 195, 195, 195)), new PointF((int)((X + offset.X) * zoom), (int)((Y + 10 + offset.Y) * zoom)), sf);
+        }
+
+        public override bool IsWithinCircle(Point center, Point mouse, double radius)
+        {
+            Point offset = nodeGraph.graphOffset;
+            float zoom = nodeGraph.graphZoom;
+            radius = radius * zoom;
+            int diffX = (int)((center.X + offset.X) * zoom - (mouse.X));
+            int diffY = (int)((center.Y + offset.Y) * zoom - (mouse.Y));
+            return (diffX * diffX + diffY * diffY) <= radius * radius;
         }
     }
 
