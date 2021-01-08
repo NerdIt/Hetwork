@@ -19,10 +19,11 @@ namespace Hetwork
 
         private void nodeGraph1_Load(object sender, EventArgs e)
         {
-            nodeGraph1.nodes.Add(new FolderNode("Node 1", 50, 50, 35, 35, 0, nodeGraph1));
-            nodeGraph1.nodes.Add(new FolderNode("Node 2", 150, 150, 35, 35, 0, nodeGraph1));
-            nodeGraph1.nodes.Add(new FolderNode("Node 3", 250, 250, 35, 35, 0, nodeGraph1));
-            nodeGraph1.nodes.Add(new FolderNode("Node 4", 350, 350, 35, 35, 0, nodeGraph1));
+            nodeGraph1.nodes.Add(new FolderNode("Enemies", 50, 50, 45, 45, 0, nodeGraph1));
+            nodeGraph1.nodes.Add(new FolderNode("Emulation Passes", 150, 150, 45, 45, 0, nodeGraph1));
+            nodeGraph1.nodes.Add(new FolderNode("Player Actions", 250, 250, 45, 45, 0, nodeGraph1));
+            nodeGraph1.nodes.Add(new FolderNode("Attack Animations", 350, 350, 45, 45, 0, nodeGraph1));
+            nodeGraph1.nodes.Add(new SingularTaskNode("Drop Down", 450, 450, 100, 35, 0, nodeGraph1));
             nodeGraph1.connections.Add(new NodeConnection(nodeGraph1.nodes[0], nodeGraph1.nodes[1], nodeGraph1));
         }
     }

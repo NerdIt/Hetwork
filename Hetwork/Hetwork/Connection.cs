@@ -64,6 +64,11 @@ namespace Hetwork
 
         public Point ClosestCircleNodePoint(NodeVisual point, NodeVisual center, int R)
         {
+            if(center.X > point.X || center.Y > point.Y)
+            {
+                R += 5;
+            }
+
             double vX = center.X - point.X;
             double vY = center.Y - point.Y;
             double magV = Math.Sqrt(vX * vX + vY * vY);
@@ -99,7 +104,7 @@ namespace Hetwork
             {
 
             }
-            g.DrawLine(new Pen(Color.FromArgb(255, 63, 63, 63), 2 * zoom), new Point((int)((point1.X+ offset.X) * zoom), (int)((point1.Y + offset.Y) * zoom)), new Point((int)((point2.X + offset.X) * zoom), (int)((point2.Y + offset.Y) * zoom)));
+            g.DrawLine(new Pen(Color.FromArgb(255, 63, 63, 63), 2.5f * zoom), new Point((int)((point1.X+ offset.X) * zoom), (int)((point1.Y + offset.Y) * zoom)), new Point((int)((point2.X + offset.X) * zoom), (int)((point2.Y + offset.Y) * zoom)));
 
         }
     }

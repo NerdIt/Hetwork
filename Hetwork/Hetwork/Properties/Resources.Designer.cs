@@ -61,6 +61,16 @@ namespace Hetwork.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Azonix_1VB0 {
+            get {
+                object obj = ResourceManager.GetObject("Azonix_1VB0", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap grid {

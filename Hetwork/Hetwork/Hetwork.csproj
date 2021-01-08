@@ -83,6 +83,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Azonix-1VB0.otf" />
     <None Include="Resources\NodeBG.png" />
   </ItemGroup>
   <ItemGroup>

@@ -20,7 +20,7 @@ namespace Hetwork
         bool needRepaint = true;
 
         public Point graphOffset = new Point(0,0);
-        public float graphZoom = 1.5f;
+        public float graphZoom = 1f;
         public List<NodeVisual> nodes = new List<NodeVisual>();
         public List<NodeConnection> connections = new List<NodeConnection>();
 
@@ -107,9 +107,9 @@ namespace Hetwork
             {
                 leftMouseDown = true;
 
-                NodeVisual nv = nodes.FirstOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 17.5));
+                NodeVisual nv = nodes.LastOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 45 / 2) && x.GetType() == Type.GetType("Hetwork.FolderNode"));
                 if (nv == null)
-                    nv = nodes.FirstOrDefault(x => x.IsWithinRect(new Rectangle(x.X, x.Y, x.Width, x.Height), e.Location));
+                    nv = nodes.LastOrDefault(x => x.IsWithinRect(e.Location));
 
                 if (nv != null && !draggingNodes.Contains(nv))
                 {
@@ -118,6 +118,8 @@ namespace Hetwork
 
                 if(nv != null)
                 {
+                    ArrangeNodeToTop(nv);
+
                     if (!selectedNodes.Contains(nv))
                     {
                         if (ModifierKeys != Keys.Shift)
@@ -156,10 +158,10 @@ namespace Hetwork
                 }
 
 
-                for (int i = 0; i < selectedNodes.Count; i++)
-                {
-                    selectedNodes[i].offsetToCursor = new Point(selectedNodes[i].X - draggingNodes[0].X, selectedNodes[i].Y - draggingNodes[0].Y);
-                }
+                //for (int i = 0; i < selectedNodes.Count; i++)
+                //{
+                //    selectedNodes[i].offsetToCursor = new Point(selectedNodes[i].X - draggingNodes[0].X, selectedNodes[i].Y - draggingNodes[0].Y);
+                //}
 
             }
             cursorOffset = PointToScreen(e.Location);
@@ -204,9 +206,9 @@ namespace Hetwork
 
             }
 
-            NodeVisual n1 = nodes.FirstOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 17.5) && x.GetType() == Type.GetType("Hetwork.FolderNode"));
+            NodeVisual n1 = nodes.LastOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 45 / 2) && x.GetType() == Type.GetType("Hetwork.FolderNode"));
             if (n1 == null)
-                n1 = nodes.FirstOrDefault(x => x.IsWithinRect(new Rectangle(x.X, x.Y, x.Width, x.Height), e.Location));
+                n1 = nodes.LastOrDefault(x => x.IsWithinRect(e.Location));
 
             if (n1 != null)
             {
@@ -226,8 +228,8 @@ namespace Hetwork
                     if (ModifierKeys != Keys.Shift)
                     {
 
-                        nv.X += (int)(offset.X - (offset.X * graphZoom));
-                        nv.Y += (int)(offset.Y - (offset.Y * graphZoom));
+                        nv.X += (int)(offset.X);
+                        nv.Y += (int)(offset.Y);
                         
                     }
                     else
@@ -236,20 +238,8 @@ namespace Hetwork
                         {
                             foreach (NodeVisual nodeVis in selectedNodes)
                             {
-                                nodeVis.X += (int)(offset.X - (offset.X / graphZoom));
-                                nodeVis.Y += (int)(offset.Y - (offset.Y / graphZoom));
-                            }
-                        }
-                        else
-                        {
-                            foreach(NodeVisual nodeVis in selectedNodes)
-                            {
-                                //Point lerpedPoint = new Point((int)Lerp(nodeVis.X, (e.Location.X + nodeVis.offsetToCursor.X) / graphZoom, 0.6f), (int)Lerp(nodeVis.Y, (e.Location.Y + nodeVis.offsetToCursor.Y) / graphZoom, 0.2f));
-                                Point lerpedPoint = new Point((int)Lerp(nodeVis.X, (e.Location.X) / graphZoom, 0.6f), (int)Lerp(nodeVis.Y, (e.Location.Y) / graphZoom, 0.2f));
-                                //nv.X = (int)(e.Location.X / graphZoom);
-                                //nv.Y = (int)(e.Location.Y / graphZoom);
-                                nodeVis.X = lerpedPoint.X;
-                                nodeVis.Y = lerpedPoint.Y;
+                                nodeVis.X += (int)(offset.X);
+                                nodeVis.Y += (int)(offset.Y);
                             }
                         }
                     }
@@ -268,38 +258,52 @@ namespace Hetwork
 
         private void NodeGraph_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == '+')
-            {
-                if (graphZoom < 1.5)
-                {
-                    graphZoom += 0.1f;
-                    if(graphZoom > 1.5f)
-                    {
-                        graphZoom = 1.5f;
+            //if (e.KeyChar == '+')
+            //{
+            //    if (graphZoom < 1.5)
+            //    {
+            //        graphZoom += 0.1f;
+            //        if(graphZoom > 1.5f)
+            //        {
+            //            graphZoom = 1.5f;
                         
-                    }
-                    needRepaint = true;
-                    graphZoom = (float)Math.Round((double)graphZoom, 1);
-                }
-            }
-            else if(e.KeyChar == '_')
-            {
-                if (graphZoom > 0.5)
-                {
-                    graphZoom -= 0.1f;
-                    if (graphZoom < 0.5f)
-                    {
-                        graphZoom = 0.5f;
-                    }
-                    graphZoom = (float)Math.Round((double)graphZoom, 1);
-                }
-                needRepaint = true;
-            }
+            //        }
+            //        needRepaint = true;
+            //        graphZoom = (float)Math.Round((double)graphZoom, 1);
+            //    }
+            //}
+            //else if(e.KeyChar == '_')
+            //{
+            //    if (graphZoom > 0.5)
+            //    {
+            //        graphZoom -= 0.1f;
+            //        if (graphZoom < 0.5f)
+            //        {
+            //            graphZoom = 0.5f;
+            //        }
+            //        graphZoom = (float)Math.Round((double)graphZoom, 1);
+            //    }
+            //    needRepaint = true;
+            //}
             
             
 
         }
+
+        public void ArrangeNodeToTop(NodeVisual n)
+        {
+            int i = nodes.IndexOf(n);
+            if(i != -1)
+            {
+                nodes.Insert(nodes.Count, n);
+                nodes.RemoveAt(i);
+            }
+        }
+    
     }
+
+
+
 
     public class DraggingNode
     {
