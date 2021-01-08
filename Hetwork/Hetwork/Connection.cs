@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -36,13 +37,30 @@ namespace Hetwork
             point1 = ClosestCircleNodePoint(n2, n1, 30);
             point2 = ClosestCircleNodePoint(n1, n2, 30);
 
+            if (Distance(point2, new Point(n2.X, n2.Y)) < Distance(point1, new Point(n2.X, n2.Y)))
+            {
+                point1 = Midpoint(new Point(n1.X, n1.Y), new Point(n2.X, n2.Y));
+                point2 = Midpoint(new Point(n1.X, n1.Y), new Point(n2.X, n2.Y));
+            }
+
             //if(n2.IsWithinCircle(new Point(n2.X, n2.Y), point2, 30))
             //{
             //    point2 = point1;
             //}
         }
 
+        public float Distance(Point p1, Point p2)
+        {
+            return ((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
+        }
 
+        Point Midpoint(Point a, Point b)
+        {
+            Point ret = new Point();
+            ret.X = (a.X + b.X) / 2;
+            ret.Y = (a.Y + b.Y) / 2;
+            return ret;
+        }
 
         public Point ClosestCircleNodePoint(NodeVisual point, NodeVisual center, int R)
         {
@@ -61,9 +79,9 @@ namespace Hetwork
 
 
 
-    public void Draw(Graphics g)
+        public void Draw(Graphics g)
         {
-            g.InterpolationMode = InterpolationMode.Low;
+            g.InterpolationMode = InterpolationMode.Default;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
             Update();

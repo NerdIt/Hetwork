@@ -15,7 +15,16 @@ namespace Hetwork
         public int Y;
         public int Width;
         public int Height;
- 
+
+        public string title;
+
+
+        public bool isHover = false;
+        public bool isHoverArea = false;
+        public bool isDragging = false;
+        public bool isSelected = false;
+
+        public Point offsetToCursor = new Point();
 
         public virtual void DrawShadow(Graphics g)
         {
@@ -26,6 +35,7 @@ namespace Hetwork
         {
             
         }
+
 
         public virtual bool IsWithinCircle(Point center, Point mouse, double radius)
         {
@@ -45,7 +55,7 @@ namespace Hetwork
         
         
 
-        public FolderNode(int x, int y, int width, int height, int perc, NodeGraph graphControl)
+        public FolderNode(string name, int x, int y, int width, int height, int perc, NodeGraph graphControl)
         {
             X = x;
             Y = y;
@@ -53,6 +63,7 @@ namespace Hetwork
             Height = height;
             percentage = perc;
             nodeGraph = graphControl;
+            title = name;
         }
 
         public override void DrawShadow(Graphics g)
@@ -100,7 +111,47 @@ namespace Hetwork
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
             g.DrawString(percText, stringFont, new SolidBrush(Color.FromArgb(255, 195, 195, 195)), new PointF((int)((X + offset.X) * zoom), (int)((Y + 10 + offset.Y) * zoom)), sf);
+
+            //  DRAW FULL NAME AND BORDER ON HOVER AREA
+            if(isHover && !isSelected)
+            {
+                g.DrawEllipse(new Pen(Color.LightGray, 2 * zoom), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
+
+                string nameText = title;
+                Font titleFont = new Font("Arial", 7 * zoom, FontStyle.Bold);
+                stringSize = new SizeF();
+                while (stringSize.Width > 60 && titleFont.Size > 1)
+                {
+                    stringSize = g.MeasureString(nameText, titleFont);
+                    titleFont = new Font("Arial", titleFont.Size - 1);
+                }
+                sf = new StringFormat();
+                sf.LineAlignment = StringAlignment.Center;
+                sf.Alignment = StringAlignment.Center;
+                g.DrawString(nameText, titleFont, new SolidBrush(Color.FromArgb(190, 195, 195, 195)), new PointF((int)((X + offset.X) * zoom), (int)((Y - 22 + offset.Y) * zoom)), sf);
+            }
+
+            if(isSelected)
+            {
+                g.DrawEllipse(new Pen(Color.FromArgb(255, 63, 63, 63), 2 * zoom), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
+
+                string nameText = title;
+                Font titleFont = new Font("Arial", 7 * zoom, FontStyle.Bold);
+                stringSize = new SizeF();
+                while (stringSize.Width > 60 && titleFont.Size > 1)
+                {
+                    stringSize = g.MeasureString(nameText, titleFont);
+                    titleFont = new Font("Arial", titleFont.Size - 1);
+                }
+                sf = new StringFormat();
+                sf.LineAlignment = StringAlignment.Center;
+                sf.Alignment = StringAlignment.Center;
+                g.DrawString(nameText, titleFont, new SolidBrush(Color.FromArgb(190, 195, 195, 195)), new PointF((int)((X + offset.X) * zoom), (int)((Y - 22 + offset.Y) * zoom)), sf);
+            }
         }
+
+
+
 
         public override bool IsWithinCircle(Point center, Point mouse, double radius)
         {

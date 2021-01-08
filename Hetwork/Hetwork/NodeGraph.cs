@@ -24,6 +24,7 @@ namespace Hetwork
         public List<NodeVisual> nodes = new List<NodeVisual>();
         public List<NodeConnection> connections = new List<NodeConnection>();
 
+        public List<NodeVisual> selectedNodes = new List<NodeVisual>();
 
         public NodeGraph()
         {
@@ -54,8 +55,8 @@ namespace Hetwork
             e.Graphics.InterpolationMode = InterpolationMode.Low;
             e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
 
-            
-            
+
+
 
 
             //  DRAW SHADOWS
@@ -92,9 +93,12 @@ namespace Hetwork
         bool leftMouseDown = false;
         Point cursorOffset = new Point();
         public List<NodeVisual> draggingNodes = new List<NodeVisual>();
+        Point mouseDownPoint = new Point();
+        Point mouseUpPoint = new Point();
 
         private void NodeGraph_MouseDown(object sender, MouseEventArgs e)
         {
+            mouseDownPoint = e.Location;
             if(e.Button == MouseButtons.Middle)
             {
                 middleMouseDown = true;
@@ -111,6 +115,52 @@ namespace Hetwork
                 {
                     draggingNodes.Add(nv);
                 }
+
+                if(nv != null)
+                {
+                    if (!selectedNodes.Contains(nv))
+                    {
+                        if (ModifierKeys != Keys.Shift)
+                        {
+                            for (int i = 0; i < selectedNodes.Count; i++)
+                            {
+                                selectedNodes[i].isSelected = false;
+                            }
+                            selectedNodes.Clear();
+                        }
+                        selectedNodes.Add(nv);
+                    }
+                    else if(ModifierKeys != Keys.Shift)
+                    {
+                        for (int i = 0; i < selectedNodes.Count; i++)
+                        {
+                            selectedNodes[i].isSelected = false;
+                        }
+                        selectedNodes.Clear();
+                        nv.isSelected = true;
+                        selectedNodes.Add(nv);
+                    }
+
+                    foreach (NodeVisual n in selectedNodes)
+                    {
+                        n.isSelected = true;
+                    }
+                }
+                else if(ModifierKeys != Keys.Shift)
+                {
+                    for (int i = 0; i < selectedNodes.Count; i++)
+                    {
+                        selectedNodes[i].isSelected = false;
+                    }
+                    selectedNodes.Clear();
+                }
+
+
+                for (int i = 0; i < selectedNodes.Count; i++)
+                {
+                    selectedNodes[i].offsetToCursor = new Point(selectedNodes[i].X - draggingNodes[0].X, selectedNodes[i].Y - draggingNodes[0].Y);
+                }
+
             }
             cursorOffset = PointToScreen(e.Location);
             needRepaint = true;
@@ -118,6 +168,7 @@ namespace Hetwork
 
         private void NodeGraph_MouseUp(object sender, MouseEventArgs e)
         {
+            mouseUpPoint = e.Location;
             if (e.Button == MouseButtons.Middle)
             {
                 middleMouseDown = false;
@@ -126,15 +177,43 @@ namespace Hetwork
             {
                 leftMouseDown = false;
                 draggingNodes.Clear();
+
+                //NodeVisual nv = nodes.FirstOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 17.5));
+                //if (nv == null)
+                //    nv = nodes.FirstOrDefault(x => x.IsWithinRect(new Rectangle(x.X, x.Y, x.Width, x.Height), e.Location));
+
+                
             }
+
             needRepaint = true;
+        }
+
+        public float Distance(Point p1, Point p2)
+        {
+            return ((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
         }
 
         private void NodeGraph_MouseMove(object sender, MouseEventArgs e)
         {
             var em = PointToScreen(e.Location);
             Point offset = new Point(em.X - cursorOffset.X, em.Y - cursorOffset.Y);
-            
+
+            foreach (NodeVisual n in nodes)
+            {
+                n.isHover = false;
+
+            }
+
+            NodeVisual n1 = nodes.FirstOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 17.5) && x.GetType() == Type.GetType("Hetwork.FolderNode"));
+            if (n1 == null)
+                n1 = nodes.FirstOrDefault(x => x.IsWithinRect(new Rectangle(x.X, x.Y, x.Width, x.Height), e.Location));
+
+            if (n1 != null)
+            {
+                n1.isHover = true;
+            }
+
+
             if (middleMouseDown)
             {
                 graphOffset = new Point(graphOffset.X + offset.X, graphOffset.Y + offset.Y);
@@ -144,15 +223,35 @@ namespace Hetwork
             {
                 foreach(NodeVisual nv in draggingNodes)
                 {
-                    if (graphZoom == 1)
+                    if (ModifierKeys != Keys.Shift)
                     {
-                        nv.X += offset.X;
-                        nv.Y += offset.Y;
+
+                        nv.X += (int)(offset.X - (offset.X * graphZoom));
+                        nv.Y += (int)(offset.Y - (offset.Y * graphZoom));
+                        
                     }
                     else
                     {
-                        nv.X = (int)(e.Location.X / graphZoom);
-                        nv.Y = (int)(e.Location.Y / graphZoom);
+                        if (graphZoom == 1)
+                        {
+                            foreach (NodeVisual nodeVis in selectedNodes)
+                            {
+                                nodeVis.X += (int)(offset.X - (offset.X / graphZoom));
+                                nodeVis.Y += (int)(offset.Y - (offset.Y / graphZoom));
+                            }
+                        }
+                        else
+                        {
+                            foreach(NodeVisual nodeVis in selectedNodes)
+                            {
+                                //Point lerpedPoint = new Point((int)Lerp(nodeVis.X, (e.Location.X + nodeVis.offsetToCursor.X) / graphZoom, 0.6f), (int)Lerp(nodeVis.Y, (e.Location.Y + nodeVis.offsetToCursor.Y) / graphZoom, 0.2f));
+                                Point lerpedPoint = new Point((int)Lerp(nodeVis.X, (e.Location.X) / graphZoom, 0.6f), (int)Lerp(nodeVis.Y, (e.Location.Y) / graphZoom, 0.2f));
+                                //nv.X = (int)(e.Location.X / graphZoom);
+                                //nv.Y = (int)(e.Location.Y / graphZoom);
+                                nodeVis.X = lerpedPoint.X;
+                                nodeVis.Y = lerpedPoint.Y;
+                            }
+                        }
                     }
                 }
             }
@@ -160,6 +259,11 @@ namespace Hetwork
 
             cursorOffset = em;
             needRepaint = true;
+        }
+
+        float Lerp(float firstFloat, float secondFloat, float by)
+        {
+            return firstFloat * (1 - by) + secondFloat * by;
         }
 
         private void NodeGraph_KeyPress(object sender, KeyPressEventArgs e)
