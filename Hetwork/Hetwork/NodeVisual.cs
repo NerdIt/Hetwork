@@ -196,18 +196,16 @@ namespace Hetwork
 
     public class SingularTaskNode : NodeVisual
     {
-        public int percentage;
         public NodeGraph nodeGraph;
 
 
 
-        public SingularTaskNode(string name, int x, int y, int width, int height, int perc, NodeGraph graphControl)
+        public SingularTaskNode(string name, int x, int y, int width, int height, NodeGraph graphControl)
         {
             X = x;
             Y = y;
             Width = width;
             Height = height;
-            percentage = perc;
             nodeGraph = graphControl;
             title = name;
         }
@@ -238,20 +236,34 @@ namespace Hetwork
             g.DrawRectangle(new Pen(Color.FromArgb(255, 215, 215, 215)), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
 
 
-            //  DRAW PERCENTAGE TEXT
-            string percText = percentage + "%";
+            //  DRAW NAME TEXT
+            string nText = title;
             Font stringFont = new Font("Andale Mono", 9 * zoom, FontStyle.Bold);
             SizeF stringSize = new SizeF();
-            stringSize = g.MeasureString(percText, stringFont);
-            while (stringSize.Width > 55 && stringFont.Size > 1)
+            stringSize = g.MeasureString(nText, stringFont);
+            if (stringSize.Width > 180)
             {
-                stringSize = g.MeasureString(percText, stringFont);
-                stringFont = new Font("Andale Mono", stringFont.Size - 1);
+                string newText = "";
+                int inc = 0;
+                Debug.WriteLine("Loop");
+                for (int i = 0; i < nText.Length; i++)
+                {
+                    newText += nText[i];
+                    if (i == inc + 10)
+                    {
+                        newText += "\n";
+                        stringFont = new Font("Andale Mono", stringFont.Size - 1 * zoom, FontStyle.Bold);
+                        inc += 10;
+                    }
+                    
+                }
+                nText = newText;
             }
+
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            g.DrawString(percText, stringFont, new SolidBrush(Color.FromArgb(255, 195, 195, 195)), new PointF((int)((X + offset.X) * zoom), (int)((Y + offset.Y) * zoom)), sf);
+            g.DrawString(nText, stringFont, new SolidBrush(Color.FromArgb(255, 195, 195, 195)), new PointF((int)((X + offset.X) * zoom), (int)((Y + offset.Y) * zoom)), sf);
 
 
 
@@ -261,43 +273,43 @@ namespace Hetwork
             //g.DrawString(titleText, stringFont, new SolidBrush(Color.FromArgb(255, 195, 195, 195)), new PointF((int)((X + offset.X) * zoom), (int)((Y - 10 + offset.Y) * zoom)), sf);
 
             //  DRAW FULL NAME AND BORDER ON HOVER AREA
-            //if (isHover && !isSelected)
-            //{
-            //    g.DrawEllipse(new Pen(Color.LightGray, 2 * zoom), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
+            if (isHover && !isSelected)
+            {
+                g.DrawRectangle(new Pen(Color.LightGray, 2 * zoom), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
 
-            //    string nameText = title;
-            //    Font titleFont = new Font("Andale Mono", 7 * zoom, FontStyle.Bold);
-            //    stringSize = new SizeF();
-            //    stringSize = g.MeasureString(nameText, stringFont);
-            //    while (stringSize.Width > 140 && titleFont.Size > 1)
-            //    {
-            //        stringSize = g.MeasureString(nameText, titleFont);
-            //        titleFont = new Font("Andale Mono", titleFont.Size - 1);
-            //    }
-            //    sf = new StringFormat();
-            //    sf.LineAlignment = StringAlignment.Center;
-            //    sf.Alignment = StringAlignment.Center;
-            //    g.DrawString(nameText, titleFont, new SolidBrush(Color.FromArgb(255, 123, 123, 123)), new PointF((int)((X + offset.X) * zoom), (int)((Y - Height / 2 - stringSize.Height / 2 + offset.Y) * zoom)), sf);
-            //}
+                string nameText = title;
+                Font titleFont = new Font("Andale Mono", 7 * zoom, FontStyle.Bold);
+                stringSize = new SizeF();
+                stringSize = g.MeasureString(nameText, stringFont);
+                while (stringSize.Width > 140 && titleFont.Size > 1)
+                {
+                    stringSize = g.MeasureString(nameText, titleFont);
+                    titleFont = new Font("Andale Mono", titleFont.Size - 1);
+                }
+                sf = new StringFormat();
+                sf.LineAlignment = StringAlignment.Center;
+                sf.Alignment = StringAlignment.Center;
+                g.DrawString(nameText, titleFont, new SolidBrush(Color.FromArgb(255, 123, 123, 123)), new PointF((int)((X + offset.X) * zoom), (int)((Y - Height / 2 - stringSize.Height / 2 + offset.Y) * zoom)), sf);
+            }
 
-            //if (isSelected)
-            //{
-            //    g.DrawEllipse(new Pen(Color.FromArgb(255, 63, 63, 63), 2 * zoom), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
+            if (isSelected)
+            {
+                g.DrawRectangle(new Pen(Color.FromArgb(255, 63, 63, 63), 2 * zoom), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
 
-            //    string nameText = title;
-            //    Font titleFont = new Font("Andale Mono", 7 * zoom, FontStyle.Bold);
-            //    stringSize = new SizeF();
-            //    stringSize = g.MeasureString(nameText, stringFont);
-            //    while (stringSize.Width > 140 && titleFont.Size > 1)
-            //    {
-            //        stringSize = g.MeasureString(nameText, titleFont);
-            //        titleFont = new Font("Andale Mono", titleFont.Size - 1);
-            //    }
-            //    sf = new StringFormat();
-            //    sf.LineAlignment = StringAlignment.Center;
-            //    sf.Alignment = StringAlignment.Center;
-            //    g.DrawString(nameText, titleFont, new SolidBrush(Color.FromArgb(255, 123, 123, 123)), new PointF((int)((X + offset.X) * zoom), (int)((Y - Height / 2 - stringSize.Height / 2 + offset.Y) * zoom)), sf);
-            //}
+                string nameText = title;
+                Font titleFont = new Font("Andale Mono", 7 * zoom, FontStyle.Bold);
+                stringSize = new SizeF();
+                stringSize = g.MeasureString(nameText, stringFont);
+                while (stringSize.Width > 140 && titleFont.Size > 1)
+                {
+                    stringSize = g.MeasureString(nameText, titleFont);
+                    titleFont = new Font("Andale Mono", titleFont.Size - 1);
+                }
+                sf = new StringFormat();
+                sf.LineAlignment = StringAlignment.Center;
+                sf.Alignment = StringAlignment.Center;
+                g.DrawString(nameText, titleFont, new SolidBrush(Color.FromArgb(255, 123, 123, 123)), new PointF((int)((X + offset.X) * zoom), (int)((Y - Height / 2 - stringSize.Height / 2 + offset.Y) * zoom)), sf);
+            }
         }
 
 

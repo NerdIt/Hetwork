@@ -32,16 +32,55 @@ namespace Hetwork
             Point offset = nodeGraph.graphOffset;
             float zoom = nodeGraph.graphZoom;
 
+            Point p1;
+            Point p2;
 
-
-            point1 = ClosestCircleNodePoint(n2, n1, 30);
-            point2 = ClosestCircleNodePoint(n1, n2, 30);
-
-            if (Distance(point2, new Point(n2.X, n2.Y)) < Distance(point1, new Point(n2.X, n2.Y)))
+            if (n1.GetType() == Type.GetType("Hetwork.FolderNode"))
             {
-                point1 = Midpoint(new Point(n1.X, n1.Y), new Point(n2.X, n2.Y));
-                point2 = Midpoint(new Point(n1.X, n1.Y), new Point(n2.X, n2.Y));
+                p1 = new Point(n1.X, n1.Y);
             }
+            else
+            {
+                p1 = new Point((int)((n1.X - n1.Width / 2 - 5)), (int)((n1.Y)));
+            }
+
+            if (n2.GetType() == Type.GetType("Hetwork.FolderNode"))
+            {
+                p2 = new Point(n2.X, n2.Y);
+            }
+            else
+            {
+                p2 = new Point((int)((n2.X - n2.Width / 2 - 5)), (int)((n2.Y)));
+            }
+
+
+            if (n1.GetType() == Type.GetType("Hetwork.FolderNode"))
+            {
+                point1 = ClosestCircleNodePoint(p2, p1, 30);
+            }
+            else
+            {
+                point1 = p1;
+            }
+            if (n2.GetType() == Type.GetType("Hetwork.FolderNode"))
+            {
+                point2 = ClosestCircleNodePoint(p1, p2, 30);
+            }
+            else
+            {
+                point2 = p2;
+            }
+
+            if (n1.GetType() == Type.GetType("Hetwork.FolderNode") && n2.GetType() == Type.GetType("Hetwork.FolderNode"))
+            {
+                if (Distance(point2, new Point(p2.X, p2.Y)) < Distance(point1, new Point(p2.X, p2.Y)))
+                {
+                    
+                    point1 = Midpoint(new Point(p1.X, p1.Y), new Point(p2.X, p2.Y));
+                    point2 = Midpoint(new Point(p1.X, p1.Y), new Point(p2.X, p2.Y));
+                }
+            }
+            
 
             //if(n2.IsWithinCircle(new Point(n2.X, n2.Y), point2, 30))
             //{
@@ -62,12 +101,13 @@ namespace Hetwork
             return ret;
         }
 
-        public Point ClosestCircleNodePoint(NodeVisual point, NodeVisual center, int R)
+        public Point ClosestCircleNodePoint(Point point, Point center, int R)
         {
             if(center.X > point.X || center.Y > point.Y)
             {
                 R += 5;
             }
+            
 
             double vX = center.X - point.X;
             double vY = center.Y - point.Y;
