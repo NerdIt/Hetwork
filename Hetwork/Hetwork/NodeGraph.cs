@@ -22,7 +22,7 @@ namespace Hetwork
         public Point graphOffset = new Point(0,0);
         public float graphZoom = 1f;
         public List<NodeVisual> nodes = new List<NodeVisual>();
-        public List<NodeConnection> connections = new List<NodeConnection>();
+
 
         public List<NodeVisual> selectedNodes = new List<NodeVisual>();
 
@@ -57,18 +57,20 @@ namespace Hetwork
 
 
 
-
-
             //  DRAW SHADOWS
             foreach (NodeVisual nv in nodes)
             {
                 nv.DrawShadow(e.Graphics);
             }
 
-            foreach(NodeConnection nc in connections)
+            foreach(NodeVisual nc in nodes)
             {
-                nc.Draw(e.Graphics);
+                if (nc.connection != null)
+                {
+                    nc.connection.Draw(e.Graphics);
+                }
             }
+
 
             //  DRAW NODES
             foreach (NodeVisual nv in nodes)
@@ -82,6 +84,10 @@ namespace Hetwork
             {
                 e.Graphics.DrawString($"{graphOffset.X},{graphOffset.Y}", new Font("Arial", 7), new SolidBrush(Color.FromArgb(255, 195, 195, 195)), 0, 0);
             }
+            
+            if(editingConnection != null)
+                editingConnection.Draw(e.Graphics);
+
 
             //  GRAPH ZOOM STRING
             StringFormat sf = new StringFormat();
@@ -95,6 +101,9 @@ namespace Hetwork
         public List<NodeVisual> draggingNodes = new List<NodeVisual>();
         Point mouseDownPoint = new Point();
         Point mouseUpPoint = new Point();
+
+        NodeVisual editingNodeConnection = null;
+        DragConnection editingConnection = null;
 
         private void NodeGraph_MouseDown(object sender, MouseEventArgs e)
         {
@@ -150,18 +159,29 @@ namespace Hetwork
                 }
                 else if(ModifierKeys != Keys.Shift)
                 {
+                    bool shouldClear = true;
                     for (int i = 0; i < selectedNodes.Count; i++)
                     {
-                        selectedNodes[i].isSelected = false;
+                        if (!selectedNodes[i].isHoverArea)
+                        {
+                            selectedNodes[i].isSelected = false;
+                        }
+                        else
+                        {
+                            shouldClear = false;
+                        }
+
                     }
-                    selectedNodes.Clear();
+                    if(shouldClear)
+                        selectedNodes.Clear();
                 }
 
-
-                //for (int i = 0; i < selectedNodes.Count; i++)
-                //{
-                //    selectedNodes[i].offsetToCursor = new Point(selectedNodes[i].X - draggingNodes[0].X, selectedNodes[i].Y - draggingNodes[0].Y);
-                //}
+                NodeVisual n3 = nodes.LastOrDefault(x => x.isHoveringNewNode && x.GetType() != Type.GetType("Hetwork.FolderNode"));
+                if(n3 != null)
+                {
+                    editingConnection = new DragConnection(new Point(n3.X - n3.Width / 2 - 5, n3.Y), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
+                    editingNodeConnection = n3;
+                }
 
             }
             cursorOffset = PointToScreen(e.Location);
@@ -180,11 +200,22 @@ namespace Hetwork
                 leftMouseDown = false;
                 draggingNodes.Clear();
 
+                if (editingNodeConnection != null)
+                {
+                    NodeVisual nv = nodes.FirstOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 17.5) && x.GetType() == Type.GetType("Hetwork.FolderNode"));
+                    if (nv != null)
+                    {
+                        editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
+                    }
+                }
+
+                editingNodeConnection = null;
+                editingConnection = null;
                 //NodeVisual nv = nodes.FirstOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 17.5));
                 //if (nv == null)
                 //    nv = nodes.FirstOrDefault(x => x.IsWithinRect(new Rectangle(x.X, x.Y, x.Width, x.Height), e.Location));
 
-                
+
             }
 
             needRepaint = true;
@@ -203,7 +234,8 @@ namespace Hetwork
             foreach (NodeVisual n in nodes)
             {
                 n.isHover = false;
-
+                n.isHoverArea = false;
+                n.isHoveringNewNode = false;
             }
 
             NodeVisual n1 = nodes.LastOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 45 / 2) && x.GetType() == Type.GetType("Hetwork.FolderNode"));
@@ -246,9 +278,58 @@ namespace Hetwork
                 }
             }
 
+            if(editingNodeConnection != null)
+            {
+                editingConnection = new DragConnection(new Point(editingNodeConnection.X - editingNodeConnection.Width / 2 - 5, editingNodeConnection.Y), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
+
+            }
+
+
+            NodeVisual n2 = nodes.LastOrDefault(x => x.IsWithinHoverArea(e.Location) && x.GetType() == Type.GetType("Hetwork.SingularTaskNode"));
+            if(n2 != null)
+            {
+                n2.isHoverArea = true;
+                
+                if(IsWithinRect(new Rectangle(n2.X + graphOffset.X - 12 - n2.Width / 2, n2.Y + graphOffset.Y - n2.Height / 2 + 8, 7, n2.Height - 16), e.Location))
+                {
+                    
+                    n2.isHoveringNewNode = true;
+                }
+
+
+                //if (n2.IsWithinCircle(new Point(n2.connectionGrabPoint.X - 3, n2.connectionGrabPoint.Y - 3), e.Location, 500))
+                //{
+                //    Debug.WriteLine("Debug");
+                //    n2.isSelectingNewNode = true;
+                //}
+            }
+
+            n2 = nodes.LastOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 45 / 2 + 18) && x.GetType() == Type.GetType("Hetwork.FolderNode"));
+            if (n2 != null)
+            {
+                n2.isHoverArea = true;
+
+                if (IsWithinRect(new Rectangle(n2.X + graphOffset.X - n2.Width / 2 + 8, n2.Y + graphOffset.Y + n2.Height / 2 + 8, n2.Width - 16, 7), e.Location))
+                {
+
+                    n2.isHoveringNewNode = true;
+                }
+
+
+                //if (n2.IsWithinCircle(new Point(n2.connectionGrabPoint.X - 3, n2.connectionGrabPoint.Y - 3), e.Location, 500))
+                //{
+                //    Debug.WriteLine("Debug");
+                //    n2.isSelectingNewNode = true;
+                //}
+            }
 
             cursorOffset = em;
             needRepaint = true;
+        }
+
+        bool IsWithinRect(Rectangle rect, Point mouse)
+        { 
+            return rect.Contains(mouse);
         }
 
         float Lerp(float firstFloat, float secondFloat, float by)

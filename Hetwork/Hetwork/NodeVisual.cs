@@ -23,8 +23,13 @@ namespace Hetwork
         public bool isHoverArea = false;
         public bool isDragging = false;
         public bool isSelected = false;
+        public bool isHoveringNewNode = false;
 
         public Point offsetToCursor = new Point();
+
+        public NodeConnection connection;
+
+
 
         public virtual void DrawShadow(Graphics g)
         {
@@ -46,6 +51,18 @@ namespace Hetwork
         {
             return false;
         }
+
+        public virtual bool IsWithinHoverArea(Point mouse)
+        {
+            return false;
+        }
+
+        public virtual Point GetConnectionLocation(Point _point)
+        {
+            return new Point();
+        }
+
+
     }
 
     public class FolderNode : NodeVisual
@@ -178,6 +195,16 @@ namespace Hetwork
                 sf.Alignment = StringAlignment.Center;
                 g.DrawString(nameText, titleFont, new SolidBrush(Color.FromArgb(255, 123, 123, 123)), new PointF((int)((X + offset.X) * zoom), (int)((Y - Height / 2 - stringSize.Height / 2 + offset.Y) * zoom)), sf);
             }
+
+            if (isHoverArea && !isHoveringNewNode && connection == null)
+            {
+                g.FillRectangle(new SolidBrush(Color.FromArgb(255, 63, 63, 63)), new Rectangle(X + offset.X - Width / 2 + 10, Y + offset.Y + Height / 2 + 8, Width - 20, 7));
+            }
+            //g.FillEllipse(new SolidBrush(Color.Red), new Rectangle(new Point(connectionGrabPoint.X - 2, connectionGrabPoint.Y - 2), new Size(12, 12)));                
+            if (isHoveringNewNode && connection == null)
+            {
+                g.FillRectangle(new SolidBrush(Color.FromArgb(255, 63, 63, 63)), new Rectangle(X + offset.X - Width / 2 + 8, Y + offset.Y + Height / 2 + 5, Width - 16, 9));
+            }
         }
 
 
@@ -192,6 +219,25 @@ namespace Hetwork
             int diffY = (int)((center.Y + offset.Y) * zoom - (mouse.Y));
             return (diffX * diffX + diffY * diffY) <= radius * radius;
         }
+
+        public override Point GetConnectionLocation(Point _point)
+        {
+            int R = Math.Max(Width, Height) / 2 + 5;
+            //if (X > _point.X || Y > _point.Y)
+            //{
+            //    R += 5;
+            //}
+            
+
+            double vX = _point.X - X;
+            double vY = _point.Y - Y;
+            double magV = Math.Sqrt(vX * vX + vY * vY);
+            double aX = X + vX / magV * R;
+            double aY = Y + vY / magV * R;
+
+            return new Point((int)aX, (int)aY);
+        }
+
     }
 
     public class SingularTaskNode : NodeVisual
@@ -227,7 +273,20 @@ namespace Hetwork
             Point offset = nodeGraph.graphOffset;
             float zoom = nodeGraph.graphZoom;
 
-            
+            if(isSelected)
+            {
+                if(connection != null)
+                {
+                    connection.color = Color.FromArgb(255, 153, 153, 153);
+                }
+            }
+            else
+            {
+                if (connection != null)
+                {
+                    connection.color = Color.FromArgb(255, 63, 63, 63);
+                }
+            }
 
             //  DRAW BASE FILLED RECT
             g.FillRectangle(new SolidBrush(Color.FromArgb(255, 252, 252, 252)), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
@@ -310,6 +369,18 @@ namespace Hetwork
                 sf.Alignment = StringAlignment.Center;
                 g.DrawString(nameText, titleFont, new SolidBrush(Color.FromArgb(255, 123, 123, 123)), new PointF((int)((X + offset.X) * zoom), (int)((Y - Height / 2 - stringSize.Height / 2 + offset.Y) * zoom)), sf);
             }
+
+
+
+            if (isHoverArea && !isHoveringNewNode && connection == null)
+            {
+                g.FillRectangle(new SolidBrush(Color.FromArgb(255, 63, 63, 63)), new Rectangle(X + offset.X - 12 - Width / 2, Y + offset.Y - Height / 2 + 8, 7, Height - 16));
+            }
+            //g.FillEllipse(new SolidBrush(Color.Red), new Rectangle(new Point(connectionGrabPoint.X - 2, connectionGrabPoint.Y - 2), new Size(12, 12)));                
+            if(isHoveringNewNode && connection == null)
+            {
+                g.FillRectangle(new SolidBrush(Color.FromArgb(255, 63, 63, 63)), new Rectangle(X + offset.X - 12 - Width / 2, Y + offset.Y - Height / 2 + 4, 10, Height - 8));
+            }
         }
 
 
@@ -321,6 +392,57 @@ namespace Hetwork
             Rectangle r = new Rectangle((int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
             return r.Contains(mouse);
         }
+
+        public override bool IsWithinHoverArea(Point mouse)
+        {
+            Point offset = nodeGraph.graphOffset;
+            float zoom = nodeGraph.graphZoom;
+
+            Rectangle r = new Rectangle(X - 20 + offset.X - Width / 2, Y + offset.Y - Height / 2, Width + 20, Height);
+            return r.Contains(mouse);
+        }
+
+        //public override bool IsWithinCircle(Point center, Point mouse, double radius)
+        //{
+        //    Point offset = nodeGraph.graphOffset;
+        //    float zoom = nodeGraph.graphZoom;
+        //    int diffX = (int)((center.X + offset.X) * zoom - (mouse.X));
+        //    int diffY = (int)((center.Y + offset.Y) * zoom - (mouse.Y));
+        //    return (diffX * diffX + diffY * diffY) <= radius * radius;
+        //}
+
+        public int Clamp(int x, int lower, int upper)
+        {
+            return Math.Max(lower, Math.Min(upper, x));
+        }
+
+        public override Point GetConnectionLocation(Point _point)
+        {
+            int r = X + Width;
+            int b = Y + Height;
+
+            _point.X = Clamp(_point.X, X, r);
+            _point.Y = Clamp(_point.Y, Y, b);
+
+            int dl = Math.Abs(_point.X - X);
+            int dr = Math.Abs(_point.X - r);
+            int dt = Math.Abs(_point.Y - Y);
+            int db = Math.Abs(_point.Y - b);
+            int m = Math.Min(Math.Min(dl, dr),Math.Min(dt, db));
+
+            return new Point(X, Y);
+
+            if (m == dt)
+                return new Point(_point.X, Y);
+            if (m == db)
+                return new Point(_point.X, b);
+            if (m == dl)
+                return new Point(X, _point.Y);
+            return new Point(r, _point.Y);
+        }
+
     }
+
+    
 
 }
