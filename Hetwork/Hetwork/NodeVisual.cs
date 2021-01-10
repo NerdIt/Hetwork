@@ -222,18 +222,18 @@ namespace Hetwork
 
         public override Point GetConnectionLocation(Point _point)
         {
-            int R = Math.Max(Width, Height) / 2 + 5;
+            int R = Math.Max(Width, Height) / 2 + 10;
             //if (X > _point.X || Y > _point.Y)
             //{
             //    R += 5;
             //}
             
 
-            double vX = _point.X - X;
-            double vY = _point.Y - Y;
+            double vX = _point.X - X + 2;
+            double vY = _point.Y - Y + 2;
             double magV = Math.Sqrt(vX * vX + vY * vY);
-            double aX = X + vX / magV * R;
-            double aY = Y + vY / magV * R;
+            double aX = X + 2 + vX / magV * R;
+            double aY = Y + 2 + vY / magV * R;
 
             return new Point((int)aX, (int)aY);
         }
@@ -413,32 +413,58 @@ namespace Hetwork
 
         public int Clamp(int x, int lower, int upper)
         {
-            return Math.Max(lower, Math.Min(upper, x));
+            if(x < lower)
+            {
+                x = lower;
+            }
+            if(x > upper)
+            {
+                x = upper;
+            }
+
+            return x;
+        }
+
+        public Point[] points
+        { 
+            get 
+            {
+                //return new Point[8] {   new Point(X, Y + Height / 2 + 10), new Point(X, Y - Height / 2 - 10),
+                //                        new Point(X + Width / 2 + 10, Y), new Point(X - Width / 2 - 10, Y),
+                //                        new Point(X + Width / 2 + 10, Y + Height / 2 + 10),
+                //                        new Point(X + Width / 2 + 10, Y - Height / 2 - 10),
+                //                        new Point(X - Width / 2 - 10, Y + Height / 2 + 10),
+                //                        new Point(X - Width / 2 - 10, Y - Height / 2 - 10)};
+                return new Point[4] {   new Point(X, Y + Height / 2 + 10), new Point(X, Y - Height / 2 - 10),
+                                        new Point(X + Width / 2 + 10, Y), new Point(X - Width / 2 - 10, Y)};
+            } 
         }
 
         public override Point GetConnectionLocation(Point _point)
         {
-            int r = X + Width;
-            int b = Y + Height;
+            List<float> d = new List<float>();
+            for(int i = 0; i < points.Length; i++)
+            {
+                d.Add(GetDistance(_point, points[i]));
+            }
 
-            _point.X = Clamp(_point.X, X, r);
-            _point.Y = Clamp(_point.Y, Y, b);
+            try
+            {
+                return points[d.IndexOf(d.Min())];
+            }
+            catch
+            {
+                return points[2];
+            }
 
-            int dl = Math.Abs(_point.X - X);
-            int dr = Math.Abs(_point.X - r);
-            int dt = Math.Abs(_point.Y - Y);
-            int db = Math.Abs(_point.Y - b);
-            int m = Math.Min(Math.Min(dl, dr),Math.Min(dt, db));
+        }
 
-            return new Point(X, Y);
+        public float GetDistance(Point p1, Point p2)
+        {
+            float xDelta = p1.X - p2.X;
+            float yDelta = p1.Y - p2.Y;
 
-            if (m == dt)
-                return new Point(_point.X, Y);
-            if (m == db)
-                return new Point(_point.X, b);
-            if (m == dl)
-                return new Point(X, _point.Y);
-            return new Point(r, _point.Y);
+            return (float)Math.Sqrt(Math.Pow(xDelta, 2) + Math.Pow(yDelta, 2));
         }
 
     }
