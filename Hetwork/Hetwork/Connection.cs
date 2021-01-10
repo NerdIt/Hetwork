@@ -22,6 +22,8 @@ namespace Hetwork
 
         public Color color = Color.FromArgb(255, 63, 63, 63);
 
+        public bool isHoverArea = false;
+
         public NodeConnection(NodeVisual node1, NodeVisual node2, NodeGraph ng)
         {
             n1 = node1;
@@ -40,43 +42,6 @@ namespace Hetwork
             Point offset = nodeGraph.graphOffset;
             float zoom = nodeGraph.graphZoom;
 
-            //Point p1;
-            //Point p2;
-
-            //if (n1.GetType() == Type.GetType("Hetwork.FolderNode"))
-            //    p1 = new Point(n1.X, n1.Y);
-            //else
-            //    if(n1.X > n2.X)
-            //        p1 = new Point((int)((n1.X - n1.Width / 2 - 5)), (int)((n1.Y)));
-            //    else
-            //        p1 = new Point((int)((n1.X + n1.Width / 2 + 5)), (int)((n1.Y)));
-
-            //if (n2.GetType() == Type.GetType("Hetwork.FolderNode"))
-            //    p2 = new Point(n2.X, n2.Y);
-            //else
-            //    if (n2.X > n1.X)
-            //        p2 = new Point((int)((n2.X - n2.Width / 2 - 5)), (int)((n2.Y)));
-            //    else
-            //        p2 = new Point((int)((n2.X + n2.Width / 2 + 5)), (int)((n2.Y)));
-
-
-
-            //if (n1.GetType() == Type.GetType("Hetwork.FolderNode"))
-            //    if(n2.GetType() == Type.GetType("Hetwork.FolderNode"))
-            //        point1 = ClosestCircleNodePoint(p1, p2, 30);
-            //    else
-            //        point1 = ClosestCircleNodePoint(p1, p2, 30);
-            //else
-            //    point1 = p1;
-
-
-            //if (n2.GetType() == Type.GetType("Hetwork.FolderNode"))
-            //    if (n1.GetType() == Type.GetType("Hetwork.FolderNode"))
-            //        point2 = ClosestCircleNodePoint(p2, p1, 30);
-            //    else
-            //        point2 = ClosestCircleNodePoint(p2, p1, 30);
-            //else
-            //    point2 = p2;
 
             
 
@@ -149,18 +114,35 @@ namespace Hetwork
             Point offset = nodeGraph.graphOffset;
             float zoom = nodeGraph.graphZoom;
 
-            try
-            {
-                g.FillEllipse(new SolidBrush(color), new Rectangle(new Point((int)((point1.X - 2.5f + offset.X) * zoom), (int)((point1.Y - 2.5f + offset.Y) * zoom)), new Size((int)(5 * zoom), (int)(5 * zoom))));
-
-                g.FillEllipse(new SolidBrush(color), new Rectangle(new Point((int)((point2.X - 2.5f + offset.X) * zoom), (int)((point2.Y - 2.5f + offset.Y) * zoom)), new Size((int)(5 * zoom), (int)(5 * zoom))));
-            }
-            catch
+            if (!isHoverArea)
             {
 
-            }
-            g.DrawLine(new Pen(color, 2.5f * zoom), new Point((int)((point1.X+ offset.X) * zoom), (int)((point1.Y + offset.Y) * zoom)), new Point((int)((point2.X + offset.X) * zoom), (int)((point2.Y + offset.Y) * zoom)));
+                try
+                {
+                    g.FillEllipse(new SolidBrush(color), new Rectangle(new Point((int)((point1.X - 2.5f + offset.X) * zoom), (int)((point1.Y - 2.5f + offset.Y) * zoom)), new Size((int)(5 * zoom), (int)(5 * zoom))));
 
+                    g.FillEllipse(new SolidBrush(color), new Rectangle(new Point((int)((point2.X - 2.5f + offset.X) * zoom), (int)((point2.Y - 2.5f + offset.Y) * zoom)), new Size((int)(5 * zoom), (int)(5 * zoom))));
+                }
+                catch
+                {
+
+                }
+                g.DrawLine(new Pen(color, 2.5f * zoom), new Point((int)((point1.X + offset.X) * zoom), (int)((point1.Y + offset.Y) * zoom)), new Point((int)((point2.X + offset.X) * zoom), (int)((point2.Y + offset.Y) * zoom)));
+            }
+            else
+            {
+                try
+                {
+                    g.FillEllipse(new SolidBrush(Color.Red), new Rectangle(new Point((int)((point1.X - 2.5f + offset.X) * zoom), (int)((point1.Y - 2.5f + offset.Y) * zoom)), new Size((int)(5 * zoom), (int)(5 * zoom))));
+
+                    g.FillEllipse(new SolidBrush(Color.Red), new Rectangle(new Point((int)((point2.X - 2.5f + offset.X) * zoom), (int)((point2.Y - 2.5f + offset.Y) * zoom)), new Size((int)(5 * zoom), (int)(5 * zoom))));
+                }
+                catch
+                {
+
+                }
+                g.DrawLine(new Pen(Color.Red, 2.5f * zoom), new Point((int)((point1.X + offset.X) * zoom), (int)((point1.Y + offset.Y) * zoom)), new Point((int)((point2.X + offset.X) * zoom), (int)((point2.Y + offset.Y) * zoom)));
+            }
         }
     }
 

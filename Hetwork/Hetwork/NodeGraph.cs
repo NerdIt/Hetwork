@@ -12,6 +12,7 @@ using Hetwork.Properties;
 using System.Drawing.Imaging;
 using System.Diagnostics;
 
+
 namespace Hetwork
 {
     public partial class NodeGraph : UserControl
@@ -39,6 +40,20 @@ namespace Hetwork
             timer.Tick += TimerOnTick;
             timer.Start();
             DoubleBuffered = true;
+
+            ContextMenu cm = new ContextMenu();
+            MenuItem mi1 = new MenuItem();
+            mi1.Text = "Add Folder";
+            mi1.Click += new System.EventHandler(this.AddFolder);
+            cm.MenuItems.Add(mi1);
+
+            ContextMenu = cm;
+            
+        }
+
+        public void AddFolder(object sender, System.EventArgs e)
+        {
+            nodes.Add(new FolderNode("New Node", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 45, 45, 0, this));
         }
 
 
@@ -52,7 +67,8 @@ namespace Hetwork
         }
 
 
-        
+
+        public NodeConnection connection;
 
         public void PaintControl(object sender, PaintEventArgs e)
         {
@@ -82,6 +98,10 @@ namespace Hetwork
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
             e.Graphics.DrawString(projectName, new Font("Arial", 50 * textSize, FontStyle.Bold), new SolidBrush(Color.FromArgb(10, 0, 0, 0)), averagePoint, sf);
+
+
+            
+
 
             //  DRAW SHADOWS
             foreach (NodeVisual nv in nodes)
@@ -120,6 +140,50 @@ namespace Hetwork
             sf.Alignment = StringAlignment.Far;
             e.Graphics.DrawString($"{string.Format("{0:0.0}", (double)graphZoom)}", new Font("Arial", 7 * textSize), new SolidBrush(Color.FromArgb(255, 195, 195, 195)), Width - 1, 0, sf);
         }
+
+        //double distOfLineDefinedBy2PointsAndPoint(double x1, double y1, double x2, double y2, double x3, double y3)
+        //{
+        //    return Math.Abs((y2 - y1) * x3 - (x2 - x1) * y3 + x2 * y1 - y2 * x1) /
+        //            Math.Sqrt(Math.Pow(y2 - y1, 2) + Math.Pow(x2 - x1, 2));
+        //}
+
+        public float NearestPointOnLineDistance(Point linePnt, PointF lineDir, Point pnt)
+        {
+            Normalize(lineDir); //this needs to be a unit vector
+            var v = new Point(pnt.X - linePnt.X, pnt.Y - linePnt.Y);
+            var d = DotProduct(new decimal[2]{ v.X, v.Y }, new decimal[2] { (decimal)lineDir.X, (decimal)lineDir.Y });
+            
+            PointF p = new PointF(linePnt.X + lineDir.X * (float)d, linePnt.Y + lineDir.Y * (float)d);
+            return Distance(new Point((int)p.X, (int)p.Y), pnt);
+        }
+
+        private decimal DotProduct(decimal[] vec1, decimal[] vec2)
+        {
+            if (vec1 == null)
+                return 0;
+
+            if (vec2 == null)
+                return 0;
+
+            if (vec1.Length != vec2.Length)
+                return 0;
+
+            decimal tVal = 0;
+            for (int x = 0; x < vec1.Length; x++)
+            {
+                tVal += vec1[x] * vec2[x];
+            }
+
+            return tVal;
+        }
+
+
+        public PointF Normalize(PointF A)
+        {
+            double length = Math.Sqrt(A.X * A.X + A.Y * A.Y);
+            return new PointF((float)(A.X / length), (float)(A.Y / length));
+        }
+
 
         bool middleMouseDown = false;
         bool leftMouseDown = false;
@@ -205,14 +269,14 @@ namespace Hetwork
                 NodeVisual n3 = nodes.LastOrDefault(x => x.isHoveringNewNode && x.GetType() != Type.GetType("Hetwork.FolderNode"));
                 if(n3 != null)
                 {
-                    editingConnection = new DragConnection(new Point(n3.X - n3.Width / 2 - 5, n3.Y), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
+                    editingConnection = new DragConnection(n3.GetConnectionLocation(new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y)), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
                     editingNodeConnection = n3;
                 }
 
                 n3 = nodes.LastOrDefault(x => x.isHoveringNewNode && x.GetType() == Type.GetType("Hetwork.FolderNode"));
                 if (n3 != null && editingConnection == null)
                 {
-                    editingConnection = new DragConnection(new Point(n3.X, n3.Y), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
+                    editingConnection = new DragConnection(n3.GetConnectionLocation(new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y)), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
                     editingNodeConnection = n3;
                 }
 
@@ -235,11 +299,22 @@ namespace Hetwork
 
                 if (editingNodeConnection != null)
                 {
-                    NodeVisual nv = nodes.FirstOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 17.5) && x.GetType() == Type.GetType("Hetwork.FolderNode"));
+                    NodeVisual nv = nodes.FirstOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 17.5) && x.GetType() == Type.GetType("Hetwork.FolderNode") && !editingNodeConnection.isMain);
                     if (nv != null)
                     {
                         nv.children.Add(editingNodeConnection);                        
                         editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
+                    }
+
+                    nv = nodes.FirstOrDefault(x => x.IsWithinRect(e.Location) && x.GetType() != Type.GetType("Hetwork.FolderNode") && editingNodeConnection.GetType() == Type.GetType("Hetwork.FolderNode") || editingNodeConnection.isMain);
+                    if (nv != null)
+                    {
+                        if (nv.connection != null && nv.connection.n2.children.Contains(nv))
+                        {
+                            nv.connection.n2.children.Remove(nv);
+                        }
+                        editingNodeConnection.children.Add(nv);
+                        nv.connection = new NodeConnection(nv, editingNodeConnection, this);
                     }
                 }
 
@@ -271,6 +346,23 @@ namespace Hetwork
                 n.isHoverArea = false;
                 n.isHoveringNewNode = false;
             }
+
+            //  BROKEN
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                if (nodes[i].connection != null)
+                {
+                    if (NearestPointOnLineDistance(nodes[i].connection.point1, new PointF(nodes[i].connection.point2.X - nodes[i].connection.point1.X, nodes[i].connection.point2.Y - nodes[i].connection.point1.Y), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y)) < 20)
+                    {
+                        nodes[i].connection.isHoverArea = true;
+                    }
+                    else
+                    {
+                        nodes[i].connection.isHoverArea = false;
+                    }
+                }
+            }
+
 
             NodeVisual n1 = nodes.LastOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 45 / 2) && x.GetType() == Type.GetType("Hetwork.FolderNode"));
             if (n1 == null)
@@ -314,7 +406,7 @@ namespace Hetwork
 
             if(editingNodeConnection != null)
             {
-                editingConnection = new DragConnection(editingConnection.point1, new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
+                editingConnection = new DragConnection(editingNodeConnection.GetConnectionLocation(new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y)), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
 
             }
 
@@ -324,7 +416,7 @@ namespace Hetwork
             {
                 n2.isHoverArea = true;
                 
-                if(IsWithinRect(new Rectangle(n2.X + graphOffset.X - 12 - n2.Width / 2, n2.Y + graphOffset.Y - n2.Height / 2 + 8, 7, n2.Height - 16), e.Location))
+                if(IsWithinRect(new Rectangle(n2.X + graphOffset.X - 5, n2.Y + graphOffset.Y + n2.Height / 2 + 7, 10, 10), e.Location))
                 {
                     
                     n2.isHoveringNewNode = true;
@@ -343,7 +435,7 @@ namespace Hetwork
             {
                 n2.isHoverArea = true;
 
-                if (IsWithinRect(new Rectangle(n2.X + graphOffset.X - n2.Width / 2 + 8, n2.Y + graphOffset.Y + n2.Height / 2 + 8, n2.Width - 16, 7), e.Location))
+                if (IsWithinRect(new Rectangle(n2.X + graphOffset.X - 5, n2.Y + graphOffset.Y + n2.Height / 2 + 7, 10, 10), e.Location))
                 {
 
                     n2.isHoveringNewNode = true;
@@ -401,34 +493,7 @@ namespace Hetwork
             //    needRepaint = true;
             //}
 
-            if (e.KeyChar == 'x')
-            {
-                for (int i = 0; i < selectedNodes.Count; i++)
-                {
-                    if (!selectedNodes[i].isMain)
-                    {
-                        if(selectedNodes[i].connection != null && selectedNodes[i].connection.n2.children.Contains(selectedNodes[i]))
-                        {
-                            selectedNodes[i].connection.n2.children.Remove(selectedNodes[i]);
-                        }
-                        if(selectedNodes[i].GetType() == Type.GetType("Hetwork.FolderNode"))
-                        {
-                            for(int j = 0; j < nodes.Count; j++)
-                            {
-                                if(nodes[j].connection != null && nodes[j].connection.n2 == selectedNodes[i])
-                                {
-                                    nodes[j].connection.Dispose();
-                                    nodes[j].connection = null;
-                                }
-                            }
-                        }
-                        selectedNodes[i].Dispose();
-                        nodes.Remove(selectedNodes[i]);
-                    }
-                }
-                selectedNodes.Clear();
-                needRepaint = true;
-            }
+
 
         }
 
@@ -444,15 +509,37 @@ namespace Hetwork
 
         private void NodeGraph_KeyDown(object sender, KeyEventArgs e)
         {
-            
-            //if(e.KeyCode == Keys.Delete)
-            //{
-            //    for(int i = 0; i < selectedNodes.Count; i++)
-            //    {
-            //        nodes.Remove(selectedNodes[i]);   
-            //    }
-            //    selectedNodes.Clear();
-            //}
+
+            if (e.KeyCode == Keys.Delete)
+            {
+                for (int i = 0; i < selectedNodes.Count; i++)
+                {
+                    if (!selectedNodes[i].isMain)
+                    {
+                        if (selectedNodes[i].connection != null && selectedNodes[i].connection.n2.children.Contains(selectedNodes[i]))
+                        {
+                            selectedNodes[i].connection.n2.children.Remove(selectedNodes[i]);
+                        }
+                        if (selectedNodes[i].GetType() == Type.GetType("Hetwork.FolderNode"))
+                        {
+                            for (int j = 0; j < nodes.Count; j++)
+                            {
+                                if (nodes[j].connection != null && nodes[j].connection.n2 == selectedNodes[i])
+                                {
+                                    nodes[j].connection.Dispose();
+                                    nodes[j].connection = null;
+                                }
+                            }
+                        }
+                        selectedNodes[i].Dispose();
+                        nodes.Remove(selectedNodes[i]);
+                    }
+                }
+                selectedNodes.Clear();
+                needRepaint = true;
+            }
+
+
         }
     }
 

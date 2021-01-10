@@ -229,12 +229,12 @@ namespace Hetwork
 
             if (isHoverArea && !isHoveringNewNode && connection == null)
             {
-                g.FillRectangle(new SolidBrush(Color.FromArgb(255, 63, 63, 63)), new Rectangle(X + offset.X - Width / 2 + 10, Y + offset.Y + Height / 2 + 8, Width - 20, 7));
+                g.FillEllipse(new SolidBrush(Color.FromArgb(255, 63, 63, 63)), new Rectangle(X + offset.X - 3, Y + offset.Y + Height / 2 + 6, 6, 6));
             }
             //g.FillEllipse(new SolidBrush(Color.Red), new Rectangle(new Point(connectionGrabPoint.X - 2, connectionGrabPoint.Y - 2), new Size(12, 12)));                
             if (isHoveringNewNode && connection == null)
             {
-                g.FillRectangle(new SolidBrush(Color.FromArgb(255, 63, 63, 63)), new Rectangle(X + offset.X - Width / 2 + 8, Y + offset.Y + Height / 2 + 5, Width - 16, 9));
+                g.FillEllipse(new SolidBrush(Color.FromArgb(255, 63, 63, 63)), new Rectangle(X + offset.X - 4, Y + offset.Y + Height / 2 + 6, 8, 8));
             }
 
 
@@ -402,15 +402,14 @@ namespace Hetwork
             }
 
 
-
             if (isHoverArea && !isHoveringNewNode && connection == null)
             {
-                g.FillRectangle(new SolidBrush(Color.FromArgb(255, 63, 63, 63)), new Rectangle(X + offset.X - 12 - Width / 2, Y + offset.Y - Height / 2 + 8, 7, Height - 16));
+                g.FillEllipse(new SolidBrush(Color.FromArgb(255, 63, 63, 63)), new Rectangle(X + offset.X - 3, Y + offset.Y + Height / 2 + 6, 6, 6));
             }
             //g.FillEllipse(new SolidBrush(Color.Red), new Rectangle(new Point(connectionGrabPoint.X - 2, connectionGrabPoint.Y - 2), new Size(12, 12)));                
-            if(isHoveringNewNode && connection == null)
+            if (isHoveringNewNode && connection == null)
             {
-                g.FillRectangle(new SolidBrush(Color.FromArgb(255, 63, 63, 63)), new Rectangle(X + offset.X - 12 - Width / 2, Y + offset.Y - Height / 2 + 4, 10, Height - 8));
+                g.FillEllipse(new SolidBrush(Color.FromArgb(255, 63, 63, 63)), new Rectangle(X + offset.X - 4, Y + offset.Y + Height / 2 + 6, 8, 8));
             }
         }
 
@@ -429,7 +428,7 @@ namespace Hetwork
             Point offset = nodeGraph.graphOffset;
             float zoom = nodeGraph.graphZoom;
 
-            Rectangle r = new Rectangle(X - 20 + offset.X - Width / 2, Y + offset.Y - Height / 2, Width + 20, Height);
+            Rectangle r = new Rectangle(X + offset.X - Width / 2, Y + offset.Y - Height + 20, Width, Height + 20);
             return r.Contains(mouse);
         }
 
