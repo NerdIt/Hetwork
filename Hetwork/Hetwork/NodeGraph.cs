@@ -26,6 +26,10 @@ namespace Hetwork
 
         public List<NodeVisual> selectedNodes = new List<NodeVisual>();
 
+        public string projectName = "Project Name";
+
+        public float textSize = 1;
+
         public NodeGraph()
         {
             InitializeComponent();
@@ -55,7 +59,22 @@ namespace Hetwork
             e.Graphics.InterpolationMode = InterpolationMode.Low;
             e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
 
-
+            Point averagePoint;
+            int aX = 0;
+            int aY = 0;
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                aX += nodes[i].GetRelativePosition().X;
+                aY += nodes[i].GetRelativePosition().Y;
+            }
+            aX /= nodes.Count;
+            aY /= nodes.Count;
+            averagePoint = new Point(aX, aY);
+            //Debug.WriteLine(averagePoint);
+            StringFormat sf = new StringFormat();
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
+            e.Graphics.DrawString(projectName, new Font("Arial", 50 * textSize, FontStyle.Bold), new SolidBrush(Color.FromArgb(10, 0, 0, 0)), averagePoint, sf);
 
             //  DRAW SHADOWS
             foreach (NodeVisual nv in nodes)
@@ -82,7 +101,7 @@ namespace Hetwork
             needRepaint = false;
             if (middleMouseDown)
             {
-                e.Graphics.DrawString($"{graphOffset.X},{graphOffset.Y}", new Font("Arial", 7), new SolidBrush(Color.FromArgb(255, 195, 195, 195)), 0, 0);
+                e.Graphics.DrawString($"{graphOffset.X},{graphOffset.Y}", new Font("Arial", 7 * textSize), new SolidBrush(Color.FromArgb(255, 195, 195, 195)), 0, 0);
             }
             
             if(editingConnection != null)
@@ -90,9 +109,9 @@ namespace Hetwork
 
 
             //  GRAPH ZOOM STRING
-            StringFormat sf = new StringFormat();
+            sf = new StringFormat();
             sf.Alignment = StringAlignment.Far;
-            e.Graphics.DrawString($"{string.Format("{0:0.0}", (double)graphZoom)}", new Font("Arial", 7), new SolidBrush(Color.FromArgb(255, 195, 195, 195)), Width - 1, 0, sf);
+            e.Graphics.DrawString($"{string.Format("{0:0.0}", (double)graphZoom)}", new Font("Arial", 7 * textSize), new SolidBrush(Color.FromArgb(255, 195, 195, 195)), Width - 1, 0, sf);
         }
 
         bool middleMouseDown = false;
@@ -180,6 +199,13 @@ namespace Hetwork
                 if(n3 != null)
                 {
                     editingConnection = new DragConnection(new Point(n3.X - n3.Width / 2 - 5, n3.Y), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
+                    editingNodeConnection = n3;
+                }
+
+                n3 = nodes.LastOrDefault(x => x.isHoveringNewNode && x.GetType() == Type.GetType("Hetwork.FolderNode"));
+                if (n3 != null && editingConnection == null)
+                {
+                    editingConnection = new DragConnection(new Point(n3.X, n3.Y), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
                     editingNodeConnection = n3;
                 }
 
@@ -280,7 +306,7 @@ namespace Hetwork
 
             if(editingNodeConnection != null)
             {
-                editingConnection = new DragConnection(new Point(editingNodeConnection.X - editingNodeConnection.Width / 2 - 5, editingNodeConnection.Y), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
+                editingConnection = new DragConnection(editingConnection.point1, new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
 
             }
 

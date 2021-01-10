@@ -28,7 +28,7 @@ namespace Hetwork
         public Point offsetToCursor = new Point();
 
         public NodeConnection connection;
-
+        public NodeGraph nodeGraph;
 
 
         public virtual void DrawShadow(Graphics g)
@@ -62,13 +62,19 @@ namespace Hetwork
             return new Point();
         }
 
+        public Point GetRelativePosition()
+        {
+            Point offset = nodeGraph.graphOffset;
+            return new Point(X + offset.X, Y + offset.Y);
+        }
+
 
     }
 
     public class FolderNode : NodeVisual
     {
         public int percentage;
-        public NodeGraph nodeGraph;
+        
         
         
 
@@ -100,6 +106,22 @@ namespace Hetwork
             Point offset = nodeGraph.graphOffset;
             float zoom = nodeGraph.graphZoom;
 
+            if (isSelected)
+            {
+                if (connection != null)
+                {
+                    connection.color = Color.FromArgb(255, 153, 153, 153);
+                }
+            }
+            else
+            {
+                if (connection != null)
+                {
+                    connection.color = Color.FromArgb(255, 63, 63, 63);
+                }
+            }
+
+
             //  CREATE GRADIANT
             GraphicsPath path = new GraphicsPath();
             path.AddEllipse((int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
@@ -117,13 +139,13 @@ namespace Hetwork
 
             //  DRAW PERCENTAGE TEXT
             string percText = percentage + "%";
-            Font stringFont = new Font("Andale Mono", 9 * zoom, FontStyle.Bold);
+            Font stringFont = new Font("Andale Mono", 9 * nodeGraph.textSize * zoom, FontStyle.Bold);
             SizeF stringSize = new SizeF();
             stringSize = g.MeasureString(percText, stringFont);
             while (stringSize.Width > 55 && stringFont.Size > 1)
             {
                 stringSize = g.MeasureString(percText, stringFont);
-                stringFont = new Font("Andale Mono", stringFont.Size - 1);
+                stringFont = new Font("Andale Mono", stringFont.Size - 1 * nodeGraph.textSize);
             }
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
@@ -163,13 +185,13 @@ namespace Hetwork
                 g.DrawEllipse(new Pen(Color.LightGray, 2 * zoom), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
 
                 string nameText = title;
-                Font titleFont = new Font("Andale Mono", 7 * zoom, FontStyle.Bold);
+                Font titleFont = new Font("Andale Mono", 7 * nodeGraph.textSize * zoom, FontStyle.Bold);
                 stringSize = new SizeF();
                 stringSize = g.MeasureString(nameText, stringFont);
                 while (stringSize.Width > 140 && titleFont.Size > 1)
                 {
                     stringSize = g.MeasureString(nameText, titleFont);
-                    titleFont = new Font("Andale Mono", titleFont.Size - 1);
+                    titleFont = new Font("Andale Mono", titleFont.Size - 1 * nodeGraph.textSize);
                 }
                 sf = new StringFormat();
                 sf.LineAlignment = StringAlignment.Center;
@@ -182,13 +204,13 @@ namespace Hetwork
                 g.DrawEllipse(new Pen(Color.FromArgb(255, 63, 63, 63), 2 * zoom), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
 
                 string nameText = title;
-                Font titleFont = new Font("Andale Mono", 7 * zoom, FontStyle.Bold);
+                Font titleFont = new Font("Andale Mono", 7 * nodeGraph.textSize * zoom, FontStyle.Bold);
                 stringSize = new SizeF();
                 stringSize = g.MeasureString(nameText, stringFont);
                 while (stringSize.Width > 140 && titleFont.Size > 1)
                 {
                     stringSize = g.MeasureString(nameText, titleFont);
-                    titleFont = new Font("Andale Mono", titleFont.Size - 1);
+                    titleFont = new Font("Andale Mono", titleFont.Size - 1 * nodeGraph.textSize);
                 }
                 sf = new StringFormat();
                 sf.LineAlignment = StringAlignment.Center;
@@ -242,8 +264,6 @@ namespace Hetwork
 
     public class SingularTaskNode : NodeVisual
     {
-        public NodeGraph nodeGraph;
-
 
 
         public SingularTaskNode(string name, int x, int y, int width, int height, NodeGraph graphControl)
@@ -297,7 +317,7 @@ namespace Hetwork
 
             //  DRAW NAME TEXT
             string nText = title;
-            Font stringFont = new Font("Andale Mono", 9 * zoom, FontStyle.Bold);
+            Font stringFont = new Font("Andale Mono", 9 * zoom * nodeGraph.textSize, FontStyle.Bold);
             SizeF stringSize = new SizeF();
             stringSize = g.MeasureString(nText, stringFont);
             if (stringSize.Width > 180)
@@ -311,7 +331,7 @@ namespace Hetwork
                     if (i == inc + 10)
                     {
                         newText += "\n";
-                        stringFont = new Font("Andale Mono", stringFont.Size - 1 * zoom, FontStyle.Bold);
+                        stringFont = new Font("Andale Mono", stringFont.Size - 1 * nodeGraph.textSize * zoom, FontStyle.Bold);
                         inc += 10;
                     }
                     
@@ -337,13 +357,13 @@ namespace Hetwork
                 g.DrawRectangle(new Pen(Color.LightGray, 2 * zoom), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
 
                 string nameText = title;
-                Font titleFont = new Font("Andale Mono", 7 * zoom, FontStyle.Bold);
+                Font titleFont = new Font("Andale Mono", 7 * nodeGraph.textSize * zoom, FontStyle.Bold);
                 stringSize = new SizeF();
                 stringSize = g.MeasureString(nameText, stringFont);
                 while (stringSize.Width > 140 && titleFont.Size > 1)
                 {
                     stringSize = g.MeasureString(nameText, titleFont);
-                    titleFont = new Font("Andale Mono", titleFont.Size - 1);
+                    titleFont = new Font("Andale Mono", titleFont.Size - 1 * nodeGraph.textSize);
                 }
                 sf = new StringFormat();
                 sf.LineAlignment = StringAlignment.Center;
@@ -356,13 +376,13 @@ namespace Hetwork
                 g.DrawRectangle(new Pen(Color.FromArgb(255, 63, 63, 63), 2 * zoom), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
 
                 string nameText = title;
-                Font titleFont = new Font("Andale Mono", 7 * zoom, FontStyle.Bold);
+                Font titleFont = new Font("Andale Mono", 7 * nodeGraph.textSize * zoom, FontStyle.Bold);
                 stringSize = new SizeF();
                 stringSize = g.MeasureString(nameText, stringFont);
                 while (stringSize.Width > 140 && titleFont.Size > 1)
                 {
                     stringSize = g.MeasureString(nameText, titleFont);
-                    titleFont = new Font("Andale Mono", titleFont.Size - 1);
+                    titleFont = new Font("Andale Mono", titleFont.Size - 1 * nodeGraph.textSize);
                 }
                 sf = new StringFormat();
                 sf.LineAlignment = StringAlignment.Center;
