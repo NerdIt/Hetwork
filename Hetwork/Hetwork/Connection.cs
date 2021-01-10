@@ -30,6 +30,10 @@ namespace Hetwork
             nodeGraph = ng;
         }
 
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
 
         public void Update()
         {

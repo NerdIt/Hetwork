@@ -67,8 +67,15 @@ namespace Hetwork
                 aX += nodes[i].GetRelativePosition().X;
                 aY += nodes[i].GetRelativePosition().Y;
             }
-            aX /= nodes.Count;
-            aY /= nodes.Count;
+            try
+            {
+                aX /= nodes.Count;
+                aY /= nodes.Count;
+            }
+            catch
+            {
+
+            }
             averagePoint = new Point(aX, aY);
             //Debug.WriteLine(averagePoint);
             StringFormat sf = new StringFormat();
@@ -231,6 +238,7 @@ namespace Hetwork
                     NodeVisual nv = nodes.FirstOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 17.5) && x.GetType() == Type.GetType("Hetwork.FolderNode"));
                     if (nv != null)
                     {
+                        nv.children.Add(editingNodeConnection);                        
                         editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
                     }
                 }
@@ -373,7 +381,7 @@ namespace Hetwork
             //        if(graphZoom > 1.5f)
             //        {
             //            graphZoom = 1.5f;
-                        
+
             //        }
             //        needRepaint = true;
             //        graphZoom = (float)Math.Round((double)graphZoom, 1);
@@ -392,8 +400,35 @@ namespace Hetwork
             //    }
             //    needRepaint = true;
             //}
-            
-            
+
+            if (e.KeyChar == 'x')
+            {
+                for (int i = 0; i < selectedNodes.Count; i++)
+                {
+                    if (!selectedNodes[i].isMain)
+                    {
+                        if(selectedNodes[i].connection != null && selectedNodes[i].connection.n2.children.Contains(selectedNodes[i]))
+                        {
+                            selectedNodes[i].connection.n2.children.Remove(selectedNodes[i]);
+                        }
+                        if(selectedNodes[i].GetType() == Type.GetType("Hetwork.FolderNode"))
+                        {
+                            for(int j = 0; j < nodes.Count; j++)
+                            {
+                                if(nodes[j].connection != null && nodes[j].connection.n2 == selectedNodes[i])
+                                {
+                                    nodes[j].connection.Dispose();
+                                    nodes[j].connection = null;
+                                }
+                            }
+                        }
+                        selectedNodes[i].Dispose();
+                        nodes.Remove(selectedNodes[i]);
+                    }
+                }
+                selectedNodes.Clear();
+                needRepaint = true;
+            }
 
         }
 
@@ -406,7 +441,19 @@ namespace Hetwork
                 nodes.RemoveAt(i);
             }
         }
-    
+
+        private void NodeGraph_KeyDown(object sender, KeyEventArgs e)
+        {
+            
+            //if(e.KeyCode == Keys.Delete)
+            //{
+            //    for(int i = 0; i < selectedNodes.Count; i++)
+            //    {
+            //        nodes.Remove(selectedNodes[i]);   
+            //    }
+            //    selectedNodes.Clear();
+            //}
+        }
     }
 
 

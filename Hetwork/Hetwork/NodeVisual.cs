@@ -30,6 +30,10 @@ namespace Hetwork
         public NodeConnection connection;
         public NodeGraph nodeGraph;
 
+        public bool isMain = false;
+
+        public List<NodeVisual> children = new List<NodeVisual>();
+
 
         public virtual void DrawShadow(Graphics g)
         {
@@ -66,6 +70,11 @@ namespace Hetwork
         {
             Point offset = nodeGraph.graphOffset;
             return new Point(X + offset.X, Y + offset.Y);
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
 
 
@@ -227,6 +236,8 @@ namespace Hetwork
             {
                 g.FillRectangle(new SolidBrush(Color.FromArgb(255, 63, 63, 63)), new Rectangle(X + offset.X - Width / 2 + 8, Y + offset.Y + Height / 2 + 5, Width - 16, 9));
             }
+
+
         }
 
 
