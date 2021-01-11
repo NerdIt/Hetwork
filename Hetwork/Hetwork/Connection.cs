@@ -150,7 +150,7 @@ namespace Hetwork
 
                 try
                 {
-                    g.FillEllipse(new SolidBrush(Color.FromArgb(255, 255, 131, 122)), new Rectangle(new Point((int)((point1.X - 5f + offset.X) * zoom), (int)((point1.Y - 5f + offset.Y) * zoom)), new Size((int)(10 * zoom), (int)(10 * zoom))));
+                    g.FillEllipse(new SolidBrush(color), new Rectangle(new Point((int)((point1.X - 5f + offset.X) * zoom), (int)((point1.Y - 5f + offset.Y) * zoom)), new Size((int)(10 * zoom), (int)(10 * zoom))));
 
                     g.FillEllipse(new SolidBrush(color), new Rectangle(new Point((int)((point2.X - 5f + offset.X) * zoom), (int)((point2.Y - 5f + offset.Y) * zoom)), new Size((int)(10 * zoom), (int)(10 * zoom))));
                 }
@@ -158,7 +158,7 @@ namespace Hetwork
                 {
 
                 }
-                            }
+            }
             else
             {
                 //try
@@ -197,8 +197,10 @@ namespace Hetwork
         public NodeVisual GetClosestPoint(Point p)
         {
             Point offset = nodeGraph.graphOffset;
+            Debug.WriteLine(Distance(new Point(point1.X - offset.X, point1.Y - offset.Y), p));
+            Debug.WriteLine(Distance(new Point(point2.X - offset.X, point2.Y - offset.Y), p));
 
-            if (Distance(new Point(point1.X - offset.X, point1.Y - offset.Y), p) > Distance(new Point(point2.X - offset.X, point2.Y - offset.Y), p))
+            if (Distance(new Point(point1.X - offset.X, point1.Y - offset.Y), p) < Distance(new Point(point2.X - offset.X, point2.Y - offset.Y), p))
             {
                 return n1;
             }

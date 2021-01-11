@@ -194,6 +194,7 @@ namespace Hetwork
 
         NodeVisual editingNodeConnection = null;
         DragConnection dragConnection = null;
+        NodeConnection processingConnection = null;
 
         private void NodeGraph_MouseDown(object sender, MouseEventArgs e)
         {
@@ -301,29 +302,33 @@ namespace Hetwork
                     {
                         //NodeVisual editFrom = c1.GetClosestPoint(e.Location);
 
-
-
-                        
-                        editingNodeConnection = c1.n1;
-                        c1.isSelected = true;
-                        editingNodeConnection.connection.RemoveChild();
-                        editingNodeConnection.connection = null;
-                        if (c1.GetClosestPoint(e.Location) == c1.n1)
+                        //  CURSOR POSITION BROKEN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        if(c1.GetClosestPoint(new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y)) == c1.n1)
                         {
-                            
-                            dragConnection = new DragConnection(editingNodeConnection.GetConnectionLocation(new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y)), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
+                            //  N1
+                            Debug.WriteLine("Closest is N1");
+                            editingNodeConnection = c1.n2;
+                            processingConnection = c1;
                         }
                         else
                         {
-                            
-                            editingNodeConnection = null;
-                            dragConnection = null;
+                            //  N2
+                            editingNodeConnection = c1.n1;
+                            processingConnection = c1;
                         }
 
+                        dragConnection = new DragConnection(editingNodeConnection.GetConnectionLocation(new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y)), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
+
+                        c1.isSelected = true;
+                        //editingNodeConnection.connection.RemoveChild();
+                        //editingNodeConnection.connection = null;
                         
 
                         
-                                                
+
+
+
+
 
 
                     }
@@ -360,6 +365,12 @@ namespace Hetwork
                 draggingNodes.Clear();
 
                 //  EDIT NODE CONNECTION
+                if(processingConnection != null)
+                {
+                    processingConnection.n1.connection.RemoveChild();
+                    processingConnection.n1.connection = null;
+                }
+
                 if (editingNodeConnection != null)
                 {
 
@@ -369,42 +380,92 @@ namespace Hetwork
 
                         if (nv != null && nv != editingNodeConnection)
                         {
-                            //Node Senarios
-                            if (editingNodeConnection.GetType() == Type.GetType("Hetwork.FolderNode") && nv.GetType() != Type.GetType("Hetwork.FolderNode"))
+
+                            if (processingConnection != null && processingConnection.n1 != editingNodeConnection)
                             {
                                 
-                                if (nv.connection == null)
+
+                                if(editingNodeConnection.GetType() == Type.GetType("Hetwork.FolderNode") && nv.GetType() == Type.GetType("Hetwork.FolderNode"))
+                                {
+                                    if (editingNodeConnection.connection != null)
+                                    {
+                                        if (nv.connection == null)
+                                        {
+                                            nv.connection = new NodeConnection(nv, editingNodeConnection, this);
+                                        }
+                                        else
+                                        {
+                                            nv.connection.RemoveChild();
+                                            nv.connection = new NodeConnection(nv, editingNodeConnection, this);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
+                                    }
+                                }
+                                else if(editingNodeConnection.GetType() == Type.GetType("Hetwork.FolderNode") && nv.GetType() != Type.GetType("Hetwork.FolderNode"))
+                                {
+                                    if(nv.connection != null)
+                                    {
+                                        nv.connection.RemoveChild();
+                                        nv.connection = new NodeConnection(nv, editingNodeConnection, this);
+                                    }    
+                                }
+                            }
+                            else
+                            {
+                                if (editingNodeConnection.connection != null)
+                                {
+                                    editingNodeConnection.connection.RemoveChild();
+                                    editingNodeConnection.connection = null;
+                                }
+
+
+                                //Node Senarios
+                                if (editingNodeConnection.GetType() == Type.GetType("Hetwork.FolderNode") && nv.GetType() != Type.GetType("Hetwork.FolderNode"))
+                                {
+                                    
+                                    if (nv.connection == null)
+                                    {
+                                        nv.connection = new NodeConnection(nv, editingNodeConnection, this);
+                                    }
+                                    else
+                                    {
+                                        nv.connection.RemoveChild();
+                                        nv.connection = new NodeConnection(nv, editingNodeConnection, this);
+                                    }
+                                }
+                                else if (editingNodeConnection.GetType() != Type.GetType("Hetwork.FolderNode") && nv.GetType() == Type.GetType("Hetwork.FolderNode"))
+                                {
+                                    
+                                    editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
+                                }
+                                else if (editingNodeConnection.GetType() == Type.GetType("Hetwork.FolderNode") && nv.GetType() == Type.GetType("Hetwork.FolderNode") && !editingNodeConnection.isMain && !editingNodeConnection.isMain)
+                                {
+                                    editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
+                                }
+                                else if (editingNodeConnection.isMain && nv.connection == null)
                                 {
                                     nv.connection = new NodeConnection(nv, editingNodeConnection, this);
                                 }
                                 else
                                 {
-                                    nv.connection.RemoveChild();
-                                    nv.connection = new NodeConnection(nv, editingNodeConnection, this);
-                                }
-                            }
-                            else if (editingNodeConnection.GetType() != Type.GetType("Hetwork.FolderNode") && nv.GetType() == Type.GetType("Hetwork.FolderNode"))
-                            {
-                                editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
-                            }
-                            else if (editingNodeConnection.GetType() == Type.GetType("Hetwork.FolderNode") && nv.GetType() == Type.GetType("Hetwork.FolderNode") && !editingNodeConnection.isMain && !editingNodeConnection.isMain)
-                            {
-                                editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
-                            }
-                            else if(editingNodeConnection.isMain && nv.connection == null)
-                            {
-                                nv.connection = new NodeConnection(nv, editingNodeConnection, this);
-                            }
-                            else
-                            {
 
+                                }
                             }
 
                             //editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
                         }
+                        else if(nv == null && editingNodeConnection != null && editingNodeConnection.connection != null)
+                        {
+                            editingNodeConnection.connection.RemoveChild();
+                            editingNodeConnection.connection = null;
+                        }
 
                         dragConnection = null;
                         editingNodeConnection = null;
+                        processingConnection = null;
                     }
                 }
 
