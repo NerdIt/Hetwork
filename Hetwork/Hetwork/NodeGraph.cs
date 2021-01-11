@@ -295,17 +295,37 @@ namespace Hetwork
                     }
 
                     var c1 = ncs.LastOrDefault(x => x.isHoverArea);
-
+                    
                     
                     if (c1 != null)
                     {
+                        //NodeVisual editFrom = c1.GetClosestPoint(e.Location);
+
+
+
+                        
                         editingNodeConnection = c1.n1;
                         c1.isSelected = true;
                         editingNodeConnection.connection.RemoveChild();
                         editingNodeConnection.connection = null;
-                        editingNodeConnection = c1.n1;
-                        dragConnection = new DragConnection(c1.n1.GetConnectionLocation(new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y)), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
-                        //originalConnectionPos = e.Location;
+                        if (c1.GetClosestPoint(e.Location) == c1.n1)
+                        {
+                            
+                            dragConnection = new DragConnection(editingNodeConnection.GetConnectionLocation(new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y)), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
+                        }
+                        else
+                        {
+                            
+                            editingNodeConnection = null;
+                            dragConnection = null;
+                        }
+
+                        
+
+                        
+                                                
+
+
                     }
                 }
 
@@ -313,48 +333,7 @@ namespace Hetwork
 
 
 
-                //NodeVisual n3 = nodes.LastOrDefault(x => x.isHoveringNewNode && x.GetType() != Type.GetType("Hetwork.FolderNode"));
-                //if(n3 != null)
-                //{
-                //    editingConnection = new DragConnection(n3.GetConnectionLocation(new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y)), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
-                //    editingNodeConnection = n3;
-                //}
 
-                //n3 = nodes.LastOrDefault(x => x.isHoveringNewNode && x.GetType() == Type.GetType("Hetwork.FolderNode"));
-                //if (n3 != null && editingConnection == null)
-                //{
-                //    editingConnection = new DragConnection(n3.GetConnectionLocation(new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y)), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
-                //    editingNodeConnection = n3;
-                //}
-
-
-                //if (n3 == null && nv == null)
-                //{
-
-
-                //    List<NodeConnection> ncs = new List<NodeConnection>();
-
-                //    foreach (NodeVisual v in nodes)
-                //    {
-
-                //        if (v.connection != null)
-                //        {
-                //            v.connection.isSelected = false;
-                //            ncs.Add(v.connection);
-                //        }
-                //    }
-
-                //    var c1 = ncs.LastOrDefault(x => x.isHoverArea);
-
-                //    if(c1 != null)
-                //    {
-                //        c1.isSelected = true;
-                //        editingExistingConnection = true;
-                //        editingNodeConnection = c1.n1;
-                //        editingConnection = new DragConnection(c1.n1.GetConnectionLocation(new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y)), new Point(e.Location.X - graphOffset.X, e.Location.Y - graphOffset.Y), this);
-                //        originalConnectionPos = e.Location;
-                //    }
-                //}
 
 
             }
@@ -388,7 +367,7 @@ namespace Hetwork
                     {
                         NodeVisual nv = nodes.LastOrDefault(x => x.IsWithinRect(e.Location) || x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 22.5f));
 
-                        if (nv != null)
+                        if (nv != null && nv != editingNodeConnection)
                         {
                             //Node Senarios
                             if (editingNodeConnection.GetType() == Type.GetType("Hetwork.FolderNode") && nv.GetType() != Type.GetType("Hetwork.FolderNode"))
@@ -412,6 +391,10 @@ namespace Hetwork
                             {
                                 editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
                             }
+                            else if(editingNodeConnection.isMain && nv.connection == null)
+                            {
+                                nv.connection = new NodeConnection(nv, editingNodeConnection, this);
+                            }
                             else
                             {
 
@@ -423,56 +406,6 @@ namespace Hetwork
                         dragConnection = null;
                         editingNodeConnection = null;
                     }
-
-
-                    //NodeVisual nv = nodes.FirstOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 22.5) && x.GetType() == Type.GetType("Hetwork.FolderNode") && !editingNodeConnection.isMain);
-                    //if (nv != null && !editingExistingConnection)
-                    //{
-
-                    //    if (editingNodeConnection.connection != null && editingNodeConnection.connection.n2.children.Contains(editingNodeConnection))
-                    //        editingNodeConnection.connection.n2.children.Remove(editingNodeConnection);
-                    //    nv.children.Add(editingNodeConnection);                        
-                    //    editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
-                    //}
-
-                    //if (nv == null)
-                    //{
-                    //    nv = nodes.FirstOrDefault(x => x.IsWithinRect(e.Location) && x.GetType() != Type.GetType("Hetwork.FolderNode") && editingNodeConnection.GetType() == Type.GetType("Hetwork.FolderNode") || editingNodeConnection.isMain);
-                    //    if (nv != null && !editingExistingConnection)
-                    //    {
-                    //        if (nv.connection != null && nv.connection.n2.children.Contains(nv))
-                    //        {
-                    //            nv.connection.n2.children.Remove(nv);
-                    //        }
-                    //        if (editingNodeConnection.children.Contains(nv))
-                    //            editingNodeConnection.children.Remove(nv);
-                    //        editingNodeConnection.children.Add(nv);
-                    //        nv.connection = new NodeConnection(nv, editingNodeConnection, this);
-                    //    }
-                    //}
-
-                    //if (editingExistingConnection && nv != null)
-                    //{
-                    //    if (Distance(originalConnectionPos, e.Location) > 5)
-                    //    {
-                    //        if (editingNodeConnection.connection != null && editingNodeConnection.connection.n2.children.Contains(editingNodeConnection))
-                    //            editingNodeConnection.connection.n2.children.Remove(editingNodeConnection);
-                    //        editingNodeConnection.connection = null;
-                    //        editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
-
-                    //    }
-                    //}
-                    //else if(editingExistingConnection && nv == null)
-                    //{
-                    //    if (editingNodeConnection.connection != null && editingNodeConnection.connection.n2.children.Contains(editingNodeConnection))
-                    //        editingNodeConnection.connection.n2.children.Remove(editingNodeConnection);
-                    //    editingNodeConnection.connection = null;
-                    //}
-
-                    //if(editingNodeConnection.connection != null)
-                    //{
-
-                    //} 
                 }
 
                 editingNodeConnection = null;
@@ -565,13 +498,6 @@ namespace Hetwork
                     
                     n2.isHoveringNewNode = true;
                 }
-
-
-                //if (n2.IsWithinCircle(new Point(n2.connectionGrabPoint.X - 3, n2.connectionGrabPoint.Y - 3), e.Location, 500))
-                //{
-                //    Debug.WriteLine("Debug");
-                //    n2.isSelectingNewNode = true;
-                //}
             }
 
             n2 = nodes.LastOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 45 / 2 + 18) && x.GetType() == Type.GetType("Hetwork.FolderNode"));

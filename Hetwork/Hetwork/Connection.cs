@@ -146,9 +146,11 @@ namespace Hetwork
             }
             else if(isHoverArea && !isSelected)
             {
+                g.DrawLine(new Pen(color, 2.5f * zoom), new Point((int)((point1.X + offset.X) * zoom), (int)((point1.Y + offset.Y) * zoom)), new Point((int)((point2.X + offset.X) * zoom), (int)((point2.Y + offset.Y) * zoom)));
+
                 try
                 {
-                    g.FillEllipse(new SolidBrush(color), new Rectangle(new Point((int)((point1.X - 5f + offset.X) * zoom), (int)((point1.Y - 5f + offset.Y) * zoom)), new Size((int)(10 * zoom), (int)(10 * zoom))));
+                    g.FillEllipse(new SolidBrush(Color.FromArgb(255, 255, 131, 122)), new Rectangle(new Point((int)((point1.X - 5f + offset.X) * zoom), (int)((point1.Y - 5f + offset.Y) * zoom)), new Size((int)(10 * zoom), (int)(10 * zoom))));
 
                     g.FillEllipse(new SolidBrush(color), new Rectangle(new Point((int)((point2.X - 5f + offset.X) * zoom), (int)((point2.Y - 5f + offset.Y) * zoom)), new Size((int)(10 * zoom), (int)(10 * zoom))));
                 }
@@ -156,8 +158,7 @@ namespace Hetwork
                 {
 
                 }
-                g.DrawLine(new Pen(color, 2.5f * zoom), new Point((int)((point1.X + offset.X) * zoom), (int)((point1.Y + offset.Y) * zoom)), new Point((int)((point2.X + offset.X) * zoom), (int)((point2.Y + offset.Y) * zoom)));
-            }
+                            }
             else
             {
                 //try
@@ -191,6 +192,20 @@ namespace Hetwork
                 return true;
 
             return false;
+        }
+
+        public NodeVisual GetClosestPoint(Point p)
+        {
+            Point offset = nodeGraph.graphOffset;
+
+            if (Distance(new Point(point1.X - offset.X, point1.Y - offset.Y), p) > Distance(new Point(point2.X - offset.X, point2.Y - offset.Y), p))
+            {
+                return n1;
+            }
+            else
+            {
+                return n2;
+            }
         }
     }
 
