@@ -31,6 +31,8 @@ namespace Hetwork
 
         public float textSize = 1;
 
+        public NodeVisual selectedNode;
+
         public NodeGraph()
         {
             InitializeComponent();
@@ -113,15 +115,12 @@ namespace Hetwork
                 aX += nodes[i].GetRelativePosition().X;
                 aY += nodes[i].GetRelativePosition().Y;
             }
-            try
-            {
+            if(nodes.Count > 0)
+            { 
                 aX /= nodes.Count;
                 aY /= nodes.Count;
             }
-            catch
-            {
 
-            }
             averagePoint = new Point(aX, aY);
             //Debug.WriteLine(averagePoint);
             StringFormat sf = new StringFormat();
@@ -296,6 +295,12 @@ namespace Hetwork
                     }
                     if(shouldClear)
                         selectedNodes.Clear();
+                }
+
+                if(selectedNodes.Count > 0)
+                {
+                    selectedNode = selectedNodes[0];
+                    NodeSelected_Event(this, e);
                 }
 
                 #endregion
@@ -744,6 +749,22 @@ namespace Hetwork
 
 
         }
+
+
+        #region Events
+        [Browsable(true)]
+        [Category("NodeGraph Action")]
+        [Description("Invoked when node selection changes")]
+        public event EventHandler NodeSelected;
+        NodeVisual oldSelectedNode = null;
+        public void NodeSelected_Event(object sender, MouseEventArgs e)
+        {
+            if (NodeSelected != null)
+            {
+                NodeSelected(this, e);
+            }
+        }
+        #endregion
     }
 
     public class DraggingNode

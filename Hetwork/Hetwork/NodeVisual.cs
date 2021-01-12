@@ -164,31 +164,6 @@ namespace Hetwork
             g.DrawString(percText, stringFont, new SolidBrush(Color.FromArgb(255, 195, 195, 195)), new PointF((int)((X + offset.X) * zoom), (int)((Y + offset.Y) * zoom)), sf);
 
 
-            //string titleText = title;
-            //stringFont = new Font("Arial", 7 * zoom, FontStyle.Bold);
-            //stringSize = g.MeasureString(titleText, stringFont);
-            
-            //while (stringSize.Width > 45 && stringFont.Size > 1)
-            //{
-            //    stringSize = g.MeasureString(titleText, stringFont);
-            //    Debug.WriteLine(stringSize.Width.ToString());
-            //    stringFont = new Font("Arial", stringFont.Size - 1);
-            //}
-            //if(stringSize.Width > 45)
-            //{
-            //    string newStr = "";
-            //    for(int i = 0; i < 10 && i < titleText.Length; i++)
-            //    {
-            //        newStr += titleText[i];
-            //    }
-            //    newStr += "...";
-            //    titleText = newStr;
-            //}
-
-            //sf = new StringFormat();
-            //sf.LineAlignment = StringAlignment.Center;
-            //sf.Alignment = StringAlignment.Center;
-            //g.DrawString(titleText, stringFont, new SolidBrush(Color.FromArgb(255, 195, 195, 195)), new PointF((int)((X + offset.X) * zoom), (int)((Y - 10 + offset.Y) * zoom)), sf);
 
             //  DRAW FULL NAME AND BORDER ON HOVER AREA
             if (isHover && !isSelected)
