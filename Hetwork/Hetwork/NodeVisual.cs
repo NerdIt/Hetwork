@@ -283,6 +283,8 @@ namespace Hetwork
     public class SingularTaskNode : NodeVisual
     {
 
+        public SingularTask taskElement;
+
 
         public SingularTaskNode(string name, int x, int y, int width, int height, NodeGraph graphControl)
         {
@@ -444,14 +446,6 @@ namespace Hetwork
             return r.Contains(mouse);
         }
 
-        //public override bool IsWithinCircle(Point center, Point mouse, double radius)
-        //{
-        //    Point offset = nodeGraph.graphOffset;
-        //    float zoom = nodeGraph.graphZoom;
-        //    int diffX = (int)((center.X + offset.X) * zoom - (mouse.X));
-        //    int diffY = (int)((center.Y + offset.Y) * zoom - (mouse.Y));
-        //    return (diffX * diffX + diffY * diffY) <= radius * radius;
-        //}
 
         public int Clamp(int x, int lower, int upper)
         {
@@ -512,10 +506,9 @@ namespace Hetwork
 
     }
 
-
     public class ListTaskNode : NodeVisual
     {
-
+        public ListTask taskElement;
 
         public ListTaskNode(string name, int x, int y, int width, int height, NodeGraph graphControl)
         {
@@ -677,14 +670,7 @@ namespace Hetwork
             return r.Contains(mouse);
         }
 
-        //public override bool IsWithinCircle(Point center, Point mouse, double radius)
-        //{
-        //    Point offset = nodeGraph.graphOffset;
-        //    float zoom = nodeGraph.graphZoom;
-        //    int diffX = (int)((center.X + offset.X) * zoom - (mouse.X));
-        //    int diffY = (int)((center.Y + offset.Y) * zoom - (mouse.Y));
-        //    return (diffX * diffX + diffY * diffY) <= radius * radius;
-        //}
+
 
         public int Clamp(int x, int lower, int upper)
         {

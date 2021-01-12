@@ -67,6 +67,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TaskElements.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

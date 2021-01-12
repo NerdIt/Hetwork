@@ -746,9 +746,6 @@ namespace Hetwork
         }
     }
 
-
-
-
     public class DraggingNode
     {
         public Point offset;
