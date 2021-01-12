@@ -11,6 +11,12 @@ namespace Hetwork
         public bool completed = false;
         public string taskTitle = "";
         public string taskContent = "";
+
+        public SingularTask(string name, string body)
+        {
+            taskTitle = name;
+            taskContent = body;
+        }
     }
 
     public class ListTask
@@ -18,6 +24,12 @@ namespace Hetwork
         public bool completed = false;
         public string taskTitle = "";
         public List<SingularTask> elements = new List<SingularTask>();
+
+        public ListTask(string name, List<SingularTask> items)
+        {
+            taskTitle = name;
+            elements.AddRange(items);
+        }
     }
 
 

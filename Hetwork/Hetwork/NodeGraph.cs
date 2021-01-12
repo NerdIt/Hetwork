@@ -77,12 +77,16 @@ namespace Hetwork
 
         public void AddTask(object sender, System.EventArgs e)
         {
-            nodes.Add(new SingularTaskNode("New Task", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 100, 35, this));
+            var n = new SingularTaskNode("New Task", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 100, 35, this);
+            n.taskElement = new SingularTask(n.title, "");
+            nodes.Add(n);
         }
 
         public void AddList(object sender, System.EventArgs e)
         {
-            nodes.Add(new ListTaskNode("New List", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 100, 35, this));
+            var n = new ListTaskNode("New List", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 100, 35, this);
+            n.taskElement = new ListTask(n.title, new List<SingularTask>());
+            nodes.Add(n);
         }
         #endregion
 

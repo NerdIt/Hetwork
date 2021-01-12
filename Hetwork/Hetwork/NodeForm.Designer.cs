@@ -35,13 +35,11 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.propertiesTable = new System.Windows.Forms.TableLayoutPanel();
             this.nodeTitleLabel = new System.Windows.Forms.Label();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.nodeActions = new System.Windows.Forms.ListView();
+            this.contentDisplayPanel = new System.Windows.Forms.Panel();
             this.primaryTable.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.propertiesTable.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // primaryTable
@@ -95,8 +93,8 @@
             this.propertiesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.propertiesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.propertiesTable.Controls.Add(this.nodeTitleLabel, 0, 0);
-            this.propertiesTable.Controls.Add(this.listView1, 0, 2);
-            this.propertiesTable.Controls.Add(this.panel1, 0, 1);
+            this.propertiesTable.Controls.Add(this.nodeActions, 0, 2);
+            this.propertiesTable.Controls.Add(this.contentDisplayPanel, 0, 1);
             this.propertiesTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertiesTable.Location = new System.Drawing.Point(17, 3);
             this.propertiesTable.Name = "propertiesTable";
@@ -123,39 +121,27 @@
             this.nodeTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.nodeTitleLabel.TextChanged += new System.EventHandler(this.nodeTitleLabel_TextChanged);
             // 
-            // listView1
+            // nodeActions
             // 
-            this.listView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(3, 258);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(91, 177);
-            this.listView1.TabIndex = 2;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.nodeActions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.nodeActions.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.nodeActions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nodeActions.HideSelection = false;
+            this.nodeActions.Location = new System.Drawing.Point(3, 258);
+            this.nodeActions.Name = "nodeActions";
+            this.nodeActions.Size = new System.Drawing.Size(91, 177);
+            this.nodeActions.TabIndex = 2;
+            this.nodeActions.UseCompatibleStateImageBehavior = false;
             // 
-            // panel1
+            // contentDisplayPanel
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.richTextBox1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 19);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(91, 233);
-            this.panel1.TabIndex = 3;
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Location = new System.Drawing.Point(0, 0);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(89, 231);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
+            this.contentDisplayPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.contentDisplayPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.contentDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.contentDisplayPanel.Location = new System.Drawing.Point(3, 19);
+            this.contentDisplayPanel.Name = "contentDisplayPanel";
+            this.contentDisplayPanel.Size = new System.Drawing.Size(91, 233);
+            this.contentDisplayPanel.TabIndex = 3;
             // 
             // NodeForm
             // 
@@ -170,7 +156,6 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.propertiesTable.ResumeLayout(false);
             this.propertiesTable.PerformLayout();
-            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -181,8 +166,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel propertiesTable;
         private System.Windows.Forms.Label nodeTitleLabel;
-        private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.ListView nodeActions;
+        private System.Windows.Forms.Panel contentDisplayPanel;
     }
 }

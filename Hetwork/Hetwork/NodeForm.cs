@@ -52,5 +52,23 @@ namespace Hetwork
             lab.Font = new Font(lab.Font.FontFamily, newSize, lab.Font.Style);
         }
 
+
+        public void SetDisplayType(object task)
+        {
+            if(task.GetType() == Type.GetType("Hetwork.SingularTask"))
+            {
+                contentDisplayPanel.Controls
+            }
+            else if(task.GetType() == Type.GetType("Hetwork.ListTask"))
+            {
+
+            }
+        }
+
+        public RichTextBox TextContent()
+        {
+            
+        }
+
     }
 }
