@@ -25,6 +25,8 @@ namespace Hetwork
         public bool isHoverArea = false;
         public bool isSelected = false;
 
+        
+
         public NodeConnection(NodeVisual node1, NodeVisual node2, NodeGraph ng)
         {
             n1 = node1;
@@ -197,10 +199,9 @@ namespace Hetwork
         public NodeVisual GetClosestPoint(Point p)
         {
             Point offset = nodeGraph.graphOffset;
-            Debug.WriteLine(Distance(new Point(point1.X - offset.X, point1.Y - offset.Y), p));
-            Debug.WriteLine(Distance(new Point(point2.X - offset.X, point2.Y - offset.Y), p));
 
-            if (Distance(new Point(point1.X - offset.X, point1.Y - offset.Y), p) < Distance(new Point(point2.X - offset.X, point2.Y - offset.Y), p))
+
+            if (Distance(new Point(point1.X + offset.X, point1.Y + offset.Y), p) < Distance(new Point(point2.X + offset.X, point2.Y + offset.Y), p))
             {
                 return n1;
             }
