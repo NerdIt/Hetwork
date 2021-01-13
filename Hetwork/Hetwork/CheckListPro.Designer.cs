@@ -38,6 +38,11 @@
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.Name = "CheckListPro";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Paint_Object);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CheckListPro_MouseDown);
+            this.MouseLeave += new System.EventHandler(this.CheckListPro_MouseLeave);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CheckListPro_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CheckListPro_MouseUp);
+            this.Resize += new System.EventHandler(this.CheckListPro_Resize);
             this.ResumeLayout(false);
 
         }

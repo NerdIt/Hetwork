@@ -33,12 +33,28 @@
             // 
             // checkListPro1
             // 
+            this.checkListPro1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.checkListPro1.AutoScroll = true;
             this.checkListPro1.BackColor = System.Drawing.Color.Gainsboro;
+            this.checkListPro1.BorderColor = System.Drawing.Color.Black;
+            this.checkListPro1.BorderWidth = 0.5F;
+            this.checkListPro1.CheckColor = System.Drawing.Color.White;
+            this.checkListPro1.ElementColor = System.Drawing.Color.Gray;
+            this.checkListPro1.ElementDistance = 3;
+            this.checkListPro1.HorizontalPadding = 3;
+            this.checkListPro1.HoverCheckColor = System.Drawing.Color.LightGray;
+            this.checkListPro1.HoverColor = System.Drawing.Color.LightGray;
+            this.checkListPro1.IsCheckedColor = System.Drawing.Color.Gray;
             this.checkListPro1.Location = new System.Drawing.Point(12, 12);
             this.checkListPro1.Name = "checkListPro1";
-            this.checkListPro1.Size = new System.Drawing.Size(150, 59);
+            this.checkListPro1.ScrollSensitivity = 5;
+            this.checkListPro1.Size = new System.Drawing.Size(150, 326);
             this.checkListPro1.TabIndex = 0;
+            this.checkListPro1.TextColor = System.Drawing.Color.Black;
+            this.checkListPro1.TextFont = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkListPro1.UseItemBorders = true;
             // 
             // CHECKLISTPRO_FORMTEST
             // 

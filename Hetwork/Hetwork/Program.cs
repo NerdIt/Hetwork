@@ -11,8 +11,8 @@ namespace Hetwork
     {
         static void Main(string[] args)
         {
-            //Application.Run(new NodeForm());
-            Application.Run(new CHECKLISTPRO_FORMTEST());
+            Application.Run(new NodeForm());
+            //Application.Run(new CHECKLISTPRO_FORMTEST());
         }
     }
 }

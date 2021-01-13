@@ -50,19 +50,23 @@ namespace Hetwork
                     try
                     {
                         SetDisplayType((mainGraph.selectedNode as ListTaskNode).taskElement);
-                        List<string> items = new List<string>();
+                        List<CheckedItemPro> items = new List<CheckedItemPro>();
                         ListTask lt = (mainGraph.selectedNode as ListTaskNode).taskElement;
                         for(int i = 0; i < lt.elements.Count; i++)
                         {
-                            items.Add(lt.elements[i].taskContent);
+                            items.Add(new CheckedItemPro(lt.elements[i].completed, lt.elements[i].taskContent));
                         }
 
-                        (contentDisplayPanel.Controls[0] as CheckedListBox).Items.AddRange(items.ToArray());
+                        (contentDisplayPanel.Controls[0] as CheckListPro).Items.AddRange(items);
                     }
                     catch
                     {
 
                     }
+                }
+                else
+                {
+                    contentDisplayPanel.Controls.Clear();
                 }
                 
 
@@ -118,15 +122,17 @@ namespace Hetwork
             return rtb;
         }
 
-        public CheckedListBox ListContent()
+        public CheckListPro ListContent()
         {
-            CheckedListBox clb = new CheckedListBox();
+            CheckListPro clp = new CheckListPro();
 
-            clb.Dock = DockStyle.Fill;
-            clb.BackColor = Color.FromArgb(255, 230, 230, 230);
-            clb.BorderStyle = BorderStyle.None;
+            clp.Dock = DockStyle.Fill;
+            clp.BackColor = Color.FromArgb(255, 230, 230, 230);
+            clp.BorderStyle = BorderStyle.None;
+            clp.ElementColor = Color.FromArgb(255, 230, 230, 230);
+            clp.UseItemBorders = false;
 
-            return clb;
+            return clp;
         }
 
     }
