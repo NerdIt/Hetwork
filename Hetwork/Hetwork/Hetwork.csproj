@@ -46,6 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CheckListPro.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CheckListPro.Designer.cs">
+      <DependentUpon>CheckListPro.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CHECKLISTPRO_FORMTEST.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CHECKLISTPRO_FORMTEST.Designer.cs">
+      <DependentUpon>CHECKLISTPRO_FORMTEST.cs</DependentUpon>
+    </Compile>
     <Compile Include="Connection.cs" />
     <Compile Include="NodeForm.cs">
       <SubType>Form</SubType>
@@ -73,6 +85,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CheckListPro.resx">
+      <DependentUpon>CheckListPro.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CHECKLISTPRO_FORMTEST.resx">
+      <DependentUpon>CHECKLISTPRO_FORMTEST.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="NodeForm.resx">
       <DependentUpon>NodeForm.cs</DependentUpon>
     </EmbeddedResource>

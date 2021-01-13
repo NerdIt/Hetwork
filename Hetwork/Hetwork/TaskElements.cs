@@ -16,6 +16,7 @@ namespace Hetwork
         {
             taskTitle = name;
             taskContent = body;
+            taskContent = "debug rich";
         }
     }
 
@@ -29,6 +30,8 @@ namespace Hetwork
         {
             taskTitle = name;
             elements.AddRange(items);
+            elements.Add(new SingularTask("test", "debug"));
+            elements.Add(new SingularTask("test", "debug x2"));
         }
     }
 
