@@ -13,6 +13,7 @@ namespace Hetwork
         {
             Application.Run(new NodeForm());
             //Application.Run(new CHECKLISTPRO_FORMTEST());
+            //Application.Run(new EditorForm());
         }
     }
 }

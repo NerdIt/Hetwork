@@ -37,8 +37,10 @@
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.Name = "NodeGraph";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintControl);
+            this.Enter += new System.EventHandler(this.NodeGraph_Enter);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NodeGraph_KeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NodeGraph_KeyPress);
+            this.Leave += new System.EventHandler(this.NodeGraph_Leave);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.NodeGraph_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.NodeGraph_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.NodeGraph_MouseUp);

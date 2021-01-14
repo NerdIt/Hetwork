@@ -16,7 +16,13 @@ namespace Hetwork
         {
             taskTitle = name;
             taskContent = body;
-            taskContent = "debug rich";
+        }
+
+        public SingularTask(string name, string body, bool completionStatus)
+        {
+            taskTitle = name;
+            taskContent = body;
+            completed = completionStatus;
         }
     }
 

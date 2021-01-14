@@ -31,12 +31,12 @@
         private void InitializeComponent()
         {
             this.primaryTable = new System.Windows.Forms.TableLayoutPanel();
-            this.mainGraph = new Hetwork.NodeGraph();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.propertiesTable = new System.Windows.Forms.TableLayoutPanel();
             this.nodeTitleLabel = new System.Windows.Forms.Label();
             this.nodeActions = new System.Windows.Forms.ListView();
             this.contentDisplayPanel = new System.Windows.Forms.Panel();
+            this.mainGraph = new Hetwork.NodeGraph();
             this.primaryTable.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.propertiesTable.SuspendLayout();
@@ -57,21 +57,7 @@
             this.primaryTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 450F));
             this.primaryTable.Size = new System.Drawing.Size(800, 450);
             this.primaryTable.TabIndex = 1;
-            // 
-            // mainGraph
-            // 
-            this.mainGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.mainGraph.BackColor = System.Drawing.Color.White;
-            this.mainGraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.mainGraph.ForeColor = System.Drawing.Color.Black;
-            this.mainGraph.Location = new System.Drawing.Point(3, 3);
-            this.mainGraph.Name = "mainGraph";
-            this.mainGraph.Size = new System.Drawing.Size(671, 444);
-            this.mainGraph.TabIndex = 0;
-            this.mainGraph.NodeSelected += new System.EventHandler(this.nodeGraph1_NodeSelected);
-            this.mainGraph.Load += new System.EventHandler(this.nodeGraph1_Load);
+            this.primaryTable.Paint += new System.Windows.Forms.PaintEventHandler(this.primaryTable_Paint);
             // 
             // tableLayoutPanel1
             // 
@@ -111,7 +97,7 @@
             this.nodeTitleLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.nodeTitleLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.nodeTitleLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.nodeTitleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nodeTitleLabel.Font = new System.Drawing.Font("Comic Sans MS", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.nodeTitleLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.nodeTitleLabel.Location = new System.Drawing.Point(3, 0);
             this.nodeTitleLabel.Name = "nodeTitleLabel";
@@ -142,6 +128,21 @@
             this.contentDisplayPanel.Name = "contentDisplayPanel";
             this.contentDisplayPanel.Size = new System.Drawing.Size(91, 233);
             this.contentDisplayPanel.TabIndex = 3;
+            // 
+            // mainGraph
+            // 
+            this.mainGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mainGraph.BackColor = System.Drawing.Color.White;
+            this.mainGraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mainGraph.ForeColor = System.Drawing.Color.Black;
+            this.mainGraph.Location = new System.Drawing.Point(3, 3);
+            this.mainGraph.Name = "mainGraph";
+            this.mainGraph.Size = new System.Drawing.Size(671, 444);
+            this.mainGraph.TabIndex = 0;
+            this.mainGraph.NodeSelected += new System.EventHandler(this.nodeGraph1_NodeSelected);
+            this.mainGraph.Load += new System.EventHandler(this.nodeGraph1_Load);
             // 
             // NodeForm
             // 

@@ -38,7 +38,8 @@ namespace Hetwork
         private Font textFont = new Font("Arial", 8);
         private Color textColor = Color.Black;
         private Color isCheckColor = Color.Gray;
-
+        private Color selectedColor = Color.DarkGray;
+        private bool useCheckBox = true;
 
         private int fontHeight
         {
@@ -53,19 +54,17 @@ namespace Hetwork
         {
             get
             {
-               
                 return Items.Count * (fontHeight + elementDistance) - Height;
-
             }
         }
 
         private int scrollSensitivity = 5;
+        private Form parentForm;
 
-
-        public CheckListPro()
+        public CheckListPro(Form _form)
         {
             InitializeComponent();
-
+            parentForm = _form;
             DoubleBuffered = true;
             timer.Interval = 30;
             timer.Tick += TimerOnTick;
@@ -95,7 +94,11 @@ namespace Hetwork
             {
 
                 //  DRAW BACKGROUND
-                if (hoverId != i)
+                if (selectetedItem == i)
+                {
+                    g.FillRectangle(new SolidBrush(selectedColor), new Rectangle(new Point(horizontalPadding, ((int)fontHeight + elementDistance) * i - yOffset), new Size(Width - horizontalPadding * 2, fontHeight)));
+                }
+                else if (hoverId != i)
                 {
                     g.FillRectangle(new SolidBrush(elementColor), new Rectangle(new Point(horizontalPadding, ((int)fontHeight + elementDistance) * i - yOffset), new Size(Width - horizontalPadding * 2, fontHeight)));
                 }
@@ -108,22 +111,26 @@ namespace Hetwork
                     g.DrawRectangle(new Pen(borderColor, borderWidth), new Rectangle(new Point(horizontalPadding, ((int)fontHeight + elementDistance) * i - yOffset), new Size(Width - 1 - horizontalPadding * 2, fontHeight)));
 
                 //  DRAW CHECK BACKGROUND
-                if (i != hoverCheckId)
+                if (useCheckBox)
                 {
-                    g.FillRectangle(new SolidBrush(checkColor), new Rectangle(new Point(1 + horizontalPadding, ((int)fontHeight + elementDistance) * i - yOffset + 1), new Size(fontHeight - 2, fontHeight - 2)));
-                }
-                else
-                {
-                    g.FillRectangle(new SolidBrush(hoverCheckColor), new Rectangle(new Point(1 + horizontalPadding, ((int)fontHeight + elementDistance) * i - yOffset + 1), new Size(fontHeight - 2, fontHeight - 2)));
-                }
+                    if (i != hoverCheckId)
+                    {
+                        g.FillRectangle(new SolidBrush(checkColor), new Rectangle(new Point(1 + horizontalPadding, ((int)fontHeight + elementDistance) * i - yOffset + 1), new Size(fontHeight - 2, fontHeight - 2)));
+                    }
+                    else
+                    {
+                        g.FillRectangle(new SolidBrush(hoverCheckColor), new Rectangle(new Point(1 + horizontalPadding, ((int)fontHeight + elementDistance) * i - yOffset + 1), new Size(fontHeight - 2, fontHeight - 2)));
+                    }
 
-                if (Items[i].check)
-                {
-                    g.FillEllipse(new SolidBrush(isCheckColor), new Rectangle(new Point(1 + horizontalPadding + 2, ((int)fontHeight + elementDistance) * i - yOffset + 1 + 2), new Size(fontHeight - 2 - 4, fontHeight - 2 - 4)));
-                }
+                    if (Items[i].check)
+                    {
+                        g.FillEllipse(new SolidBrush(isCheckColor), new Rectangle(new Point(1 + horizontalPadding + 2, ((int)fontHeight + elementDistance) * i - yOffset + 1 + 2), new Size(fontHeight - 2 - 4, fontHeight - 2 - 4)));
+                    }
 
-                //  DRAW CHECK BORDER
-                g.DrawRectangle(new Pen(borderColor, 0.5f), new Rectangle(new Point(1 + horizontalPadding, ((int)fontHeight + elementDistance) * i - yOffset + 1), new Size(fontHeight - 2, fontHeight - 2)));
+                    //  DRAW CHECK BORDER
+
+                    g.DrawRectangle(new Pen(borderColor, 0.5f), new Rectangle(new Point(1 + horizontalPadding, ((int)fontHeight + elementDistance) * i - yOffset + 1), new Size(fontHeight - 2, fontHeight - 2)));
+                }
 
                 //  DRAW TEXT
                 StringFormat sf = new StringFormat();
@@ -135,7 +142,7 @@ namespace Hetwork
                 {
                     int charIndex = 0;
                     newText = "";
-                    while(horizontalPadding + 14 + g.MeasureString(newText, textFont).Width < Width - horizontalPadding * 2 - 10 + 5 && charIndex < Items[i].name.Length)
+                    while (horizontalPadding + 14 + g.MeasureString(newText, textFont).Width < Width - horizontalPadding * 2 - 10 + 5 && charIndex < Items[i].name.Length)
                     {
                         newText += Items[i].name[charIndex];
                         charIndex++;
@@ -179,16 +186,32 @@ namespace Hetwork
             Invalidate();
         }
 
+        private bool leftMouseDown = false;
+
+
 
         private void CheckListPro_MouseDown(object sender, MouseEventArgs e)
         {
-            if(GetCheckByRect(e.Location) != -1 && hoverCheckId != -1 && Items.Count > hoverCheckId)
+            if (e.Button == MouseButtons.Left)
             {
-                Items[hoverCheckId].check = !Items[hoverCheckId].check;
+                Cursor.Current = Cursors.SizeAll;
+                leftMouseDown = true;
+
+                if (GetCheckByRect(e.Location) != -1 && hoverCheckId != -1 && Items.Count > hoverCheckId)
+                {
+                    Items[hoverCheckId].check = !Items[hoverCheckId].check;
+                }
+
+                if (GetItemByRect(e.Location) != -1 && hoverId != -1 && Items.Count > hoverId)
+                {
+                    selectetedItem = hoverId;
+                }
             }
 
             needRepaint = true;
         }
+
+        
 
         private void CheckListPro_MouseMove(object sender, MouseEventArgs e)
         {
@@ -196,22 +219,67 @@ namespace Hetwork
             hoverCheckId = -1;
 
             hoverId = GetItemByRect(e.Location);
-            if(hoverId == -1)
+            if(hoverId != -1)
+            {
+                int scounter = 0;
+                int ccounter = 0;
+                string text = "";
+                for(int i = 0; i < Items[hoverId].details.Length; i++)
+                {
+                    if(Items[hoverId].details[i] == ' ')
+                    {
+                        scounter++;
+                    }
+
+                    text += Items[hoverId].details[i];
+
+                    if (scounter >= 4)
+                    {
+                        text += "\n";
+                        scounter = 0;
+                        ccounter = i;
+                    }
+                    else if(i == ccounter + 30)
+                    {
+                        ccounter = i;
+                        text += "\n";
+                    }
+                }
+                    
+                    
+                toolTip1.SetToolTip(this, text);
+            }
+
+            if (hoverId == -1 && useCheckBox)
             {
                 hoverCheckId = GetCheckByRect(e.Location);
-            }    
+            }
+
+
+            if(leftMouseDown)
+            {
+                Cursor.Current = Cursors.SizeAll;
+            }
+            else
+            {
+                Cursor.Current = Cursors.Default;
+            }
+
+            
+
             needRepaint = true;
         }
 
         private int hoverId = -1;
         private int hoverCheckId = -1;
 
+        public int selectetedItem = -1;
 
         int GetItemByRect(Point p)
         {
-            for(int i = 0; i < Items.Count; i++)
+            for (int i = 0; i < Items.Count; i++)
             {
-                if(new Rectangle(new Point(horizontalPadding + 1 + fontHeight - 2, ((int)fontHeight + elementDistance) * i - yOffset), new Size(Width - horizontalPadding * 2 - (1 + fontHeight - 2), fontHeight)).Contains(p))
+                if (new Rectangle(new Point(horizontalPadding + 1 + fontHeight - 2, ((int)fontHeight + elementDistance) * i - yOffset), new Size(Width - horizontalPadding * 2 - (1 + fontHeight - 2), fontHeight)).Contains(p))
                 {
                     return i;
                 }
@@ -221,9 +289,9 @@ namespace Hetwork
 
         int GetCheckByRect(Point p)
         {
-            for(int i = 0; i < Items.Count; i++)
+            for (int i = 0; i < Items.Count; i++)
             {
-                if(new Rectangle(new Point(1 + horizontalPadding, ((int)fontHeight + elementDistance) * i - yOffset + 1), new Size(fontHeight - 2, fontHeight - 2)).Contains(p))
+                if (new Rectangle(new Point(1 + horizontalPadding, ((int)fontHeight + elementDistance) * i - yOffset + 1), new Size(fontHeight - 2, fontHeight - 2)).Contains(p))
                 {
                     return i;
                 }
@@ -235,8 +303,18 @@ namespace Hetwork
 
         private void CheckListPro_MouseUp(object sender, MouseEventArgs e)
         {
+            leftMouseDown = false;
 
+            if (e.Button == MouseButtons.Left)
+            {
+                if (hoverId != -1 && selectetedItem != hoverId)
+                {
+                    Items.Rearrange(selectetedItem, hoverId);
+                    selectetedItem = hoverId;
+                }
+            }
         }
+
 
         private void CheckListPro_MouseLeave(object sender, EventArgs e)
         {
@@ -437,6 +515,32 @@ namespace Hetwork
             }
         }
 
+        [Browsable(true), Category("Check List Pro"), Description("Item selected color")]
+        public Color SelectedColor
+        {
+            get
+            {
+                return selectedColor;
+            }
+            set
+            {
+                selectedColor = value;
+            }
+        }
+
+        [Browsable(true), Category("Check List Pro"), Description("Use Checkbox")]
+        public bool UseCheckbox
+        {
+            get
+            {
+                return useCheckBox;
+            }
+            set
+            {
+                useCheckBox = value;
+            }
+        }
+
 
         #endregion
 
@@ -448,10 +552,38 @@ namespace Hetwork
     {
         public bool check = false;
         public string name = "";
-        public CheckedItemPro(bool checkStatus, string nameDetail)
+        public string details = "";
+        public CheckedItemPro(bool checkStatus, string nameDetail, string detailString)
         {
             check = checkStatus;
             name = nameDetail;
+            details = detailString;
+        }
+    }
+
+
+    public static class ListExtensions
+    {
+        
+        public static void Rearrange<T>(this List<T> list, int index, int targetIndex)
+        {
+            T v = list[index];
+            list.RemoveAt(index);
+            list.Insert(targetIndex, v);
+        }
+
+        public static void SendToTop<T>(this List<T> list, int index, int targetIndex)
+        {
+            T v = list[index];
+            list.RemoveAt(index);
+            list.Insert(0, v);
+        }
+
+        public static void SendToBottom<T>(this List<T> list, int index, int targetIndex)
+        {
+            T v = list[index];
+            list.RemoveAt(index);
+            list.Insert(list.Count, v);
         }
     }
 }

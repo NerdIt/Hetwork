@@ -24,11 +24,13 @@ namespace Hetwork
         public float graphZoom = 1f;
         public List<NodeVisual> nodes = new List<NodeVisual>();
 
+        public float zoomFactor = 1;
+
 
         public List<NodeVisual> selectedNodes = new List<NodeVisual>();
 
         public string projectName = "Project Name";
-
+        private bool focused = true;
         public float textSize = 1;
 
         public NodeVisual selectedNode;
@@ -108,6 +110,7 @@ namespace Hetwork
             e.Graphics.InterpolationMode = InterpolationMode.Low;
             e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
 
+            e.Graphics.ScaleTransform(zoomFactor, zoomFactor);
 
 
             #region DrawTitle
@@ -304,8 +307,12 @@ namespace Hetwork
                 if(selectedNodes.Count > 0)
                 {
                     selectedNode = selectedNodes[0];
-                    NodeSelected_Event(this, e);
                 }
+                else
+                {
+                    selectedNode = null;
+                }
+                NodeSelected_Event(this, e);
 
                 #endregion
 
@@ -412,7 +419,7 @@ namespace Hetwork
 
                 if (editingNodeConnection != null)
                 {
-
+                    
                     if (dragConnection != null)
                     {
                         NodeVisual nv = nodes.LastOrDefault(x => x.IsWithinRect(e.Location) || x.IsWithinCircle(new Point(x.X, x.Y), e.Location, 22.5f));
@@ -428,6 +435,7 @@ namespace Hetwork
                                 {
                                     if (editingNodeConnection.connection != null)
                                     {
+                                        
                                         if (nv.connection == null)
                                         {
                                             nv.connection = new NodeConnection(nv, editingNodeConnection, this);
@@ -440,11 +448,13 @@ namespace Hetwork
                                     }
                                     else if(!editingNodeConnection.isMain)
                                     {
+                                        
                                         editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
                                     }
                                     else
                                     {
-                                        if(nv.connection != null)
+                                        
+                                        if (nv.connection != null)
                                             nv.connection.RemoveChild();
                                         nv.connection = new NodeConnection(nv, editingNodeConnection, this);
                                     }
@@ -509,8 +519,8 @@ namespace Hetwork
                         }
                         else if(nv == null && editingNodeConnection != null && editingNodeConnection.connection != null)
                         {
-                            editingNodeConnection.connection.RemoveChild();
-                            editingNodeConnection.connection = null;
+                            //processingConnection.n1.connection.RemoveChild();
+                            //editingNodeConnection.connection = null;
                         }
                         editingNodeConnection.isEditingConnection = false;
                         dragConnection = null;
@@ -705,6 +715,17 @@ namespace Hetwork
             //    needRepaint = true;
             //}
 
+            //if(e.KeyChar == '+')
+            //{
+            //    zoomFactor += 0.1f;
+            //}
+            //else if (e.KeyChar == '_')
+            //{
+            //    zoomFactor -= 0.1f;
+            //}
+
+            //needRepaint = true;
+
 
 
         }
@@ -722,7 +743,7 @@ namespace Hetwork
         private void NodeGraph_KeyDown(object sender, KeyEventArgs e)
         {
 
-            if (e.KeyCode == Keys.Delete)
+            if (e.KeyCode == Keys.Delete && focused)
             {
                 for (int i = 0; i < selectedNodes.Count; i++)
                 {
@@ -760,7 +781,6 @@ namespace Hetwork
         [Category("NodeGraph Action")]
         [Description("Invoked when node selection changes")]
         public event EventHandler NodeSelected;
-        NodeVisual oldSelectedNode = null;
         public void NodeSelected_Event(object sender, MouseEventArgs e)
         {
             if (NodeSelected != null)
@@ -769,6 +789,16 @@ namespace Hetwork
             }
         }
         #endregion
+
+        private void NodeGraph_Enter(object sender, EventArgs e)
+        {
+            focused = true;
+        }
+
+        private void NodeGraph_Leave(object sender, EventArgs e)
+        {
+            focused = false;
+        }
     }
 
     public class DraggingNode
