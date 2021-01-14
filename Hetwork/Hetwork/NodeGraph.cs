@@ -46,7 +46,7 @@ namespace Hetwork
             timer.Tick += TimerOnTick;
             timer.Start();
             DoubleBuffered = true;
-
+            MouseWheel += ScrollWheelEvent;
 
             PopulateNewMenu();
         }
@@ -94,6 +94,23 @@ namespace Hetwork
         }
         #endregion
 
+
+        public float scrollSensitivity = 0.1f;
+        public void ScrollWheelEvent(object sender, MouseEventArgs e)
+        {
+            if(e.Delta > 0 && zoomFactor < 1.5f)
+            {
+                zoomFactor += scrollSensitivity;
+            }
+            else if(e.Delta < 0 && zoomFactor > 0.5f)
+            {
+                zoomFactor -= scrollSensitivity;
+            }
+
+            needRepaint = true;
+                
+        }
+
         private void TimerOnTick(object sender, EventArgs eventArgs)
         {
             if (DesignMode) return;
@@ -109,15 +126,28 @@ namespace Hetwork
 
         public void PaintControl(object sender, PaintEventArgs e)
         {
-            
+            //  GRAPH OFFSET STRING
+            needRepaint = false;
+            if (middleMouseDown)
+            {
+                e.Graphics.DrawString($"{graphOffset.X},{graphOffset.Y}", new Font("Arial", 7 * textSize), new SolidBrush(Color.FromArgb(255, 195, 195, 195)), 0, 0);
+            }
+
+            if (editingNodeConnection != null)
+                dragConnection.Draw(e.Graphics);
+
+
+            //  GRAPH ZOOM STRING
+            StringFormat tsf = new StringFormat();
+            tsf.Alignment = StringAlignment.Far;
+            e.Graphics.DrawString($"{string.Format("{0:0.0}", (double)zoomFactor)}", new Font("Arial", 7 * textSize), new SolidBrush(Color.FromArgb(255, 195, 195, 195)), Width - 1, 0, tsf);
 
 
             e.Graphics.InterpolationMode = InterpolationMode.Low;
             e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
             e.Graphics.ScaleTransform(zoomFactor, zoomFactor);
-            Point[] pArray = new Point[1] { Cursor.Position };
-            e.Graphics.TransformPoints(CoordinateSpace.World, CoordinateSpace.Device, pArray);
-            CursorLocation = pArray[0];
+
+
 
             #region DrawTitle
             Point averagePoint;
@@ -167,23 +197,9 @@ namespace Hetwork
             #endregion
 
 
-            //  GRAPH OFFSET STRING
-            needRepaint = false;
-            if (middleMouseDown)
-            {
-                e.Graphics.DrawString($"{graphOffset.X},{graphOffset.Y}", new Font("Arial", 7 * textSize), new SolidBrush(Color.FromArgb(255, 195, 195, 195)), 0, 0);
-            }
             
-            if(editingNodeConnection != null)
-                dragConnection.Draw(e.Graphics);
 
 
-            ////  GRAPH ZOOM STRING
-            //sf = new StringFormat();
-            //sf.Alignment = StringAlignment.Far;
-            //e.Graphics.DrawString($"{string.Format("{0:0.0}", (double)graphZoom)}", new Font("Arial", 7 * textSize), new SolidBrush(Color.FromArgb(255, 195, 195, 195)), Width - 1, 0, sf);
-
-            e.Graphics.FillRectangle(new SolidBrush(Color.Red), new Rectangle(CursorLocation.X, CursorLocation.Y, 2, 2));
 
         }
 
@@ -555,6 +571,9 @@ namespace Hetwork
 
         private void NodeGraph_MouseMove(object sender, MouseEventArgs e)
         {
+            CursorLocation = new Point((int)(PointToClient(Cursor.Position).X / zoomFactor), (int)(PointToClient(Cursor.Position).Y / zoomFactor));
+
+
             var em = PointToScreen(CursorLocation);
             Point offset = new Point(em.X - cursorOffset.X, em.Y - cursorOffset.Y);
 
@@ -724,14 +743,14 @@ namespace Hetwork
             //    needRepaint = true;
             //}
 
-            if (e.KeyChar == '+')
-            {
-                zoomFactor += 0.1f;
-            }
-            else if (e.KeyChar == '_')
-            {
-                zoomFactor -= 0.1f;
-            }
+            //if (e.KeyChar == '+')
+            //{
+            //    zoomFactor += 0.1f;
+            //}
+            //else if (e.KeyChar == '_')
+            //{
+            //    zoomFactor -= 0.1f;
+            //}
 
             needRepaint = true;
 
