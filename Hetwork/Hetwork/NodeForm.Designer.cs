@@ -34,7 +34,6 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.propertiesTable = new System.Windows.Forms.TableLayoutPanel();
             this.nodeTitleLabel = new System.Windows.Forms.Label();
-            this.nodeActions = new System.Windows.Forms.ListView();
             this.contentDisplayPanel = new System.Windows.Forms.Panel();
             this.mainGraph = new Hetwork.NodeGraph();
             this.primaryTable.SuspendLayout();
@@ -77,17 +76,15 @@
             // 
             this.propertiesTable.ColumnCount = 1;
             this.propertiesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.propertiesTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.propertiesTable.Controls.Add(this.nodeTitleLabel, 0, 0);
-            this.propertiesTable.Controls.Add(this.nodeActions, 0, 2);
             this.propertiesTable.Controls.Add(this.contentDisplayPanel, 0, 1);
             this.propertiesTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertiesTable.Location = new System.Drawing.Point(17, 3);
             this.propertiesTable.Name = "propertiesTable";
-            this.propertiesTable.RowCount = 3;
-            this.propertiesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 3.828829F));
-            this.propertiesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 54.72973F));
-            this.propertiesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.66667F));
+            this.propertiesTable.RowCount = 2;
+            this.propertiesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.538462F));
+            this.propertiesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.46153F));
+            this.propertiesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.propertiesTable.Size = new System.Drawing.Size(97, 438);
             this.propertiesTable.TabIndex = 2;
             // 
@@ -101,32 +98,20 @@
             this.nodeTitleLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.nodeTitleLabel.Location = new System.Drawing.Point(3, 0);
             this.nodeTitleLabel.Name = "nodeTitleLabel";
-            this.nodeTitleLabel.Size = new System.Drawing.Size(91, 16);
+            this.nodeTitleLabel.Size = new System.Drawing.Size(91, 28);
             this.nodeTitleLabel.TabIndex = 0;
             this.nodeTitleLabel.Text = "<Name>";
             this.nodeTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.nodeTitleLabel.TextChanged += new System.EventHandler(this.nodeTitleLabel_TextChanged);
-            // 
-            // nodeActions
-            // 
-            this.nodeActions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.nodeActions.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.nodeActions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.nodeActions.HideSelection = false;
-            this.nodeActions.Location = new System.Drawing.Point(3, 258);
-            this.nodeActions.Name = "nodeActions";
-            this.nodeActions.Size = new System.Drawing.Size(91, 177);
-            this.nodeActions.TabIndex = 2;
-            this.nodeActions.UseCompatibleStateImageBehavior = false;
             // 
             // contentDisplayPanel
             // 
             this.contentDisplayPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
             this.contentDisplayPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.contentDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.contentDisplayPanel.Location = new System.Drawing.Point(3, 19);
+            this.contentDisplayPanel.Location = new System.Drawing.Point(3, 31);
             this.contentDisplayPanel.Name = "contentDisplayPanel";
-            this.contentDisplayPanel.Size = new System.Drawing.Size(91, 233);
+            this.contentDisplayPanel.Size = new System.Drawing.Size(91, 404);
             this.contentDisplayPanel.TabIndex = 3;
             // 
             // mainGraph
@@ -142,6 +127,7 @@
             this.mainGraph.Size = new System.Drawing.Size(671, 444);
             this.mainGraph.TabIndex = 0;
             this.mainGraph.NodeSelected += new System.EventHandler(this.nodeGraph1_NodeSelected);
+            this.mainGraph.NodeEdited += new System.EventHandler(this.mainGraph_NodeEdited);
             this.mainGraph.Load += new System.EventHandler(this.nodeGraph1_Load);
             // 
             // NodeForm
@@ -167,7 +153,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel propertiesTable;
         private System.Windows.Forms.Label nodeTitleLabel;
-        private System.Windows.Forms.ListView nodeActions;
         private System.Windows.Forms.Panel contentDisplayPanel;
     }
 }

@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.table = new System.Windows.Forms.TableLayoutPanel();
-            this.titleTextbox = new System.Windows.Forms.TextBox();
             this.buttonTable = new System.Windows.Forms.TableLayoutPanel();
             this.applyBtn = new System.Windows.Forms.Button();
             this.cancelBtn = new System.Windows.Forms.Button();
             this.contentBox = new System.Windows.Forms.RichTextBox();
+            this.titleTextBox = new System.Windows.Forms.RichTextBox();
             this.table.SuspendLayout();
             this.buttonTable.SuspendLayout();
             this.SuspendLayout();
@@ -42,9 +42,9 @@
             // 
             this.table.ColumnCount = 1;
             this.table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.table.Controls.Add(this.titleTextbox, 0, 0);
             this.table.Controls.Add(this.buttonTable, 0, 2);
             this.table.Controls.Add(this.contentBox, 0, 1);
+            this.table.Controls.Add(this.titleTextBox, 0, 0);
             this.table.Dock = System.Windows.Forms.DockStyle.Fill;
             this.table.Location = new System.Drawing.Point(0, 0);
             this.table.Name = "table";
@@ -54,15 +54,6 @@
             this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.708779F));
             this.table.Size = new System.Drawing.Size(383, 467);
             this.table.TabIndex = 0;
-            // 
-            // titleTextbox
-            // 
-            this.titleTextbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.titleTextbox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.titleTextbox.Location = new System.Drawing.Point(3, 3);
-            this.titleTextbox.Name = "titleTextbox";
-            this.titleTextbox.Size = new System.Drawing.Size(377, 13);
-            this.titleTextbox.TabIndex = 0;
             // 
             // buttonTable
             // 
@@ -76,7 +67,7 @@
             this.buttonTable.Name = "buttonTable";
             this.buttonTable.RowCount = 1;
             this.buttonTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.buttonTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.buttonTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
             this.buttonTable.Size = new System.Drawing.Size(377, 31);
             this.buttonTable.TabIndex = 1;
             // 
@@ -106,11 +97,24 @@
             // 
             this.contentBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.contentBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.contentBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.contentBox.Location = new System.Drawing.Point(3, 31);
             this.contentBox.Name = "contentBox";
             this.contentBox.Size = new System.Drawing.Size(377, 396);
             this.contentBox.TabIndex = 2;
             this.contentBox.Text = "";
+            // 
+            // titleTextBox
+            // 
+            this.titleTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.titleTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.titleTextBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.titleTextBox.Location = new System.Drawing.Point(3, 3);
+            this.titleTextBox.Multiline = false;
+            this.titleTextBox.Name = "titleTextBox";
+            this.titleTextBox.Size = new System.Drawing.Size(377, 22);
+            this.titleTextBox.TabIndex = 3;
+            this.titleTextBox.Text = "";
             // 
             // EditorForm
             // 
@@ -121,7 +125,6 @@
             this.Name = "EditorForm";
             this.Text = "Editor";
             this.table.ResumeLayout(false);
-            this.table.PerformLayout();
             this.buttonTable.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -130,10 +133,10 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel table;
-        private System.Windows.Forms.TextBox titleTextbox;
         private System.Windows.Forms.TableLayoutPanel buttonTable;
         private System.Windows.Forms.Button applyBtn;
         private System.Windows.Forms.Button cancelBtn;
         private System.Windows.Forms.RichTextBox contentBox;
+        private System.Windows.Forms.RichTextBox titleTextBox;
     }
 }

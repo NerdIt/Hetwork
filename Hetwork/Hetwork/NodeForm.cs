@@ -24,7 +24,7 @@ namespace Hetwork
             mainGraph.nodes[0].isMain = true;
 
 
-            
+
         }
 
         private void nodeGraph1_NodeSelected(object sender, EventArgs e)
@@ -74,7 +74,7 @@ namespace Hetwork
                 nodeTitleLabel.Text = "";
                 contentDisplayPanel.Controls.Clear();
             }
-            
+
         }
 
         private void nodeTitleLabel_TextChanged(object sender, EventArgs e)
@@ -95,7 +95,7 @@ namespace Hetwork
             float newSize = lab.Font.Size * ratio;
             if (newSize <= 0)
                 newSize = 0.5f;
-            else if(newSize > 50)
+            else if (newSize > 50)
             {
                 newSize = 50;
             }
@@ -106,13 +106,13 @@ namespace Hetwork
 
         public void SetDisplayType(object task)
         {
-            if(task.GetType() == Type.GetType("Hetwork.SingularTask"))
+            if (task.GetType() == Type.GetType("Hetwork.SingularTask"))
             {
                 if (contentDisplayPanel.Controls.Count > 0)
                     contentDisplayPanel.Controls.Clear();
                 contentDisplayPanel.Controls.Add(TextContent());
             }
-            else if(task.GetType() == Type.GetType("Hetwork.ListTask"))
+            else if (task.GetType() == Type.GetType("Hetwork.ListTask"))
             {
                 if (contentDisplayPanel.Controls.Count > 0)
                     contentDisplayPanel.Controls.Clear();
@@ -148,13 +148,14 @@ namespace Hetwork
             clp.MouseUp += ChecklistMouseUp;
             clp.MouseDoubleClick += ChecklistDoubleClick;
             clp.TextFont = new Font("Courier New", 8);
+            clp.KeyDown += CheckListKeyDown;
 
             return clp;
         }
 
         public void RichTextMouseDown(object sender, MouseEventArgs e)
         {
-            
+
             if (mainGraph.selectedNode != null)
             {
                 UpdateNodeValue(mainGraph.selectedNode, sender);
@@ -177,6 +178,14 @@ namespace Hetwork
         }
 
         public void ChecklistMouseDown(object sender, MouseEventArgs e)
+        {
+            if (mainGraph.selectedNode != null)
+            {
+                UpdateNodeValue(mainGraph.selectedNode, sender);
+            }
+        }
+
+        public void CheckListKeyDown(object sender, KeyEventArgs e)
         {
             if(mainGraph.selectedNode != null)
             {
@@ -217,8 +226,8 @@ namespace Hetwork
 
         public void UpdateNodeValue(NodeVisual node, object contentDisplay)
         {
-            
-            if(contentDisplay.GetType() == Type.GetType("Hetwork.CheckListPro"))
+            mainGraph.recalculatePercentage = true;
+            if (contentDisplay.GetType() == Type.GetType("Hetwork.CheckListPro"))
             {
                 
                 CheckListPro c = contentDisplay as CheckListPro;
@@ -240,6 +249,55 @@ namespace Hetwork
         private void primaryTable_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void mainGraph_NodeEdited(object sender, EventArgs e)
+        {
+            if (mainGraph.selectedNode != null)
+            {
+                nodeTitleLabel.Text = mainGraph.selectedNode.title;
+                if (mainGraph.selectedNode.GetType() == Type.GetType("Hetwork.SingularTaskNode"))
+                {
+                    try
+                    {
+                        SetDisplayType((mainGraph.selectedNode as SingularTaskNode).taskElement);
+                        (contentDisplayPanel.Controls[0] as RichTextBox).Text = (mainGraph.selectedNode as SingularTaskNode).taskElement.taskContent;
+                    }
+                    catch
+                    {
+
+                    }
+
+                }
+                else if (mainGraph.selectedNode.GetType() == Type.GetType("Hetwork.ListTaskNode"))
+                {
+                    try
+                    {
+                        SetDisplayType((mainGraph.selectedNode as ListTaskNode).taskElement);
+                        List<CheckedItemPro> items = new List<CheckedItemPro>();
+                        ListTask lt = (mainGraph.selectedNode as ListTaskNode).taskElement;
+                        for (int i = 0; i < lt.elements.Count; i++)
+                        {
+                            items.Add(new CheckedItemPro(lt.elements[i].completed, lt.elements[i].taskTitle, lt.elements[i].taskContent));
+                        }
+
+                        (contentDisplayPanel.Controls[0] as CheckListPro).Items.AddRange(items);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                else
+                {
+                    contentDisplayPanel.Controls.Clear();
+                }
+            }
+            else if (mainGraph.selectedNode == null)
+            {
+                nodeTitleLabel.Text = "";
+                contentDisplayPanel.Controls.Clear();
+            }
         }
     }
 }

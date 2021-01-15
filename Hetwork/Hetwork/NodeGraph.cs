@@ -11,7 +11,7 @@ using System.Drawing.Drawing2D;
 using Hetwork.Properties;
 using System.Drawing.Imaging;
 using System.Diagnostics;
-
+using Microsoft.VisualBasic;
 
 namespace Hetwork
 {
@@ -25,6 +25,8 @@ namespace Hetwork
         public List<NodeVisual> nodes = new List<NodeVisual>();
 
         public float zoomFactor = 1;
+
+        public bool recalculatePercentage = false;
 
 
         public List<NodeVisual> selectedNodes = new List<NodeVisual>();
@@ -51,27 +53,46 @@ namespace Hetwork
             PopulateNewMenu();
         }
 
+        private ContextMenu EmptyRigthClick = null;
+        private ContextMenu NoneEmptyRightClick = null;
+
+
         #region RigthClickMenu
 
         public void PopulateNewMenu()
         {
-            ContextMenu cm = new ContextMenu();
+            ContextMenu cm1 = new ContextMenu();
             MenuItem mi1 = new MenuItem();
             mi1.Text = "Add Folder";
             mi1.Click += new System.EventHandler(this.AddFolder);
-            cm.MenuItems.Add(mi1);
+            cm1.MenuItems.Add(mi1);
 
             MenuItem mi2 = new MenuItem();
             mi2.Text = "Add Task";
             mi2.Click += new System.EventHandler(this.AddTask);
-            cm.MenuItems.Add(mi2);
+            cm1.MenuItems.Add(mi2);
             
             MenuItem mi3 = new MenuItem();
             mi3.Text = "Add List";
             mi3.Click += new System.EventHandler(this.AddList);
-            cm.MenuItems.Add(mi3);
+            cm1.MenuItems.Add(mi3);
 
-            ContextMenu = cm;
+            EmptyRigthClick = cm1;
+
+
+            ContextMenu cm2 = new ContextMenu();
+            MenuItem mi4 = new MenuItem();
+            mi4.Text = "Rename";
+            mi4.Click += new System.EventHandler(this.RenameNode);
+            cm2.MenuItems.Add(mi4);
+
+            MenuItem mi5 = new MenuItem();
+            mi5.Text = "Delete";
+            mi5.Click += new System.EventHandler(this.DeleteNode);
+            cm2.MenuItems.Add(mi5);
+
+
+            NoneEmptyRightClick = cm2;
         }
 
         public void AddFolder(object sender, System.EventArgs e)
@@ -92,6 +113,72 @@ namespace Hetwork
             n.taskElement = new ListTask(n.title, new List<SingularTask>());
             nodes.Add(n);
         }
+
+        public void RenameNode(object sender, System.EventArgs e)
+        {
+            var ib = Interaction.InputBox("New Node Name", "Rename", selectedNode.title);
+            if (ib != "")
+            {
+                selectedNode.title = ib;
+                if(selectedNode.GetType() == Type.GetType("Hetwork.SingularTaskNode"))
+                {
+                    (selectedNode as SingularTaskNode).taskElement.taskTitle = ib;
+                }
+                else if (selectedNode.GetType() == Type.GetType("Hetwork.ListTaskNode"))
+                {
+                    (selectedNode as ListTaskNode).taskElement.taskTitle = ib;
+                }
+
+                NodeEdited_Event(this, e);
+            }
+
+            
+        }
+
+        public void DeleteNode(object sender, System.EventArgs e)
+        {
+            if (selectedNode != null)
+            {
+                int ind = nodes.IndexOf(selectedNode);
+                if (ind != -1)
+                {
+                    if (nodes[ind].connection != null)
+                    {
+                        nodes[ind].connection.RemoveChild();
+                        nodes[ind].connection.Dispose();
+                    }
+                    nodes[ind].Dispose();
+                    nodes.Remove(selectedNode);
+                    if (selectedNodes.Contains(selectedNode))
+                        selectedNodes.Remove(selectedNode);
+                    selectedNode = null;
+                    NodeEdited_Event(this, e);
+                }
+            }
+
+
+        }
+        
+        public void CompleteNode(object sender, System.EventArgs e)
+        {
+            if (selectedNode != null)
+            {
+                if(selectedNode.GetType() == Type.GetType("Hetwork.SingularTaskNode"))
+                {
+                    (selectedNode as SingularTaskNode).taskElement.completed = !(selectedNode as SingularTaskNode).taskElement.completed;
+                }
+                else if (selectedNode.GetType() == Type.GetType("Hetwork.ListTaskNode"))
+                {
+                    (selectedNode as ListTaskNode).taskElement.completed = !(selectedNode as ListTaskNode).taskElement.completed;
+                }
+                recalculatePercentage = true;
+
+                needRepaint = true;
+            }
+            
+
+        }
+
         #endregion
 
 
@@ -126,6 +213,7 @@ namespace Hetwork
 
         public void PaintControl(object sender, PaintEventArgs e)
         {
+
             //  GRAPH OFFSET STRING
             needRepaint = false;
             if (middleMouseDown)
@@ -133,8 +221,7 @@ namespace Hetwork
                 e.Graphics.DrawString($"{graphOffset.X},{graphOffset.Y}", new Font("Arial", 7 * textSize), new SolidBrush(Color.FromArgb(255, 195, 195, 195)), 0, 0);
             }
 
-            if (editingNodeConnection != null)
-                dragConnection.Draw(e.Graphics);
+            
 
 
             //  GRAPH ZOOM STRING
@@ -147,6 +234,23 @@ namespace Hetwork
             e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
             e.Graphics.ScaleTransform(zoomFactor, zoomFactor);
 
+            if (editingNodeConnection != null)
+                dragConnection.Draw(e.Graphics);
+
+
+            if (recalculatePercentage)
+            {
+                foreach(NodeVisual nv in nodes)
+                {
+                    if(nv.GetType() == Type.GetType("Hetwork.FolderNode"))
+                    {
+                        PercentageComplete pc = nv.GetPercentage(nv);
+                        (nv as FolderNode).percentage = (int)pc.GetPercentage();
+                        Debug.WriteLine($"{pc.complete} {pc.incomplete} {pc.total} {pc.GetPercentage()}%");
+                    }
+                }
+                recalculatePercentage = false;
+            }
 
 
             #region DrawTitle
@@ -256,6 +360,7 @@ namespace Hetwork
 
         private void NodeGraph_MouseDown(object sender, MouseEventArgs e)
         {
+            CursorLocation = new Point((int)(PointToClient(Cursor.Position).X / zoomFactor), (int)(PointToClient(Cursor.Position).Y / zoomFactor));
             mouseDownPoint = CursorLocation;
             if(e.Button == MouseButtons.Middle)
             {
@@ -412,6 +517,38 @@ namespace Hetwork
 
 
             }
+            else if(e.Button == MouseButtons.Right)
+            {
+
+
+                NodeVisual nv = nodes.LastOrDefault(x => x.IsWithinCircle(new Point(x.X, x.Y), CursorLocation, 45 / 2) && x.GetType() == Type.GetType("Hetwork.FolderNode"));
+                if (nv == null)
+                    nv = nodes.LastOrDefault(x => x.IsWithinRect(CursorLocation));
+
+
+                if (nv == null)
+                {
+                    EmptyRigthClick.Show(this, e.Location);
+                }
+                else
+                {
+                    if (!nv.isMain)
+                    {
+                        selectedNode = nv;
+
+                        if(nv.GetType() != Type.GetType("Hetwork.FolderNode"))
+                        {
+                            MenuItem mi5 = new MenuItem();
+                            mi5.Text = "Toggle Completion";
+                            mi5.Click += new System.EventHandler(this.CompleteNode);
+                            NoneEmptyRightClick.MenuItems.Add(mi5);
+                        }
+
+                        NoneEmptyRightClick.Show(this, e.Location);
+                        NoneEmptyRightClick.MenuItems.RemoveAt(NoneEmptyRightClick.MenuItems.Count - 1);
+                    }
+                }
+            }
             cursorOffset = PointToScreen(CursorLocation);
             needRepaint = true;
         }
@@ -437,14 +574,16 @@ namespace Hetwork
                 #region EditNodeConnections_MouseUp
                 if (processingConnection != null)
                 {
+
                     processingConnection.n1.connection.RemoveChild();
                     processingConnection.n1.isEditingConnection = false;
                     processingConnection.n1.connection = null;
+                    
                 }
 
                 if (editingNodeConnection != null)
                 {
-                    
+                    recalculatePercentage = true;
                     if (dragConnection != null)
                     {
                         NodeVisual nv = nodes.LastOrDefault(x => x.IsWithinRect(CursorLocation) || x.IsWithinCircle(new Point(x.X, x.Y), CursorLocation, 22.5f));
@@ -787,6 +926,7 @@ namespace Hetwork
                             {
                                 if (nodes[j].connection != null && nodes[j].connection.n2 == selectedNodes[i])
                                 {
+                                    nodes[j].connection.RemoveChild();
                                     nodes[j].connection.Dispose();
                                     nodes[j].connection = null;
                                 }
@@ -794,6 +934,11 @@ namespace Hetwork
                         }
                         selectedNodes[i].Dispose();
                         nodes.Remove(selectedNodes[i]);
+                        nodes.Remove(selectedNode);
+                        if (selectedNodes.Contains(selectedNode))
+                            selectedNodes.Remove(selectedNode);
+                        selectedNode = null;
+                        NodeEdited_Event(this, e);
                     }
                 }
                 selectedNodes.Clear();
@@ -814,6 +959,19 @@ namespace Hetwork
             if (NodeSelected != null)
             {
                 NodeSelected(this, e);
+            }
+        }
+
+        [Browsable(true)]
+        [Category("NodeGraph Action")]
+        [Description("Invoked when node is edited")]
+        public event EventHandler NodeEdited;
+        public void NodeEdited_Event(object sender, EventArgs e)
+        {
+            recalculatePercentage = true;
+            if (NodeEdited != null)
+            {
+                NodeEdited(this, e);
             }
         }
         #endregion

@@ -72,6 +72,24 @@ namespace Hetwork
 
 
             MouseWheel += Control_MouseWheel;
+            PopulateNewMenu();
+        }
+
+        public void PopulateNewMenu()
+        {
+            ContextMenu cm = new ContextMenu();
+            MenuItem mi1 = new MenuItem();
+            mi1.Text = "Add Item";
+            mi1.Click += new System.EventHandler(this.AddItem);
+            cm.MenuItems.Add(mi1);
+
+            ContextMenu = cm;
+        }
+
+        public void AddItem(object sender, System.EventArgs e)
+        {
+            Items.Add(new CheckedItemPro(false, "New Item", ""));
+            needRepaint = true;
         }
 
         private void TimerOnTick(object sender, EventArgs eventArgs)
@@ -187,14 +205,14 @@ namespace Hetwork
         }
 
         private bool leftMouseDown = false;
-
+        private bool dragging = false;
 
 
         private void CheckListPro_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                Cursor.Current = Cursors.SizeAll;
+                    
                 leftMouseDown = true;
 
                 if (GetCheckByRect(e.Location) != -1 && hoverCheckId != -1 && Items.Count > hoverCheckId)
@@ -205,6 +223,12 @@ namespace Hetwork
                 if (GetItemByRect(e.Location) != -1 && hoverId != -1 && Items.Count > hoverId)
                 {
                     selectetedItem = hoverId;
+                    dragging = true;
+                    Cursor.Current = Cursors.SizeAll;
+                }
+                else
+                {
+                    selectetedItem = -1;
                 }
             }
 
@@ -256,7 +280,7 @@ namespace Hetwork
             }
 
 
-            if(leftMouseDown)
+            if(dragging)
             {
                 Cursor.Current = Cursors.SizeAll;
             }
@@ -312,6 +336,7 @@ namespace Hetwork
                     Items.Rearrange(selectetedItem, hoverId);
                     selectetedItem = hoverId;
                 }
+                dragging = false;
             }
         }
 
@@ -542,9 +567,20 @@ namespace Hetwork
         }
 
 
+
         #endregion
 
-
+        private void CheckListPro_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(selectetedItem != -1)
+            {
+                if(e.KeyCode == Keys.Delete)
+                {
+                    Items.RemoveAt(selectetedItem);
+                    needRepaint = true;
+                }
+            }
+        }
     }
 
 

@@ -79,6 +79,57 @@ namespace Hetwork
             GC.Collect();
         }
 
+        public PercentageComplete GetPercentage(NodeVisual node)
+        {
+            float complete = 0;
+            float incomplete = 0;
+            float total = 0;
+            if(node.GetType() == Type.GetType("Hetwork.FolderNode") && node.children.Count > 0)
+            {
+
+                foreach (NodeVisual nv in node.children)
+                {
+                    if (nv.GetType() != Type.GetType("Hetwork.FolderNode"))
+                    {
+                        total++;
+                        if (nv.GetType() == Type.GetType("Hetwork.SingularTaskNode"))
+                        {
+                            if ((nv as SingularTaskNode).taskElement.completed)
+                            {
+                                complete++;
+                            }
+                            else
+                            {
+                                incomplete++;
+                            }
+                        }
+                        else if (nv.GetType() == Type.GetType("Hetwork.ListTaskNode"))
+                        {
+                            if ((nv as ListTaskNode).taskElement.completed)
+                            {
+                                complete++;
+                            }
+                            else
+                            {
+                                incomplete++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        PercentageComplete pc = nv.GetPercentage(nv);
+                        complete += pc.complete;
+                        incomplete += pc.incomplete;
+                        total += pc.total;
+                    }
+                }
+                    
+                
+            }
+
+            return new PercentageComplete(complete, incomplete, total);
+        }
+
 
     }
 

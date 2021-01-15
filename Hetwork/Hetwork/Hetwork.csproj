@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -51,12 +52,6 @@
     </Compile>
     <Compile Include="CheckListPro.Designer.cs">
       <DependentUpon>CheckListPro.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CHECKLISTPRO_FORMTEST.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CHECKLISTPRO_FORMTEST.Designer.cs">
-      <DependentUpon>CHECKLISTPRO_FORMTEST.cs</DependentUpon>
     </Compile>
     <Compile Include="Connection.cs" />
     <Compile Include="EditorForm.cs">
@@ -78,6 +73,7 @@
       <DependentUpon>NodeGraph.cs</DependentUpon>
     </Compile>
     <Compile Include="NodeVisual.cs" />
+    <Compile Include="PercentageComplete.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -93,9 +89,6 @@
   <ItemGroup>
     <EmbeddedResource Include="CheckListPro.resx">
       <DependentUpon>CheckListPro.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CHECKLISTPRO_FORMTEST.resx">
-      <DependentUpon>CHECKLISTPRO_FORMTEST.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EditorForm.resx">
       <DependentUpon>EditorForm.cs</DependentUpon>

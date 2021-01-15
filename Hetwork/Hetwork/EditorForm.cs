@@ -23,13 +23,13 @@ namespace Hetwork
             node = n;
             CheckList = clp;
 
-            titleTextbox.Text = CheckList.Items[CheckList.selectetedItem].name;
+            titleTextBox.Text = CheckList.Items[CheckList.selectetedItem].name;
             contentBox.Text = CheckList.Items[CheckList.selectetedItem].details;
         }
 
         private void applyBtn_Click(object sender, EventArgs e)
         {
-            CheckList.Items[CheckList.selectetedItem].name = titleTextbox.Text;
+            CheckList.Items[CheckList.selectetedItem].name = titleTextBox.Text;
             CheckList.Items[CheckList.selectetedItem].details = contentBox.Text;
             parentForm.UpdateNodeValue(node, CheckList);
             CheckList.Invalidate();

@@ -47,7 +47,7 @@ namespace Hetwork
 
         public void RemoveChild()
         {
-            if(!n2.children.Contains(n1))
+            if(n2.children.Contains(n1))
             {
                 n2.children.Remove(n1);
             }
