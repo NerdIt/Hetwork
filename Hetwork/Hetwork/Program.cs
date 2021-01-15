@@ -45,10 +45,25 @@ namespace Hetwork
         public float zoom;
         public Point offset;
 
+        public string title;
+
         public Project(int ngi, int tgi)
         {
             nodeGlobalId = ngi;
             taskGlobalId = tgi;
+        }
+
+
+        public int GetNodeId()
+        {
+            nodeGlobalId++;
+            return nodeGlobalId - 1;
+        }
+
+        public int GetTaskId()
+        {
+            taskGlobalId++;
+            return taskGlobalId - 1;
         }
         
     }

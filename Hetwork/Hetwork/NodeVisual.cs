@@ -141,7 +141,7 @@ namespace Hetwork
         
         
 
-        public FolderNode(string name, int x, int y, int width, int height, int perc, NodeGraph graphControl)
+        public FolderNode(string name, int x, int y, int width, int height, int perc, NodeGraph graphControl, int ID)
         {
             X = x;
             Y = y;
@@ -150,6 +150,7 @@ namespace Hetwork
             percentage = perc;
             nodeGraph = graphControl;
             title = name;
+            id = ID;
         }
 
         public override void DrawShadow(Graphics g)
@@ -313,7 +314,7 @@ namespace Hetwork
         public SingularTask taskElement;
 
 
-        public SingularTaskNode(string name, int x, int y, int width, int height, NodeGraph graphControl)
+        public SingularTaskNode(string name, int x, int y, int width, int height, NodeGraph graphControl, int ID)
         {
             X = x;
             Y = y;
@@ -321,6 +322,7 @@ namespace Hetwork
             Height = height;
             nodeGraph = graphControl;
             title = name;
+            id = ID;
         }
 
         public override void DrawShadow(Graphics g)
@@ -537,7 +539,7 @@ namespace Hetwork
     {
         public ListTask taskElement;
 
-        public ListTaskNode(string name, int x, int y, int width, int height, NodeGraph graphControl)
+        public ListTaskNode(string name, int x, int y, int width, int height, NodeGraph graphControl, int ID)
         {
             X = x;
             Y = y;
@@ -545,6 +547,7 @@ namespace Hetwork
             Height = height;
             nodeGraph = graphControl;
             title = name;
+            id = ID;
         }
 
         public override void DrawShadow(Graphics g)
