@@ -81,6 +81,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Serializer.cs" />
     <Compile Include="TaskElements.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +111,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\grid.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SavePlanning.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

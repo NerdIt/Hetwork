@@ -1,0 +1,33 @@
+﻿[preset] offset 50,32
+[preset] zoom 0.3
+
+
+
+[node] folder 6 43,42 100,50 3 5,2,54,35 false "Epic Gamer"
+
+tag	node-type	id	node-pos	node-size	parent-id	children-id	is-main		node-title
+
+
+[node] single 6 43,42 100,50 3 5 "Epic Gamer"
+
+tag	node-type	id	node-pos	node-size	parent-id	task-id		node-title
+
+
+[node] list 6 43,42 100,50 3 5 "Epic Gamer"
+
+tag	node-type	id	node-pos	node-size	parent-id	task-id		node-title
+
+
+
+
+
+
+
+[task] single 4 false "Epic Task" "Epic Content"
+
+tag		task-type	id	completed	name	content
+
+
+[task] list 5 false 5,6,9,3 "Epic Task"
+
+tag		task-type	id	completed	child-task-ids	name

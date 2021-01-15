@@ -103,14 +103,14 @@ namespace Hetwork
         public void AddTask(object sender, System.EventArgs e)
         {
             var n = new SingularTaskNode("New Task", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 100, 35, this);
-            n.taskElement = new SingularTask(n.title, "");
+            n.taskElement = new SingularTask(n.title, "", 0);
             nodes.Add(n);
         }
 
         public void AddList(object sender, System.EventArgs e)
         {
             var n = new ListTaskNode("New List", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 100, 35, this);
-            n.taskElement = new ListTask(n.title, new List<SingularTask>());
+            n.taskElement = new ListTask(n.title, new List<SingularTask>(), 0);
             nodes.Add(n);
         }
 
@@ -943,6 +943,10 @@ namespace Hetwork
                 }
                 selectedNodes.Clear();
                 needRepaint = true;
+            }
+            else if(ModifierKeys == Keys.Control && e.KeyCode == Keys.S)
+            {
+                Debug.WriteLine("Save");
             }
 
 

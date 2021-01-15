@@ -11,11 +11,13 @@ namespace Hetwork
         public bool completed = false;
         public string taskTitle = "";
         public string taskContent = "";
+        public int id;
 
-        public SingularTask(string name, string body)
+        public SingularTask(string name, string body, int ID)
         {
             taskTitle = name;
             taskContent = body;
+            id = ID;
         }
 
         public SingularTask(string name, string body, bool completionStatus)
@@ -31,11 +33,13 @@ namespace Hetwork
         public bool completed = false;
         public string taskTitle = "";
         public List<SingularTask> elements = new List<SingularTask>();
+        public int id;
 
-        public ListTask(string name, List<SingularTask> items)
+        public ListTask(string name, List<SingularTask> items, int ID)
         {
             taskTitle = name;
             elements.AddRange(items);
+            id = ID;
         }
     }
 

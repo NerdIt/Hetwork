@@ -35,6 +35,7 @@ namespace Hetwork
 
         public List<NodeVisual> children = new List<NodeVisual>();
 
+        public int id;
 
         public virtual void DrawShadow(Graphics g)
         {
