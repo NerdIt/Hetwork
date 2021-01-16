@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Hetwork
 {
@@ -109,7 +110,7 @@ namespace Hetwork
             Graphics g = e.Graphics;
             g.InterpolationMode = InterpolationMode.Low;
             g.SmoothingMode = SmoothingMode.AntiAlias;
-
+            //this.Region = GetRoundedRegion(this.Width, this.Height);
 
             for (int i = 0; i < Items.Count; i++)
             {
@@ -176,6 +177,23 @@ namespace Hetwork
 
             needRepaint = false;
         }
+
+        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+        private static extern IntPtr CreateRoundRectRgn(
+            int nLeftRect, // x-coordinate of upper-left corner
+            int nTopRect, // y-coordinate of upper-left corner
+            int nRightRect, // x-coordinate of lower-right corner
+            int nBottomRect, // y-coordinate of lower-right corner
+            int nWidthEllipse, // height of ellipse
+            int nHeightEllipse // width of ellipse
+        );
+        //function call, it will return the rounded region of the given region
+        public static System.Drawing.Region GetRoundedRegion(int controlWidth, int controlHeight)
+        {
+            return System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, controlWidth, controlHeight, 30, 30));
+        }
+        //the following Line of Code will round the edges of C# form
+        
 
         void Control_MouseWheel(object sender, MouseEventArgs e)
         {

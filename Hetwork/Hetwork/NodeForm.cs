@@ -19,6 +19,7 @@ namespace Hetwork
         {
             InitializeComponent();
             
+            
         }
 
         public void LoadData(Project p, bool newProj)
@@ -161,7 +162,7 @@ namespace Hetwork
             CheckListPro clp = new CheckListPro(this);
 
             clp.Dock = DockStyle.Fill;
-            clp.BackColor = Color.FromArgb(255, 230, 230, 230);
+            clp.BackColor = Color.FromArgb(255, 180, 180, 180);
             clp.BorderStyle = BorderStyle.None;
             clp.ElementColor = Color.FromArgb(255, 230, 230, 230);
             clp.UseItemBorders = false;
@@ -171,6 +172,7 @@ namespace Hetwork
             clp.TextFont = new Font("Courier New", 8);
             clp.KeyDown += CheckListKeyDown;
             clp.ItemsChanged += CheckListItemsChange;
+
 
             return clp;
         }
