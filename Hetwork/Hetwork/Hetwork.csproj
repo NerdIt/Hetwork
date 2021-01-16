@@ -79,6 +79,12 @@
     <Compile Include="NodeGraph.Designer.cs">
       <DependentUpon>NodeGraph.cs</DependentUpon>
     </Compile>
+    <Compile Include="NodeMenu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NodeMenu.Designer.cs">
+      <DependentUpon>NodeMenu.cs</DependentUpon>
+    </Compile>
     <Compile Include="NodeVisual.cs" />
     <Compile Include="PercentageComplete.cs" />
     <Compile Include="Program.cs" />
@@ -90,6 +96,12 @@
     </Compile>
     <Compile Include="Serializer.cs" />
     <Compile Include="TaskElements.cs" />
+    <Compile Include="VisualDesign.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VisualDesign.Designer.cs">
+      <DependentUpon>VisualDesign.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -110,9 +122,15 @@
     <EmbeddedResource Include="NodeGraph.resx">
       <DependentUpon>NodeGraph.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="NodeMenu.resx">
+      <DependentUpon>NodeMenu.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VisualDesign.resx">
+      <DependentUpon>VisualDesign.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

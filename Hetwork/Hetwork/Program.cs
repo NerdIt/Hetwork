@@ -23,49 +23,50 @@ namespace Hetwork
 
         static void Main(string[] args)
         {
+            Application.Run(new VisualDesign());
 
-            string path = projectPath;
+            //string path = projectPath;
 
-            for (int i = 0; i < projects.Length; i++)
-            {
-                Console.WriteLine($"{i} " + projects[i].Split('\\')[projects[i].Split('\\').Length - 1]);
-            }
-            Console.Write("Select Project: ");
-            int s = int.Parse(Console.ReadLine());
-            if (s > projects.Length)
-                Environment.Exit(0);
-            if (s != -1)
-            {
-                Console.WriteLine($"You Selected {projects[s]}");
+            //for (int i = 0; i < projects.Length; i++)
+            //{
+            //    Console.WriteLine($"{i} " + projects[i].Split('\\')[projects[i].Split('\\').Length - 1]);
+            //}
+            //Console.Write("Select Project: ");
+            //int s = int.Parse(Console.ReadLine());
+            //if (s > projects.Length)
+            //    Environment.Exit(0);
+            //if (s != -1)
+            //{
+            //    Console.WriteLine($"You Selected {projects[s]}");
 
-                selectedProject = new Project(0, 0);
-                selectedProject.Load(projects[s].Split('\\')[projects[s].Split('\\').Length - 1]);
-            }
-            else
-            {
-                var ib = Interaction.InputBox("New Project Name", "Create Project");
-                if (ib != "")
-                {
-                    if (!Directory.Exists(projectPath + ib))
-                        Directory.CreateDirectory(projectPath + ib);
-                    string newPath = projectPath + ib;
-                    selectedProject = new Project(0, 0);
-                    selectedProject.Load(newPath.Split('\\')[newPath.Split('\\').Length - 1]);
-                }
-            }
+            //    selectedProject = new Project(0, 0);
+            //    selectedProject.Load(projects[s].Split('\\')[projects[s].Split('\\').Length - 1]);
+            //}
+            //else
+            //{
+            //    var ib = Interaction.InputBox("New Project Name", "Create Project");
+            //    if (ib != "")
+            //    {
+            //        if (!Directory.Exists(projectPath + ib))
+            //            Directory.CreateDirectory(projectPath + ib);
+            //        string newPath = projectPath + ib;
+            //        selectedProject = new Project(0, 0);
+            //        selectedProject.Load(newPath.Split('\\')[newPath.Split('\\').Length - 1]);
+            //    }
+            //}
 
-            NodeForm nf = new NodeForm();
-            if (s != -1)
-            {
-                nf.LoadData(selectedProject, false);
-            }
-            else
-            {
-                nf.LoadData(selectedProject, true);
-            }
+            //NodeForm nf = new NodeForm();
+            //if (s != -1)
+            //{
+            //    nf.LoadData(selectedProject, false);
+            //}
+            //else
+            //{
+            //    nf.LoadData(selectedProject, true);
+            //}
 
 
-            Application.Run(nf);
+            //Application.Run(nf);
             //Application.Run(new CHECKLISTPRO_FORMTEST());
             //Application.Run(new EditorForm());
         }
