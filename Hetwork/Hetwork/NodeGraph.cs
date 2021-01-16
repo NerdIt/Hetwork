@@ -31,13 +31,15 @@ namespace Hetwork
 
         public List<NodeVisual> selectedNodes = new List<NodeVisual>();
 
-        public string projectName = "Project Name";
+        public string projectName = "";
         private bool focused = true;
         public float textSize = 1;
 
         public NodeVisual selectedNode;
 
         public Point CursorLocation = new Point(0,0);
+
+        public Project graphProject;
 
         public NodeGraph()
         {
@@ -51,6 +53,13 @@ namespace Hetwork
             MouseWheel += ScrollWheelEvent;
 
             PopulateNewMenu();
+        }
+
+        public void InitGraph()
+        {
+            nodes.Add(new FolderNode(graphProject.title, 50, 50, 45, 45, 0, this, graphProject.GetNodeId()));
+            nodes[0].isMain = true;
+            projectName = graphProject.title;
         }
 
         private ContextMenu EmptyRigthClick = null;
@@ -97,20 +106,20 @@ namespace Hetwork
 
         public void AddFolder(object sender, System.EventArgs e)
         {
-            nodes.Add(new FolderNode("New Folder", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 45, 45, 0, this));
+            nodes.Add(new FolderNode("New Folder", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 45, 45, 0, this, graphProject.GetNodeId()));
         }
 
         public void AddTask(object sender, System.EventArgs e)
         {
-            var n = new SingularTaskNode("New Task", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 100, 35, this);
-            n.taskElement = new SingularTask(n.title, "", 0);
+            var n = new SingularTaskNode("New Task", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 100, 35, this, graphProject.GetNodeId());
+            n.taskElement = new SingularTask(n.title, "", graphProject.GetTaskId());
             nodes.Add(n);
         }
 
         public void AddList(object sender, System.EventArgs e)
         {
-            var n = new ListTaskNode("New List", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 100, 35, this);
-            n.taskElement = new ListTask(n.title, new List<SingularTask>(), 0);
+            var n = new ListTaskNode("New List", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 100, 35, this, graphProject.GetNodeId());
+            n.taskElement = new ListTask(n.title, new List<SingularTask>(), graphProject.GetTaskId());
             nodes.Add(n);
         }
 
@@ -246,7 +255,7 @@ namespace Hetwork
                     {
                         PercentageComplete pc = nv.GetPercentage(nv);
                         (nv as FolderNode).percentage = (int)pc.GetPercentage();
-                        Debug.WriteLine($"{pc.complete} {pc.incomplete} {pc.total} {pc.GetPercentage()}%");
+                        //Debug.WriteLine($"{pc.complete} {pc.incomplete} {pc.total} {pc.GetPercentage()}%");
                     }
                 }
                 recalculatePercentage = false;
@@ -545,7 +554,10 @@ namespace Hetwork
                         }
 
                         NoneEmptyRightClick.Show(this, e.Location);
-                        NoneEmptyRightClick.MenuItems.RemoveAt(NoneEmptyRightClick.MenuItems.Count - 1);
+                        if (NoneEmptyRightClick.MenuItems[NoneEmptyRightClick.MenuItems.Count - 1].Text == "Toggle Completion")
+                        {
+                            NoneEmptyRightClick.MenuItems.RemoveAt(NoneEmptyRightClick.MenuItems.Count - 1);
+                        }
                     }
                 }
             }
@@ -947,6 +959,10 @@ namespace Hetwork
             else if(ModifierKeys == Keys.Control && e.KeyCode == Keys.S)
             {
                 Debug.WriteLine("Save");
+                graphProject.nodes = nodes;
+                graphProject.zoom = zoomFactor;
+                graphProject.offset = graphOffset;
+                Serializer.SaveProject(graphProject);
             }
 
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Drawing;
+using Microsoft.VisualBasic;
 
 namespace Hetwork
 {
@@ -20,17 +21,48 @@ namespace Hetwork
 
         static void Main(string[] args)
         {
-            //string s = Console.ReadLine();
-            //while(!projects.Contains(s))
-            //{
-            //    Console.WriteLine("Project Doesn't Exist");
-            //    s = Console.ReadLine();
-            //}
-            //selectedProject = new Project(0);
 
+            string path = projectPath;
 
+            for (int i = 0; i < projects.Length; i++)
+            {
+                Console.WriteLine($"{i} " + projects[i].Split('\\')[projects[i].Split('\\').Length - 1]);
+            }
+            Console.Write("Select Project: ");
+            int s = int.Parse(Console.ReadLine());
+            if (s > projects.Length)
+                Environment.Exit(0);
+            if (s != -1)
+            {
+                Console.WriteLine($"You Selected {projects[s]}");
 
-            Application.Run(new NodeForm());
+                selectedProject = new Project(0, 0);
+                selectedProject.Load(projects[s].Split('\\')[projects[s].Split('\\').Length - 1]);
+            }
+            else
+            {
+                var ib = Interaction.InputBox("New Project Name", "Create Project");
+                if (ib != "")
+                {
+                    if (!Directory.Exists(projectPath + ib))
+                        Directory.CreateDirectory(projectPath + ib);
+                    string newPath = projectPath + ib;
+                    selectedProject = new Project(0, 0);
+                    selectedProject.Load(newPath.Split('\\')[newPath.Split('\\').Length - 1]);
+                }
+            }
+
+            NodeForm nf = new NodeForm();
+            if (s != -1)
+            {
+                nf.LoadData(selectedProject, false);
+            }
+            else
+            {
+                nf.LoadData(selectedProject, true);
+            }
+            
+            Application.Run(nf);
             //Application.Run(new CHECKLISTPRO_FORMTEST());
             //Application.Run(new EditorForm());
         }
@@ -45,12 +77,19 @@ namespace Hetwork
         public float zoom;
         public Point offset;
 
-        public string title;
+        public string title = "";
+
+        public string path { get { return Program.projectPath + title + @"\"; } }
 
         public Project(int ngi, int tgi)
         {
             nodeGlobalId = ngi;
             taskGlobalId = tgi;
+        }
+
+        public void Load(string t)
+        {
+            title = t;
         }
 
 

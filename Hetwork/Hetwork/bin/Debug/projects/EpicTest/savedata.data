@@ -1,0 +1,13 @@
+[meta] nodeIDValue 4
+[meta] taskIDValue 5
+[preset] offset 77,138
+[preset] zoom 0.9999999
+[node] folder 0 -9,51 45,45 null 2,1 True EpicTest
+[node] single 3 243,226 100,35 null 2 bruh
+[node] single 2 331,4 100,35 0 1 New§0xs000Task
+[node] list 1 189,103 100,35 0 0 New§0xs000List
+[task] single 2 False bruh this§0xs000is§0xs000epic§0xs000bruv§0xn001§0xn001sick
+[task] single 1 False New§0xs000Task 
+[task] single 3 True New§0xs000Item 
+[task] single 4 False creeper epic
+[task] list 0 False New§0xs000List 3,4

@@ -41,6 +41,8 @@ namespace Hetwork
         private Color selectedColor = Color.DarkGray;
         private bool useCheckBox = true;
 
+
+
         private int fontHeight
         {
             get
@@ -88,7 +90,8 @@ namespace Hetwork
 
         public void AddItem(object sender, System.EventArgs e)
         {
-            Items.Add(new CheckedItemPro(false, "New Item", ""));
+            Items.Add(new CheckedItemPro(false, "New Item", "", Program.selectedProject.GetTaskId()));
+            NodeSelected_Event(this, e);
             needRepaint = true;
         }
 
@@ -348,7 +351,17 @@ namespace Hetwork
 
 
 
-
+        [Browsable(true)]
+        [Category("Check List Pro Action")]
+        [Description("Invoked when items change")]
+        public event EventHandler ItemsChanged;
+        public void NodeSelected_Event(object sender, EventArgs e)
+        {
+            if (ItemsChanged != null)
+            {
+                ItemsChanged(this, e);
+            }
+        }
 
 
 
@@ -589,11 +602,13 @@ namespace Hetwork
         public bool check = false;
         public string name = "";
         public string details = "";
-        public CheckedItemPro(bool checkStatus, string nameDetail, string detailString)
+        public int id;
+        public CheckedItemPro(bool checkStatus, string nameDetail, string detailString, int ID)
         {
             check = checkStatus;
             name = nameDetail;
             details = detailString;
+            id = ID;
         }
     }
 
@@ -603,9 +618,16 @@ namespace Hetwork
         
         public static void Rearrange<T>(this List<T> list, int index, int targetIndex)
         {
-            T v = list[index];
-            list.RemoveAt(index);
-            list.Insert(targetIndex, v);
+            try
+            {
+                T v = list[index];
+                list.RemoveAt(index);
+                list.Insert(targetIndex, v);
+            }
+            catch
+            {
+
+            }
         }
 
         public static void SendToTop<T>(this List<T> list, int index, int targetIndex)

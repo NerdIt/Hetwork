@@ -13,19 +13,38 @@ namespace Hetwork
 {
     public partial class NodeForm : Form
     {
+        private Project currentProject = null;
+
         public NodeForm()
         {
             InitializeComponent();
+            
+        }
+
+        public void LoadData(Project p, bool newProj)
+        {
+            currentProject = p;
+            mainGraph.graphProject = p;
+            if (newProj)
+            {
+                mainGraph.InitGraph();
+            }
+            else
+            {
+                Serializer.LoadProject(currentProject, mainGraph);
+                mainGraph.nodes = p.nodes;
+                mainGraph.graphOffset = p.offset;
+                mainGraph.zoomFactor = p.zoom;
+            }
+            //mainGraph.InitGraph();
         }
 
         private void nodeGraph1_Load(object sender, EventArgs e)
         {
-            mainGraph.nodes.Add(new FolderNode("Main", 50, 50, 45, 45, 0, mainGraph));
-            mainGraph.nodes[0].isMain = true;
-
-
-
+            
         }
+
+        
 
         private void nodeGraph1_NodeSelected(object sender, EventArgs e)
         {
@@ -54,7 +73,7 @@ namespace Hetwork
                         ListTask lt = (mainGraph.selectedNode as ListTaskNode).taskElement;
                         for (int i = 0; i < lt.elements.Count; i++)
                         {
-                            items.Add(new CheckedItemPro(lt.elements[i].completed, lt.elements[i].taskTitle, lt.elements[i].taskContent));
+                            items.Add(new CheckedItemPro(lt.elements[i].completed, lt.elements[i].taskTitle, lt.elements[i].taskContent, lt.elements[i].id));
                         }
 
                         (contentDisplayPanel.Controls[0] as CheckListPro).Items.AddRange(items);
@@ -149,6 +168,7 @@ namespace Hetwork
             clp.MouseDoubleClick += ChecklistDoubleClick;
             clp.TextFont = new Font("Courier New", 8);
             clp.KeyDown += CheckListKeyDown;
+            clp.ItemsChanged += CheckListItemsChange;
 
             return clp;
         }
@@ -156,6 +176,14 @@ namespace Hetwork
         public void RichTextMouseDown(object sender, MouseEventArgs e)
         {
 
+            if (mainGraph.selectedNode != null)
+            {
+                UpdateNodeValue(mainGraph.selectedNode, sender);
+            }
+        }
+
+        public void CheckListItemsChange(object sender, EventArgs e)
+        {
             if (mainGraph.selectedNode != null)
             {
                 UpdateNodeValue(mainGraph.selectedNode, sender);
@@ -235,7 +263,7 @@ namespace Hetwork
                 lt.taskElement.elements.Clear();
                 foreach(CheckedItemPro item in c.Items)
                 {
-                    lt.taskElement.elements.Add(new SingularTask(item.name, item.details, item.check));
+                    lt.taskElement.elements.Add(new SingularTask(item.name, item.details, item.check, item.id));
                 }
             }
             else if(contentDisplay.GetType().ToString().Contains("RichTextBox"))
@@ -278,7 +306,7 @@ namespace Hetwork
                         ListTask lt = (mainGraph.selectedNode as ListTaskNode).taskElement;
                         for (int i = 0; i < lt.elements.Count; i++)
                         {
-                            items.Add(new CheckedItemPro(lt.elements[i].completed, lt.elements[i].taskTitle, lt.elements[i].taskContent));
+                            items.Add(new CheckedItemPro(lt.elements[i].completed, lt.elements[i].taskTitle, lt.elements[i].taskContent, lt.elements[i].id));
                         }
 
                         (contentDisplayPanel.Controls[0] as CheckListPro).Items.AddRange(items);

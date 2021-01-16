@@ -20,11 +20,12 @@ namespace Hetwork
             id = ID;
         }
 
-        public SingularTask(string name, string body, bool completionStatus)
+        public SingularTask(string name, string body, bool completionStatus, int ID)
         {
             taskTitle = name;
             taskContent = body;
             completed = completionStatus;
+            id = ID;
         }
     }
 
@@ -34,6 +35,7 @@ namespace Hetwork
         public string taskTitle = "";
         public List<SingularTask> elements = new List<SingularTask>();
         public int id;
+        public List<int> cachedSingleIDs = new List<int>();
 
         public ListTask(string name, List<SingularTask> items, int ID)
         {

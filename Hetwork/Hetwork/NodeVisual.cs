@@ -33,6 +33,9 @@ namespace Hetwork
 
         public bool isMain = false;
 
+        public int cachedParentID;
+        public List<int> cachedChildrenIDs = new List<int>();
+
         public List<NodeVisual> children = new List<NodeVisual>();
 
         public int id;
@@ -312,7 +315,7 @@ namespace Hetwork
     {
 
         public SingularTask taskElement;
-
+        public int cachedTaskID;
 
         public SingularTaskNode(string name, int x, int y, int width, int height, NodeGraph graphControl, int ID)
         {
@@ -538,6 +541,7 @@ namespace Hetwork
     public class ListTaskNode : NodeVisual
     {
         public ListTask taskElement;
+        public int cachedListID;
 
         public ListTaskNode(string name, int x, int y, int width, int height, NodeGraph graphControl, int ID)
         {

@@ -22,5 +22,5 @@ C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.pdb
 C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.CheckListPro.resources
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.CheckListPro.resources
 C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.EditorForm.resources
-C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.csprojAssemblyReference.cache
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.EditorForm.resources
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.csprojAssemblyReference.cache
