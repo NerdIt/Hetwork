@@ -60,6 +60,7 @@
     <Compile Include="EditorForm.Designer.cs">
       <DependentUpon>EditorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GraphLog.cs" />
     <Compile Include="HoverBox.cs">
       <SubType>UserControl</SubType>
     </Compile>

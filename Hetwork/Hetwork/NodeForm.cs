@@ -35,6 +35,8 @@ namespace Hetwork
                 mainGraph.nodes = p.nodes;
                 mainGraph.graphOffset = p.offset;
                 mainGraph.zoomFactor = p.zoom;
+
+                GraphLog.WriteToLog(this, "Load and Project data paired");
             }
             //mainGraph.InitGraph();
         }
@@ -254,6 +256,8 @@ namespace Hetwork
 
         public void UpdateNodeValue(NodeVisual node, object contentDisplay)
         {
+            GraphLog.WriteToLog(this, "Node data updated");
+
             mainGraph.recalculatePercentage = true;
             if (contentDisplay.GetType() == Type.GetType("Hetwork.CheckListPro"))
             {
@@ -281,6 +285,7 @@ namespace Hetwork
 
         private void mainGraph_NodeEdited(object sender, EventArgs e)
         {
+            GraphLog.WriteToLog(this, "Node data updated");
             if (mainGraph.selectedNode != null)
             {
                 nodeTitleLabel.Text = mainGraph.selectedNode.title;

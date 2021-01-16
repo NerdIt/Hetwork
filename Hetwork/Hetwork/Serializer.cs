@@ -13,6 +13,10 @@ namespace Hetwork
     {
         public static void SaveProject(Project p)
         {
+            MakeBackUp(p);
+
+            GraphLog.WriteToLog("Serializer", "Back Up Made");
+
             List<NodeVisual> nodes = p.nodes;
 
             List<SingularTask> singleTasks = new List<SingularTask>();
@@ -117,7 +121,23 @@ namespace Hetwork
                     sw.WriteLine(dataString[i]);
                 }
             }
+            GraphLog.WriteToLog("Serializer", "Project Saved");
         }
+
+        public static void MakeBackUp(Project p)
+        {
+            if (!Directory.Exists(p.path + @"backup\"))
+                Directory.CreateDirectory(p.path + @"backup\");
+            if (File.Exists(p.path + "savedata.data"))
+            {
+                if (File.Exists(p.path + @"backup\savedata_backup.data"))
+                    File.Delete(p.path + @"backup\savedata_backup.data");
+
+                File.Move(p.path + "savedata.data", p.path + @"backup\savedata_backup.data");
+            }
+            
+        }
+
 
         public static string StringToBinary(string data)
         {
@@ -159,7 +179,9 @@ namespace Hetwork
                 }
             }
 
-            for(int i = 0; i < data.Count; i++)
+            GraphLog.WriteToLog("Serializer", "Load Data Read");
+
+            for (int i = 0; i < data.Count; i++)
             {
                 string[] lineSplit = data[i].Split(' ');
                 try
@@ -176,7 +198,8 @@ namespace Hetwork
                                     p.taskGlobalId = int.Parse(lineSplit[2]);
                                     break;
                                 default:
-                                    Console.WriteLine($"Corrupted Meta Save {i}");
+                                    //Console.WriteLine($"Corrupted Meta Save {i}");
+                                    GraphLog.WriteToLog("Serializer", $"Corrupted Meta Save {i}");
                                     break;
                             }
                             break;
@@ -191,7 +214,8 @@ namespace Hetwork
                                     p.zoom = float.Parse(lineSplit[2]);
                                     break;
                                 default:
-                                    Console.WriteLine($"Corrupted Preset Save {i}");
+                                    //Console.WriteLine($"Corrupted Preset Save {i}");
+                                    GraphLog.WriteToLog("Serializer", $"Corrupted Preset Save {i}");
                                     break;
                             }
                             break;
@@ -249,7 +273,8 @@ namespace Hetwork
                                     p.nodes.Add(lnode);
                                     break;
                                 default:
-                                    Console.WriteLine($"Corrupted Node Save {i}");
+                                    //Console.WriteLine($"Corrupted Node Save {i}");
+                                    GraphLog.WriteToLog("Serializer", $"Corrupted Node Save {i}");
                                     break;
                             }
                             break;
@@ -263,7 +288,7 @@ namespace Hetwork
                                 case "list":
                                     ListTask ltask = new ListTask(lineSplit[5].Replace("§0xs000", " ").Replace("§0xn001", "\n").Replace("§0xt002", "\t"), new List<SingularTask>(), int.Parse(lineSplit[2]));
                                     ltask.completed = bool.Parse(lineSplit[3]);
-                                    if (lineSplit[4] != "")
+                                    if (lineSplit[4] != "null")
                                     {
                                         string[] splValue = lineSplit[4].Split(',');
                                         for (int j = 0; j < splValue.Length; j++)
@@ -276,12 +301,14 @@ namespace Hetwork
                                     tasks.Add(ltask);
                                     break;
                                 default:
-                                    Console.WriteLine($"Corrupted Task Save {i}");
+                                    //Console.WriteLine($"Corrupted Task Save {i}");
+                                    GraphLog.WriteToLog("Serializer", $"Corrupted Task Save {i}");
                                     break;
                             }
                             break;
                         default:
-                            Console.WriteLine($"Corrupted Tag Save {i}");
+                            //Console.WriteLine($"Corrupted Tag Save {i}");
+                            GraphLog.WriteToLog("Serializer", $"Corrupted Tag Save {i}");
                             break;
                     }
                 }
@@ -292,7 +319,8 @@ namespace Hetwork
                     var frame = st.GetFrame(0);
                     // Get the line number from the stack frame
                     var line = frame.GetFileLineNumber();
-                    Console.WriteLine($"Corrupted Save {i} '{e.Message}' on line {line}");
+                    //Console.WriteLine($"Corrupted Save {i} '{e.Message}' on line {line}");
+                    GraphLog.WriteToLog("Serializer", $"Corrupted Save {i} '{e.Message}' on line {line}");
                 }
             }
 
@@ -315,8 +343,10 @@ namespace Hetwork
                 }
             }
 
+            GraphLog.WriteToLog("Serializer", "Data Processed");
 
-            for(int i = 0; i < p.nodes.Count; i++)
+
+            for (int i = 0; i < p.nodes.Count; i++)
             {
                 if(p.nodes[i].GetType() == Type.GetType("Hetwork.SingularTaskNode"))
                 {
@@ -332,7 +362,7 @@ namespace Hetwork
                     }
                     else if (task.GetType() == Type.GetType("Hetwork.ListTask"))
                     {
-                        Console.WriteLine("Corrupted IDs");
+                        GraphLog.WriteToLog("Serializer", $"Corrupted IDs on save line {i}");
                     }
                 }
                 else if (p.nodes[i].GetType() == Type.GetType("Hetwork.ListTaskNode"))
@@ -346,7 +376,7 @@ namespace Hetwork
                     
                     if (task != null && task.GetType() == Type.GetType("Hetwork.SingularTask"))
                     {
-                        Console.WriteLine("Corrupted IDs");
+                        GraphLog.WriteToLog("Serializer", $"Corrupted IDs on save line {i}");
                     }
                     else if (task != null && task.GetType() == Type.GetType("Hetwork.ListTask"))
                     {
@@ -367,6 +397,9 @@ namespace Hetwork
                     //}
                 }
             }
+
+            GraphLog.WriteToLog("Serializer", "Object Parenting Complete");
+            GraphLog.WriteToLog("Serializer", "Project Loaded");
         }
 
         public static NodeVisual GetNodeByID(List<NodeVisual> nodes, int ID)
