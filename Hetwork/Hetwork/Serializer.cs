@@ -102,7 +102,7 @@ namespace Hetwork
                 }
                 if (childId == "") { childId = "null"; }
 
-                dataString.Add($"[task] list {listTasks[i].id} {listTasks[i].completed} {listTasks[i].taskTitle.Replace(" ", "§0xs000").Replace("\n", "§0xn001").Replace("\t", "§0xt002")} {childId}");
+                dataString.Add($"[task] list {listTasks[i].id} {listTasks[i].completed} {childId} {listTasks[i].taskTitle.Replace(" ", "§0xs000").Replace("\n", "§0xn001").Replace("\t", "§0xt002")}");
             }
 
 
@@ -261,13 +261,15 @@ namespace Hetwork
                                     tasks.Add(stask);
                                     break;
                                 case "list":
-                                    ListTask ltask = new ListTask(lineSplit[4].Replace("§0xs000", " ").Replace("§0xn001", "\n").Replace("§0xt002", "\t"), new List<SingularTask>(), int.Parse(lineSplit[2]));
+                                    ListTask ltask = new ListTask(lineSplit[5].Replace("§0xs000", " ").Replace("§0xn001", "\n").Replace("§0xt002", "\t"), new List<SingularTask>(), int.Parse(lineSplit[2]));
                                     ltask.completed = bool.Parse(lineSplit[3]);
-                                    if (lineSplit[5] != "")
+                                    if (lineSplit[4] != "")
                                     {
-                                        string[] splValue = lineSplit[5].Split(',');
+                                        string[] splValue = lineSplit[4].Split(',');
                                         for (int j = 0; j < splValue.Length; j++)
                                         {
+                                            //Debug.WriteLine(splValue[j]);
+                                            
                                             ltask.cachedSingleIDs.Add(int.Parse(splValue[j]));
                                         }
                                     }

@@ -327,5 +327,7 @@ namespace Hetwork
                 contentDisplayPanel.Controls.Clear();
             }
         }
+        
+
     }
 }

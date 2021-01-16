@@ -964,6 +964,11 @@ namespace Hetwork
                 graphProject.offset = graphOffset;
                 Serializer.SaveProject(graphProject);
             }
+            else if(e.KeyCode == Keys.N)
+            {
+                
+                
+            }
 
 
         }

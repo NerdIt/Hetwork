@@ -60,6 +60,12 @@
     <Compile Include="EditorForm.Designer.cs">
       <DependentUpon>EditorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="HoverBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="HoverBox.Designer.cs">
+      <DependentUpon>HoverBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="NodeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,6 +99,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EditorForm.resx">
       <DependentUpon>EditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HoverBox.resx">
+      <DependentUpon>HoverBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NodeForm.resx">
       <DependentUpon>NodeForm.cs</DependentUpon>
