@@ -38,9 +38,9 @@ namespace Hetwork
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nodeMenu1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.nodeMenu1.Location = new System.Drawing.Point(640, 12);
+            this.nodeMenu1.Location = new System.Drawing.Point(604, 12);
             this.nodeMenu1.Name = "nodeMenu1";
-            this.nodeMenu1.Size = new System.Drawing.Size(148, 426);
+            this.nodeMenu1.Size = new System.Drawing.Size(184, 426);
             this.nodeMenu1.TabIndex = 0;
             // 
             // VisualDesign

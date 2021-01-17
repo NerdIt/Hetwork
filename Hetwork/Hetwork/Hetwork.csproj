@@ -135,12 +135,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Azonix-1VB0.otf" />
-    <None Include="Resources\NodeBG.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\grid.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Resources\Plus-Symbol-Transparent-Images.png" />
     <Content Include="SavePlanning.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

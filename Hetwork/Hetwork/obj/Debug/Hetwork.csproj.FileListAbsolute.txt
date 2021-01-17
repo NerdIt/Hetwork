@@ -27,4 +27,3 @@ C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.HoverBox.r
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.HoverBox.resources
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.NodeMenu.resources
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.VisualDesign.resources
-C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.csprojAssemblyReference.cache

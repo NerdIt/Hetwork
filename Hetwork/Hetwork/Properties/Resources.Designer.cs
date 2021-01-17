@@ -73,19 +73,9 @@ namespace Hetwork.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap grid {
+        internal static System.Drawing.Bitmap PlusSym {
             get {
-                object obj = ResourceManager.GetObject("grid", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap NodeBG {
-            get {
-                object obj = ResourceManager.GetObject("NodeBG", resourceCulture);
+                object obj = ResourceManager.GetObject("PlusSym", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
