@@ -69,12 +69,14 @@ namespace Hetwork
             ectb.Height = 80;
             ectb.BorderStyle = BorderStyle.None;
             ectb.ScrollBars = RichTextBoxScrollBars.Vertical;
+            ectb.TextChanged += TextChange;
             Controls.Add(ectb);
 
             ettb = new RichTextBox();
             ettb.Height = 20;
             ettb.BorderStyle = BorderStyle.None;
             ettb.Multiline = false;
+            ettb.TextChanged += TextChange;
             Controls.Add(ettb);
 
         }
@@ -200,8 +202,15 @@ namespace Hetwork
 
             //  DRAW CHECK
             Rectangle checkRect = new Rectangle(3, ((int)g.MeasureString("|", titleFont).Height + 20 + 3) * index + 27 - offset, (int)g.MeasureString("|", titleFont).Height, (int)g.MeasureString("|", titleFont).Height);
-            g.FillRectangle(new SolidBrush(Color.White), checkRect);
+            if(hoverCheck != index)
+                g.FillRectangle(new SolidBrush(Color.White), checkRect);
+            else
+                g.FillRectangle(new SolidBrush(Color.Gray), checkRect);
             g.DrawRectangle(new Pen(Color.Black), checkRect);
+
+            if (t.completed)
+                g.FillRectangle(new SolidBrush(Color.LightGreen), new Rectangle(checkRect.X + 2, checkRect.Y + 2, checkRect.Width - 4, checkRect.Height - 4));
+
 
             //  DRAW TITLE
             string titleText = "";
@@ -235,20 +244,31 @@ namespace Hetwork
         }
 
         public int hoverTask = -1;
+        public int hoverCheck = -1;
         public bool newTaskBtnHover = false;
 
         private void NodeMenu_MouseMove(object sender, MouseEventArgs e)
         {
             newTaskBtnHover = false;
+            hoverCheck = -1;
             bool foundHovertask = false;
             for (int i = 0; i < tasks.Count; i++)
             {
-                Rectangle rect = new Rectangle(1, (fontHeight + 20 + 3) * i + 25 - offset, Width - 5, fontHeight + 20);
-                if(rect.Contains(e.Location))
+                if (new Rectangle(3, (fontHeight + 20 + 3) * i + 27 - offset, fontHeight, fontHeight).Contains(e.Location))
                 {
-                    hoverTask = i;
-                    foundHovertask = true;
+                    hoverTask = -1;
+                    hoverCheck = i;
                     break;
+                }
+                else
+                {
+                    Rectangle rect = new Rectangle(1, (fontHeight + 20 + 3) * i + 25 - offset, Width - 5, fontHeight + 20);
+                    if (rect.Contains(e.Location))
+                    {
+                        hoverTask = i;
+                        foundHovertask = true;
+                        break;
+                    }
                 }
             }
             if (!foundHovertask)
@@ -297,18 +317,32 @@ namespace Hetwork
         {
             if (e.Button == MouseButtons.Left)
             {
-                bool foundHovertask = false;
+                bool foundSelectTask = false;
                 for (int i = 0; i < tasks.Count; i++)
                 {
-                    Rectangle rect = new Rectangle(1, (fontHeight + 20 + 3) * i + 25 - offset, Width - 5, fontHeight + 20);
-                    if (rect.Contains(e.Location))
+                    if (new Rectangle(3, (fontHeight + 20 + 3) * i + 27 - offset, fontHeight, fontHeight).Contains(e.Location))
                     {
-                        selectedTask = i;
-                        foundHovertask = true;
+                        tasks[i].completed = !tasks[i].completed;
                         break;
                     }
+                    else
+                    {
+                        Rectangle rect = new Rectangle(1, (fontHeight + 20 + 3) * i + 25 - offset, Width - 5, fontHeight + 20);
+                        if (rect.Contains(e.Location))
+                        {
+                            
+                            selectedTask = i;
+                            ettb.Text = tasks[selectedTask].taskTitle;
+                            Debug.WriteLine("Set TaskTitle");
+                            ectb.Text = tasks[selectedTask].taskContent;
+                            Debug.WriteLine("Set TaskContent");
+
+                            foundSelectTask = true;
+                            break;
+                        }
+                    }
                 }
-                if (!foundHovertask)
+                if (!foundSelectTask)
                 {
                     selectedTask = -1;
                     if (new Rectangle(1, ((int)fontHeight + 20 + 3) * tasks.Count + 25 - offset, Width - 5, 40).Contains(e.Location))
@@ -318,6 +352,21 @@ namespace Hetwork
                     
                 }
             }
+
+            needRepaint = true;
+        }
+
+        public void TextChange(object sender, EventArgs e)
+        {
+            if (selectedTask != -1)
+            {
+                tasks[selectedTask].taskTitle = ettb.Text;
+                Debug.WriteLine("Get TaskTitle");
+                tasks[selectedTask].taskContent = ectb.Text;
+                Debug.WriteLine("Get TaskContent");
+            }
+
+            needRepaint = true;
         }
     }
 }
