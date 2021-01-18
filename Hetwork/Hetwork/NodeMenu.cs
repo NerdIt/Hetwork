@@ -32,9 +32,9 @@ namespace Hetwork
 
         int offset = 0;
 
-        RichTextBox tb;
-        RichTextBox ectb;
-        RichTextBox ettb;
+        public RichTextBox tb;
+        public RichTextBox ectb;
+        public RichTextBox ettb;
 
         public Font titleFont = new Font("Arial", 7, FontStyle.Bold);
         public Font contentFont = new Font("Arial", 7);
@@ -115,7 +115,7 @@ namespace Hetwork
 
 
         public int selectedTask = -1;
-
+        public bool canAdd = true;
 
         public void Draw(object sender, PaintEventArgs e)
         {
@@ -145,13 +145,14 @@ namespace Hetwork
                 g.FillRectangle(new SolidBrush(Color.LightGray), addRect);
             }
 
-            g.DrawRectangle(new Pen(Color.Black), addRect);
-            
-
-            StringFormat sf = new StringFormat();
-            sf.LineAlignment = StringAlignment.Center;
-            sf.Alignment = StringAlignment.Center;
-            g.DrawString("+", new Font("Arial", 15, FontStyle.Bold), new SolidBrush(Color.Gray), new Point(1 + addRect.Width / 2, ((int)g.MeasureString("|", titleFont).Height + 20 + 3) * tasks.Count + 25 - offset + addRect.Height / 2), sf);
+            if (canAdd)
+            {
+                g.DrawRectangle(new Pen(Color.Black), addRect);
+                StringFormat sf = new StringFormat();
+                sf.LineAlignment = StringAlignment.Center;
+                sf.Alignment = StringAlignment.Center;
+                g.DrawString("+", new Font("Arial", 15, FontStyle.Bold), new SolidBrush(Color.Gray), new Point(1 + addRect.Width / 2, ((int)g.MeasureString("|", titleFont).Height + 20 + 3) * tasks.Count + 25 - offset + addRect.Height / 2), sf);
+            }
 
             GC.Collect();
             needRepaint = false;
@@ -163,6 +164,7 @@ namespace Hetwork
                 ectb.Enabled = true;
                 ectb.Location = new Point(2, Height - ectb.Height - 4);
                 ectb.Width = Width - 6;
+                ectb.Height = Height / 4;
                 g.DrawRectangle(new Pen(Color.Black), 1, Height - ectb.Height - 5, Width - 5, ectb.Height + 1);
 
                 ettb.Visible = true;
@@ -231,7 +233,7 @@ namespace Hetwork
             string contentText = "";
             stringSize = g.MeasureString(titleText, titleFont);
             int contentIndex = 0;
-            while (stringSize.Width + 9 < Width - 5 - (checkRect.X) && contentIndex < t.taskContent.Length)
+            while (stringSize.Width + 9 < Width - 5 - (checkRect.X) && contentIndex < t.taskContent.Length && t.taskContent[contentIndex] != '\n')
             {
                 contentText += t.taskContent[contentIndex];
                 stringSize = g.MeasureString(contentText, titleFont);
@@ -274,9 +276,14 @@ namespace Hetwork
             if (!foundHovertask)
             {
                 hoverTask = -1;
-                if(new Rectangle(1, ((int)fontHeight + 20 + 3) * tasks.Count + 25 - offset, Width - 5, 40).Contains(e.Location))
+                
+                if(new Rectangle(1, ((int)fontHeight + 20 + 3) * tasks.Count + 25 - offset, Width - 5, 40).Contains(e.Location) && canAdd)
                 {
                     newTaskBtnHover = true;
+                }
+                else
+                {
+                    newTaskBtnHover = false;
                 }
 
             }
@@ -323,6 +330,7 @@ namespace Hetwork
                     if (new Rectangle(3, (fontHeight + 20 + 3) * i + 27 - offset, fontHeight, fontHeight).Contains(e.Location))
                     {
                         tasks[i].completed = !tasks[i].completed;
+                        foundSelectTask = true;
                         break;
                     }
                     else
@@ -333,9 +341,7 @@ namespace Hetwork
                             
                             selectedTask = i;
                             ettb.Text = tasks[selectedTask].taskTitle;
-                            Debug.WriteLine("Set TaskTitle");
                             ectb.Text = tasks[selectedTask].taskContent;
-                            Debug.WriteLine("Set TaskContent");
 
                             foundSelectTask = true;
                             break;
@@ -345,7 +351,7 @@ namespace Hetwork
                 if (!foundSelectTask)
                 {
                     selectedTask = -1;
-                    if (new Rectangle(1, ((int)fontHeight + 20 + 3) * tasks.Count + 25 - offset, Width - 5, 40).Contains(e.Location))
+                    if (new Rectangle(1, ((int)fontHeight + 20 + 3) * tasks.Count + 25 - offset, Width - 5, 40).Contains(e.Location) && canAdd)
                     {
                         tasks.Add(new SingularTask("New Item", "", 0));
                     }
@@ -360,10 +366,12 @@ namespace Hetwork
         {
             if (selectedTask != -1)
             {
-                tasks[selectedTask].taskTitle = ettb.Text;
-                Debug.WriteLine("Get TaskTitle");
-                tasks[selectedTask].taskContent = ectb.Text;
-                Debug.WriteLine("Get TaskContent");
+                if(sender == ettb)
+                    tasks[selectedTask].taskTitle = ettb.Text;
+                //Debug.WriteLine("Get TaskTitle");
+                else if(sender == ectb)
+                    tasks[selectedTask].taskContent = ectb.Text;
+                //Debug.WriteLine("Get TaskContent");
             }
 
             needRepaint = true;

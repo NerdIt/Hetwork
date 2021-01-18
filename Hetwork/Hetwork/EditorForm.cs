@@ -31,7 +31,7 @@ namespace Hetwork
         {
             CheckList.Items[CheckList.selectetedItem].name = titleTextBox.Text;
             CheckList.Items[CheckList.selectetedItem].details = contentBox.Text;
-            parentForm.UpdateNodeValue(node, CheckList);
+            //parentForm.UpdateNodeValue(node, CheckList);
             CheckList.Invalidate();
             Close();
         }
