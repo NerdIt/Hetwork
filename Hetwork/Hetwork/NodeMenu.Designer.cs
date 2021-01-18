@@ -39,7 +39,9 @@ namespace Hetwork
             this.Name = "NodeMenu";
             this.Size = new System.Drawing.Size(184, 474);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Draw);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.NodeMenu_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.NodeMenu_MouseMove);
+            this.Resize += new System.EventHandler(this.NodeMenu_Resize);
             this.ResumeLayout(false);
 
         }

@@ -1,13 +1,18 @@
-[meta] nodeIDValue 5
-[meta] taskIDValue 6
-[preset] offset 8,55
-[preset] zoom 1
-[node] folder 0 87,52 45,45 null 1,4 True yay§0xs000test
-[node] single 1 292,27 100,35 0 0 New§0xs000Task
-[node] list 3 271,199 100,35 null 2 New§0xs000List
-[node] list 4 302,116 100,35 0 5 New§0xs000List
-[task] single 0 False New§0xs000Task yay§0xs000test§0xs000test
-[task] single 3 False New§0xs000Item 
-[task] single 4 True New§0xs000Item 
-[task] list 2 False 3,4 New§0xs000List
-[task] list 5 False null New§0xs000List
+[meta] nodeIDValue 8
+[meta] taskIDValue 10
+[preset] offset 240,361
+[preset] zoom 0.5999998
+[node] folder 5 105,-180 45,45 0 1,4 False New§0xs000Folder
+[node] folder 0 -81,-68 45,45 null 5,3,6,7 True yay§0xs000test
+[node] single 1 339,-243 100,35 5 0 New§0xs000Task
+[node] single 6 107,38 100,35 0 8 New§0xs000Task
+[node] single 7 74,103 100,35 0 9 New§0xs000Task
+[node] list 4 344,-135 100,35 5 5 New§0xs000List
+[node] list 3 179,-66 100,35 0 2 New§0xs000List
+[task] single 0 True New§0xs000Task yay§0xs000test§0xs000test
+[task] single 8 True New§0xs000Task 
+[task] single 9 False New§0xs000Task 
+[task] single 6 False New§0xs000Item 
+[task] single 7 False New§0xs000Item 
+[task] list 5 True null New§0xs000List
+[task] list 2 True 6,7 New§0xs000List
