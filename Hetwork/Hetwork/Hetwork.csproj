@@ -138,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Plus-Symbol-Transparent-Images.png" />
+    <None Include="Resources\Delete.png" />
     <Content Include="SavePlanning.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -35,11 +35,14 @@ namespace Hetwork
         public RichTextBox tb;
         public RichTextBox ectb;
         public RichTextBox ettb;
+        public Button dbtn;
 
         public Font titleFont = new Font("Arial", 7, FontStyle.Bold);
         public Font contentFont = new Font("Arial", 7);
 
         int fontHeight = 1;
+
+        public NodeVisual selectedNode;
 
         public NodeMenu()
         {
@@ -63,6 +66,7 @@ namespace Hetwork
             tb.BorderStyle = BorderStyle.None;
             tb.Multiline = false;
             tb.MouseWheel += Mouse_Scroll;
+            tb.TextChanged += TextChange;
             Controls.Add(tb);
 
             ectb = new RichTextBox();
@@ -79,7 +83,24 @@ namespace Hetwork
             ettb.TextChanged += TextChange;
             Controls.Add(ettb);
 
+            dbtn = new Button();
+            //dbtn.AutoSize = true;
+            dbtn.Height = 11;
+            dbtn.FlatStyle = FlatStyle.Flat;
+            //dbtn.Text = "X";
+            dbtn.Font = new Font("Arial", 5);
+            dbtn.BackColor = Color.LightGray;
+            dbtn.Click += Delete;
+            dbtn.Paint += PaintDeleteBtn;
+            Controls.Add(dbtn);
+
         }
+
+        private void PaintDeleteBtn(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImage(Resources.Delete, 0,0);
+        }
+
 
         private void TimerOnTick(object sender, EventArgs eventArgs)
         {
@@ -139,14 +160,16 @@ namespace Hetwork
                 DrawTask(tasks[i], g, i);
             }
 
-            Rectangle addRect = new Rectangle(1, ((int)g.MeasureString("|", titleFont).Height + 20 + 3) * tasks.Count + 25 - offset, Width - 5, 40);
-            if (newTaskBtnHover)
-            {
-                g.FillRectangle(new SolidBrush(Color.LightGray), addRect);
-            }
+            
+            
 
             if (canAdd)
             {
+                Rectangle addRect = new Rectangle(1, ((int)g.MeasureString("|", titleFont).Height + 20 + 3) * tasks.Count + 25 - offset, Width - 5, 40);
+                if (newTaskBtnHover)
+                {
+                    g.FillRectangle(new SolidBrush(Color.LightGray), addRect);
+                }
                 g.DrawRectangle(new Pen(Color.Black), addRect);
                 StringFormat sf = new StringFormat();
                 sf.LineAlignment = StringAlignment.Center;
@@ -172,6 +195,15 @@ namespace Hetwork
                 ettb.Location = new Point(2, Height - ectb.Height - ettb.Height - 8);
                 ettb.Width = Width - 6;
                 g.DrawRectangle(new Pen(Color.Black), 1, Height - ectb.Height - ettb.Height - 9, Width - 5, ettb.Height + 1);
+
+                if (canAdd)
+                {
+                    dbtn.Visible = true;
+                    dbtn.Enabled = true;
+                    dbtn.Width = 11;
+                    dbtn.Location = new Point(1, Height - ectb.Height - ettb.Height - 10 - dbtn.Height);
+                }
+               
             }
             else
             {
@@ -180,6 +212,9 @@ namespace Hetwork
 
                 ettb.Visible = false;
                 ettb.Enabled = false;
+
+                dbtn.Visible = false;
+                dbtn.Enabled = false;
             }
         }
 
@@ -329,7 +364,6 @@ namespace Hetwork
                 {
                     if (new Rectangle(3, (fontHeight + 20 + 3) * i + 27 - offset, fontHeight, fontHeight).Contains(e.Location))
                     {
-                        tasks[i].completed = !tasks[i].completed;
                         foundSelectTask = true;
                         break;
                     }
@@ -338,8 +372,42 @@ namespace Hetwork
                         Rectangle rect = new Rectangle(1, (fontHeight + 20 + 3) * i + 25 - offset, Width - 5, fontHeight + 20);
                         if (rect.Contains(e.Location))
                         {
-                            
+
                             selectedTask = i;
+                            foundSelectTask = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            needRepaint = true;
+        }
+
+        private void NodeMenu_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+
+
+
+                bool foundSelectTask = false;
+                for (int i = 0; i < tasks.Count; i++)
+                {
+                    if (new Rectangle(3, (fontHeight + 20 + 3) * i + 27 - offset, fontHeight, fontHeight).Contains(e.Location))
+                    {
+                        tasks[i].completed = !tasks[i].completed;
+                        NodeSelected_Event(this, e);
+                        foundSelectTask = true;
+                        break;
+                    }
+                    else
+                    {
+                        Rectangle rect = new Rectangle(1, (fontHeight + 20 + 3) * i + 25 - offset, Width - 5, fontHeight + 20);
+                        if (rect.Contains(e.Location))
+                        {
+
+                            //selectedTask = i;
                             ettb.Text = tasks[selectedTask].taskTitle;
                             ectb.Text = tasks[selectedTask].taskContent;
 
@@ -353,18 +421,42 @@ namespace Hetwork
                     selectedTask = -1;
                     if (new Rectangle(1, ((int)fontHeight + 20 + 3) * tasks.Count + 25 - offset, Width - 5, 40).Contains(e.Location) && canAdd)
                     {
-                        tasks.Add(new SingularTask("New Item", "", 0));
+                        SingularTask newTask = new SingularTask("New Item", "", Program.selectedProject.GetTaskId());
+                        tasks.Add(newTask);
+
+                        if (selectedNode.GetType() == Type.GetType("Hetwork.SingularTaskNode"))
+                        {
+                            (selectedNode as SingularTaskNode).taskElement = newTask;
+                        }
+                        else if (selectedNode.GetType() == Type.GetType("Hetwork.ListTaskNode"))
+                        {
+                            (selectedNode as ListTaskNode).taskElement.elements.Add(newTask);
+                        }
+                        NodeSelected_Event(this, e);
                     }
-                    
+
+                }
+
+                if (selectedTask != -1 && hoverTask != -1)
+                {
+                    if (hoverTask != selectedTask)
+                    {
+                        if (selectedNode.GetType() == Type.GetType("Hetwork.ListTaskNode"))
+                        {
+                            ListTaskNode listNode = selectedNode as ListTaskNode;
+                            listNode.taskElement.elements.Rearrange(listNode.taskElement.elements.IndexOf(tasks[selectedTask]), listNode.taskElement.elements.IndexOf(tasks[hoverTask]));
+                        }
+                        tasks.Rearrange(selectedTask, hoverTask);
+                        selectedTask = hoverTask;
+                    }
+                    NodeSelected_Event(this, e);
                 }
             }
-
-            needRepaint = true;
         }
 
         public void TextChange(object sender, EventArgs e)
         {
-            if (selectedTask != -1)
+            if (selectedTask != -1 && !wiping)
             {
                 if(sender == ettb)
                     tasks[selectedTask].taskTitle = ettb.Text;
@@ -372,9 +464,65 @@ namespace Hetwork
                 else if(sender == ectb)
                     tasks[selectedTask].taskContent = ectb.Text;
                 //Debug.WriteLine("Get TaskContent");
+
+                
             }
+            NodeSelected_Event(this, e);
 
             needRepaint = true;
         }
+
+        bool wiping = false;
+        public void Wipe()
+        {
+            tb.TextChanged -= TextChange;
+            ettb.TextChanged -= TextChange;
+            ectb.TextChanged -= TextChange;
+            tasks.Clear();
+            canAdd = false;
+            selectedTask = -1;
+            tb.Text = "";
+            hoverTask = -1;
+            Enabled = false;
+
+            tb.TextChanged += TextChange;
+            ettb.TextChanged += TextChange;
+            ectb.TextChanged += TextChange;
+        }
+
+        public event EventHandler ControlUpdated;
+        public void NodeSelected_Event(object sender, EventArgs e)
+        {
+            if (ControlUpdated != null)
+            {
+                ControlUpdated(this, e);
+            }
+        }
+
+        private void NodeMenu_Leave(object sender, EventArgs e)
+        {
+            hoverTask = -1;
+            newTaskBtnHover = false;
+        }
+
+        public void Delete(object sender, EventArgs e)
+        {
+            if (selectedTask != -1)
+            {
+                if (selectedNode.GetType() == Type.GetType("Hetwork.SingularTaskNode"))
+                {
+                    //(selectedNode as SingularTaskNode).taskElement = newTask;
+                }
+                else if (selectedNode.GetType() == Type.GetType("Hetwork.ListTaskNode"))
+                {
+                    (selectedNode as ListTaskNode).taskElement.elements.Remove(tasks[selectedTask]);
+                    tasks.RemoveAt(selectedTask);
+                }
+                needRepaint = true;
+                selectedTask = -1;
+            }
+        }
+
+        
     }
 }

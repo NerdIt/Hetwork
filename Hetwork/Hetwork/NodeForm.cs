@@ -21,6 +21,7 @@ namespace Hetwork
 
             nodeMenu1.canAdd = false;
             nodeMenu1.Enabled = false;
+            nodeMenu1.ControlUpdated += MenuUpdated;
         }
 
         public void LoadData(Project p, bool newProj)
@@ -40,6 +41,8 @@ namespace Hetwork
 
                 GraphLog.WriteToLog(this, "Load and Project data paired");
             }
+            mainGraph.recalculatePercentage = true;
+
             //mainGraph.InitGraph();
         }
 
@@ -49,6 +52,8 @@ namespace Hetwork
         {
             
         }
+
+        
 
         
 
@@ -77,17 +82,15 @@ namespace Hetwork
 
         private void nodeGraph1_NodeSelected(object sender, EventArgs e)
         {
-            nodeMenu1.tasks.Clear();
-            nodeMenu1.canAdd = false;
-            nodeMenu1.selectedTask = -1;
-            nodeMenu1.tb.Text = "";
-            nodeMenu1.hoverTask = -1;
-            nodeMenu1.Enabled = false;
+            nodeMenu1.Wipe();
+            
 
             if (mainGraph.selectedNode != null)
             {
+                nodeMenu1.selectedNode = mainGraph.selectedNode;
                 selectedNode = mainGraph.selectedNode;
-                if(selectedNode.GetType() == Type.GetType("Hetwork.SingularTaskNode"))
+                //Debug.WriteLine(selectedNode.id);
+                if (selectedNode.GetType() == Type.GetType("Hetwork.SingularTaskNode"))
                 {
                     SingularTaskNode node = selectedNode as SingularTaskNode;
                     nodeMenu1.Enabled = true;
@@ -95,16 +98,23 @@ namespace Hetwork
                     nodeMenu1.tb.Text = node.title;
                     nodeMenu1.tasks.Add(node.taskElement);
                 }
-                else if(selectedNode.GetType() == Type.GetType("Hetwork.ListTaskNode"))
+                else if (selectedNode.GetType() == Type.GetType("Hetwork.ListTaskNode"))
                 {
                     ListTaskNode node = selectedNode as ListTaskNode;
                     nodeMenu1.Enabled = true;
                     nodeMenu1.canAdd = true;
                     nodeMenu1.tb.Text = node.title;
-                    for(int i = 0; i < node.taskElement.elements.Count; i++)
+                    for (int i = 0; i < node.taskElement.elements.Count; i++)
                     {
                         nodeMenu1.tasks.Add(node.taskElement.elements[i]);
-                    }    
+                    }
+                }
+                else if (selectedNode.GetType() == Type.GetType("Hetwork.FolderNode"))
+                {
+                    FolderNode node = selectedNode as FolderNode;
+                    nodeMenu1.Enabled = true;
+                    nodeMenu1.canAdd = false;
+                    nodeMenu1.tb.Text = node.title;
                 }
             }
             nodeMenu1.Invalidate();
@@ -118,9 +128,53 @@ namespace Hetwork
 
         private void mainGraph_NodeEdited(object sender, EventArgs e)
         {
+            
+            nodeMenu1.Invalidate();
             //GraphLog.WriteToLog(this, "Node data updated");
         }
+
+        private void MenuUpdated(object sender, EventArgs e)
+        {
+            if (mainGraph.selectedNode != null)
+            {
+                if (mainGraph.selectedNode.GetType() == Type.GetType("Hetwork.SingularTaskNode"))
+                {
+                    SingularTaskNode node = mainGraph.selectedNode as SingularTaskNode;
+                    node.title = nodeMenu1.tb.Text;
+                    mainGraph.recalculatePercentage = true;
+                    mainGraph.Invalidate();
+                }
+                else if (mainGraph.selectedNode.GetType() == Type.GetType("Hetwork.ListTaskNode"))
+                {
+                    ListTaskNode node = mainGraph.selectedNode as ListTaskNode;
+                    node.title = nodeMenu1.tb.Text;
+                    bool completed = true;
+                    for(int i = 0; i < node.taskElement.elements.Count; i++)
+                    {
+                        if(!node.taskElement.elements[i].completed)
+                        {
+                            completed = false;
+                            break;
+                        }
+                    }
+                    node.taskElement.completed = completed;
+                    mainGraph.recalculatePercentage = true;
+                    mainGraph.Invalidate();
+                }
+                else if (mainGraph.selectedNode.GetType() == Type.GetType("Hetwork.FolderNode"))
+                {
+                    FolderNode node = mainGraph.selectedNode as FolderNode;
+                    node.title = nodeMenu1.tb.Text;
+                    mainGraph.Invalidate();
+                }
+            }
+        }
+
+
         
+
+
+
 
     }
 }

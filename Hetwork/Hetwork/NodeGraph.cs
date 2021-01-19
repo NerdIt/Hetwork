@@ -178,10 +178,15 @@ namespace Hetwork
                 }
                 else if (selectedNode.GetType() == Type.GetType("Hetwork.ListTaskNode"))
                 {
-                    (selectedNode as ListTaskNode).taskElement.completed = !(selectedNode as ListTaskNode).taskElement.completed;
+                    
+                    for(int i = 0; i < (selectedNode as ListTaskNode).taskElement.elements.Count; i++)
+                    {
+                        (selectedNode as ListTaskNode).taskElement.elements[i].completed = !(selectedNode as ListTaskNode).taskElement.completed;
+                    }
                 }
                 recalculatePercentage = true;
-
+                Invalidate();
+                NodeEdited_Event(this, e);
                 needRepaint = true;
             }
             
@@ -212,6 +217,7 @@ namespace Hetwork
             if (DesignMode) return;
             if (needRepaint)
             {
+                recalculatePercentage = true;
                 Invalidate();
             }
         }
@@ -614,25 +620,97 @@ namespace Hetwork
                                         
                                         if (nv.connection == null)
                                         {
-                                            nv.connection = new NodeConnection(nv, editingNodeConnection, this);
+                                            bool canLink = true;
+                                            NodeVisual processingNode = editingNodeConnection;
+                                            for (int i = 0; i < nodes.Count; i++)
+                                            {
+                                                if (processingNode.connection != null)
+                                                    processingNode = processingNode.connection.n2;
+                                                else
+                                                    break;
+
+                                                if (processingNode.connection.n2 == editingNodeConnection)
+                                                {
+                                                    canLink = false;
+                                                    break;
+                                                }
+
+                                            }
+                                            if(canLink)
+                                                nv.connection = new NodeConnection(nv, editingNodeConnection, this);
                                         }
                                         else
                                         {
-                                            nv.connection.RemoveChild();
-                                            nv.connection = new NodeConnection(nv, editingNodeConnection, this);
+                                            bool canLink = true;
+                                            NodeVisual processingNode = nv;
+                                            for (int i = 0; i < nodes.Count; i++)
+                                            {
+                                                if (processingNode.connection != null)
+                                                    processingNode = processingNode.connection.n2;
+                                                else
+                                                    break;
+
+                                                if (processingNode.connection.n2 == editingNodeConnection)
+                                                {
+                                                    canLink = false;
+                                                    break;
+                                                }
+
+                                            }
+
+                                            if (canLink)
+                                            {
+                                                nv.connection.RemoveChild();
+                                                nv.connection = new NodeConnection(nv, editingNodeConnection, this);
+                                            }
                                         }
                                     }
                                     else if(!editingNodeConnection.isMain)
                                     {
-                                        
-                                        editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
+                                        bool canLink = true;
+                                        NodeVisual processingNode = editingNodeConnection;
+                                        for (int i = 0; i < nodes.Count; i++)
+                                        {
+                                            if (processingNode.connection != null)
+                                                processingNode = processingNode.connection.n2;
+                                            else
+                                                break;
+
+                                            if (processingNode.connection.n2 == editingNodeConnection)
+                                            {
+                                                canLink = false;
+                                                break;
+                                            }
+
+                                        }
+
+                                        if(canLink)
+                                            editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
                                     }
                                     else
                                     {
-                                        
-                                        if (nv.connection != null)
-                                            nv.connection.RemoveChild();
-                                        nv.connection = new NodeConnection(nv, editingNodeConnection, this);
+                                        bool canLink = true;
+                                        NodeVisual processingNode = nv;
+                                        for (int i = 0; i < nodes.Count; i++)
+                                        {
+                                            if (processingNode.connection != null)
+                                                processingNode = processingNode.connection.n2;
+                                            else
+                                                break;
+
+                                            if (processingNode.connection.n2 == editingNodeConnection)
+                                            {
+                                                canLink = false;
+                                                break;
+                                            }
+
+                                        }
+                                        if (canLink)
+                                        {
+                                            if (nv.connection != null)
+                                                nv.connection.RemoveChild();
+                                            nv.connection = new NodeConnection(nv, editingNodeConnection, this);
+                                        }
                                     }
                                 }
                                 else if(editingNodeConnection.GetType() == Type.GetType("Hetwork.FolderNode") && nv.GetType() != Type.GetType("Hetwork.FolderNode"))
@@ -674,12 +752,30 @@ namespace Hetwork
                                 }
                                 else if (editingNodeConnection.GetType() != Type.GetType("Hetwork.FolderNode") && nv.GetType() == Type.GetType("Hetwork.FolderNode"))
                                 {
-                                    
-                                    editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
+                                   
+                                        editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
                                 }
                                 else if (editingNodeConnection.GetType() == Type.GetType("Hetwork.FolderNode") && nv.GetType() == Type.GetType("Hetwork.FolderNode") && !editingNodeConnection.isMain && !editingNodeConnection.isMain)
                                 {
-                                    editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
+                                    bool canLink = true;
+                                    NodeVisual processingNode = nv;
+                                    for (int i = 0; i < nodes.Count; i++)
+                                    {
+                                        if (processingNode.connection != null)
+                                            processingNode = processingNode.connection.n2;
+                                        else
+                                            break;
+
+                                        if (processingNode.connection.n2 == editingNodeConnection)
+                                        {
+                                            canLink = false;
+                                            break;
+                                        }
+
+                                    }
+
+                                    if(canLink)
+                                        editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
                                 }
                                 else if (editingNodeConnection.isMain && nv.connection == null)
                                 {

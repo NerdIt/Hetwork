@@ -109,14 +109,20 @@ namespace Hetwork
                         }
                         else if (nv.GetType() == Type.GetType("Hetwork.ListTaskNode"))
                         {
-                            if ((nv as ListTaskNode).taskElement.completed)
+                            bool isComplete = true;
+                            for (int i = 0; i < (nv as ListTaskNode).taskElement.elements.Count; i++)
                             {
+                                if (!(nv as ListTaskNode).taskElement.elements[i].completed)
+                                {
+                                    isComplete = false;
+                                }
+                            }
+
+                            if (isComplete)
                                 complete++;
-                            }
                             else
-                            {
                                 incomplete++;
-                            }
+                            
                         }
                     }
                     else
