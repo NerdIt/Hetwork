@@ -19,14 +19,12 @@ C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.csproj.Cor
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.exe
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.pdb
 C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.CheckListPro.resources
-C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.CheckListPro.resources
 C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.EditorForm.resources
-C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.EditorForm.resources
 C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.HoverBox.resources
-C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.HoverBox.resources
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.NodeMenu.resources
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.VisualDesign.resources
 C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.NodeMenu.resources
 C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.VisualDesign.resources
 C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.csprojAssemblyReference.cache
+C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.ProjectSelectionForm.resources
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.csprojAssemblyReference.cache

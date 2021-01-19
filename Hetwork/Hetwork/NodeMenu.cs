@@ -37,6 +37,8 @@ namespace Hetwork
         public RichTextBox ettb;
         public Button dbtn;
 
+        public Font editingFont = new Font("Courier New", 8.25f);
+
         public Font titleFont = new Font("Arial", 7, FontStyle.Bold);
         public Font contentFont = new Font("Arial", 7);
 
@@ -67,6 +69,7 @@ namespace Hetwork
             tb.Multiline = false;
             tb.MouseWheel += Mouse_Scroll;
             tb.TextChanged += TextChange;
+            tb.Font = editingFont;
             Controls.Add(tb);
 
             ectb = new RichTextBox();
@@ -74,6 +77,7 @@ namespace Hetwork
             ectb.BorderStyle = BorderStyle.None;
             ectb.ScrollBars = RichTextBoxScrollBars.Vertical;
             ectb.TextChanged += TextChange;
+            ectb.Font = editingFont;
             Controls.Add(ectb);
 
             ettb = new RichTextBox();
@@ -81,6 +85,7 @@ namespace Hetwork
             ettb.BorderStyle = BorderStyle.None;
             ettb.Multiline = false;
             ettb.TextChanged += TextChange;
+            ettb.Font = editingFont;
             Controls.Add(ettb);
 
             dbtn = new Button();

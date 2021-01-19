@@ -112,4 +112,37 @@ namespace Hetwork
         }
         
     }
+
+
+    public static class ListExtensions
+    {
+
+        public static void Rearrange<T>(this List<T> list, int index, int targetIndex)
+        {
+            try
+            {
+                T v = list[index];
+                list.RemoveAt(index);
+                list.Insert(targetIndex, v);
+            }
+            catch
+            {
+
+            }
+        }
+
+        public static void SendToTop<T>(this List<T> list, int index, int targetIndex)
+        {
+            T v = list[index];
+            list.RemoveAt(index);
+            list.Insert(0, v);
+        }
+
+        public static void SendToBottom<T>(this List<T> list, int index, int targetIndex)
+        {
+            T v = list[index];
+            list.RemoveAt(index);
+            list.Insert(list.Count, v);
+        }
+    }
 }

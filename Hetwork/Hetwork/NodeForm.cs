@@ -28,6 +28,9 @@ namespace Hetwork
 
         public void LoadData(Project p, bool newProj)
         {
+            mainGraph.nodes.Clear();
+            nodeMenu1.Wipe();
+            nodeMenu1.Enabled = false;
             currentProject = p;
             mainGraph.graphProject = p;
             if (newProj)
@@ -44,7 +47,8 @@ namespace Hetwork
                 GraphLog.WriteToLog(this, "Load and Project data paired");
             }
             mainGraph.recalculatePercentage = true;
-
+            nodeMenu1.Enabled = true;
+            mainGraph.Invalidate();
             //mainGraph.InitGraph();
         }
 
@@ -170,6 +174,38 @@ namespace Hetwork
                     mainGraph.Invalidate();
                 }
             }
+        }
+
+        private void FileMenu_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if(e.ClickedItem == ts0)
+            {
+
+            }
+            else if(e.ClickedItem == ts1)
+            {
+                ProjectSelectionForm psf = new ProjectSelectionForm(this);
+                psf.ShowDialog();
+                //Hide();
+                
+            }
+            else if (e.ClickedItem == ts2)
+            {
+                if (currentProject != null)
+                    Serializer.SaveProject(currentProject);
+            }
+            else if (e.ClickedItem == ts3)
+            {
+                if(currentProject != null)
+                    Serializer.SaveProject(currentProject);
+                Environment.Exit(0);
+            }
+        }
+
+        private void NodeForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (currentProject != null)
+                Serializer.SaveProject(currentProject);
         }
     }
 }

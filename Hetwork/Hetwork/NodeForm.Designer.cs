@@ -61,7 +61,7 @@
             this.primaryTable.Name = "primaryTable";
             this.primaryTable.RowCount = 1;
             this.primaryTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.primaryTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 425F));
+            this.primaryTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 422F));
             this.primaryTable.Size = new System.Drawing.Size(800, 422);
             this.primaryTable.TabIndex = 1;
             this.primaryTable.Paint += new System.Windows.Forms.PaintEventHandler(this.primaryTable_Paint);
@@ -129,29 +129,30 @@
             this.FileMenu.Name = "FileMenu";
             this.FileMenu.Size = new System.Drawing.Size(38, 22);
             this.FileMenu.Text = "File";
+            this.FileMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.FileMenu_DropDownItemClicked);
             // 
             // ts0
             // 
             this.ts0.Name = "ts0";
-            this.ts0.Size = new System.Drawing.Size(180, 22);
+            this.ts0.Size = new System.Drawing.Size(165, 22);
             this.ts0.Text = "New (CTRL + N)";
             // 
             // ts1
             // 
             this.ts1.Name = "ts1";
-            this.ts1.Size = new System.Drawing.Size(180, 22);
+            this.ts1.Size = new System.Drawing.Size(165, 22);
             this.ts1.Text = "Open (CTRL + O)";
             // 
             // ts2
             // 
             this.ts2.Name = "ts2";
-            this.ts2.Size = new System.Drawing.Size(180, 22);
+            this.ts2.Size = new System.Drawing.Size(165, 22);
             this.ts2.Text = "Save (CTRL + S)";
             // 
             // ts3
             // 
             this.ts3.Name = "ts3";
-            this.ts3.Size = new System.Drawing.Size(180, 22);
+            this.ts3.Size = new System.Drawing.Size(165, 22);
             this.ts3.Text = "Close";
             // 
             // helpBtn
@@ -172,7 +173,9 @@
             this.Controls.Add(this.nodeFormMenu);
             this.Controls.Add(this.primaryTable);
             this.Name = "NodeForm";
+            this.Tag = "MainForm";
             this.Text = "NodeForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NodeForm_FormClosing);
             this.primaryTable.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.nodeFormMenu.ResumeLayout(false);

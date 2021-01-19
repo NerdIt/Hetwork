@@ -1,0 +1,7 @@
+[meta] nodeIDValue 2
+[meta] taskIDValue 1
+[preset] offset 192,105
+[preset] zoom 1
+[node] folder 0 -95,50 45,45 null 1 True debug§0xs0002
+[node] single 1 181,-8 100,35 0 0 debug§0xs000again§0xs000task
+[task] single 0 True New§0xs000Task uhflaidshfiudshfduhsaiuhfisdhfaiusdhfiuhasdfhasiudhf
