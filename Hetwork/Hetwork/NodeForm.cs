@@ -19,6 +19,8 @@ namespace Hetwork
         {
             InitializeComponent();
 
+            (nodeFormMenu.Items[0] as ToolStripDropDownButton).ShowDropDownArrow = false;
+
             nodeMenu1.canAdd = false;
             nodeMenu1.Enabled = false;
             nodeMenu1.ControlUpdated += MenuUpdated;
@@ -169,12 +171,5 @@ namespace Hetwork
                 }
             }
         }
-
-
-        
-
-
-
-
     }
 }
