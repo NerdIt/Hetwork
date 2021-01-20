@@ -103,8 +103,11 @@ namespace Hetwork
             this.Controls.Add(this.newBtn);
             this.Controls.Add(this.projectPanel);
             this.Controls.Add(this.title);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "ProjectSelectionForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Select Project";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ProjectSelectionForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

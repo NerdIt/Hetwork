@@ -1,9 +1,4 @@
-C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\bin\Debug\Hetwork.exe.config
-C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\bin\Debug\Hetwork.exe
-C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\bin\Debug\Hetwork.pdb
 C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.csproj.CoreCompileInputs.cache
-C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.exe
-C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.pdb
 C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.NodeGraph.resources
 C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.csproj.GenerateResource.cache
 C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.NodeForm.resources
@@ -18,9 +13,6 @@ C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.csproj.Gen
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.csproj.CoreCompileInputs.cache
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.exe
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.pdb
-C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.CheckListPro.resources
-C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.EditorForm.resources
-C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.HoverBox.resources
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.NodeMenu.resources
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.VisualDesign.resources
 C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.NodeMenu.resources
@@ -28,3 +20,9 @@ C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.VisualDesi
 C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.csprojAssemblyReference.cache
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.ProjectSelectionForm.resources
 C:\Users\admin\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.csprojAssemblyReference.cache
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\Hetwork.ProjectSelectionForm.resources
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\bin\Debug\NodeIt.exe.config
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\bin\Debug\NodeIt.exe
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\bin\Debug\NodeIt.pdb
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\NodeIt.exe
+C:\Users\quant\source\repos\Hetwork\Hetwork\Hetwork\obj\Debug\NodeIt.pdb

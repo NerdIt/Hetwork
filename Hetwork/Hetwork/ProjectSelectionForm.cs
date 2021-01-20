@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -16,11 +17,14 @@ namespace Hetwork
     {
 
         NodeForm nf = null;
-        public ProjectSelectionForm(NodeForm n)
+        bool initialSelection;
+        bool selectedOption = false;
+        public ProjectSelectionForm(NodeForm n, bool init)
         {
             InitializeComponent();
             nf = n;
             openBtn.Enabled = false;
+            initialSelection = init;
 
             for (int i = 0; i < Program.projects.Length; i++)
             {
@@ -30,9 +34,23 @@ namespace Hetwork
 
         private void openBtn_Click(object sender, EventArgs e)
         {
+            selectedOption = true;
             Program.selectedProject = new Project(0, 0);
             Program.selectedProject.Load(Program.projects[projectPanel.SelectedIndex].Split('\\')[Program.projects[projectPanel.SelectedIndex].Split('\\').Length - 1]);
-            nf.LoadData(Program.selectedProject, false);
+            if (File.Exists(Program.projects[projectPanel.SelectedIndex] + @"\savedata.data"))
+            {
+                nf.LoadData(Program.selectedProject, false);
+            }
+            else
+            {
+                Debug.WriteLine("File not found");
+                Program.selectedProject = new Project(0, 0);
+                Program.selectedProject.zoom = 1;
+                Program.selectedProject.Load(Program.projects[projectPanel.SelectedIndex].Split('\\')[Program.projects[projectPanel.SelectedIndex].Split('\\').Length - 1]);
+                nf.LoadData(Program.selectedProject, true);
+            }
+
+
             Close();
         }
 
@@ -50,7 +68,11 @@ namespace Hetwork
 
         private void cancelBtn_Click(object sender, EventArgs e)
         {
-            Close();
+            selectedOption = true;
+            if (initialSelection)
+                Environment.Exit(0);
+            else
+                Close();
         }
 
         private void newBtn_Click(object sender, EventArgs e)
@@ -58,14 +80,22 @@ namespace Hetwork
             var ib = Interaction.InputBox("New Project Name", "Create Project");
             if (ib != "")
             {
+                selectedOption = true;
                 if (!Directory.Exists(Program.projectPath + ib))
                     Directory.CreateDirectory(Program.projectPath + ib);
                 string newPath = Program.projectPath + ib;
                 Program.selectedProject = new Project(0, 0);
                 Program.selectedProject.Load(newPath.Split('\\')[newPath.Split('\\').Length - 1]);
                 nf.LoadData(Program.selectedProject, true);
+
                 Close();
             }
+        }
+
+        private void ProjectSelectionForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(!selectedOption)
+                e.Cancel = true;
         }
     }
 }

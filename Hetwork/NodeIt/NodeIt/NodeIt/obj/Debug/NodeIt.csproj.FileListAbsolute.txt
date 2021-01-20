@@ -1,0 +1,12 @@
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\bin\Debug\NodeIt.exe.config
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\bin\Debug\NodeIt.exe
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\bin\Debug\NodeIt.pdb
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeIt.NodeForm.resources
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeIt.NodeGraph.resources
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeIt.NodeMenu.resources
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeIt.csproj.GenerateResource.cache
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeIt.csproj.CoreCompileInputs.cache
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeIt.exe
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeIt.pdb
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeIt.csprojAssemblyReference.cache
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeIt.ProjectSelectionForm.resources

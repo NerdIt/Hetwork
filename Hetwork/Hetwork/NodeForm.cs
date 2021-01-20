@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +17,7 @@ namespace Hetwork
     {
         private Project currentProject = null;
 
-        public NodeForm()
+        public NodeForm(bool init)
         {
             InitializeComponent();
 
@@ -24,6 +26,11 @@ namespace Hetwork
             nodeMenu1.canAdd = false;
             nodeMenu1.Enabled = false;
             nodeMenu1.ControlUpdated += MenuUpdated;
+            if(init)
+            {
+                ProjectSelectionForm ps = new ProjectSelectionForm(this, true);
+                ps.ShowDialog();
+            }
         }
 
         public void LoadData(Project p, bool newProj)
@@ -32,10 +39,15 @@ namespace Hetwork
             nodeMenu1.Wipe();
             nodeMenu1.Enabled = false;
             currentProject = p;
+            Text = currentProject.title + " - NodeIt";
             mainGraph.graphProject = p;
+
             if (newProj)
             {
+                currentProject.zoom = 1;
+                
                 mainGraph.InitGraph();
+                currentProject.nodes = mainGraph.nodes;
             }
             else
             {
@@ -43,7 +55,7 @@ namespace Hetwork
                 mainGraph.nodes = p.nodes;
                 mainGraph.graphOffset = p.offset;
                 mainGraph.zoomFactor = p.zoom;
-
+             
                 GraphLog.WriteToLog(this, "Load and Project data paired");
             }
             mainGraph.recalculatePercentage = true;
@@ -170,7 +182,10 @@ namespace Hetwork
                 else if (mainGraph.selectedNode.GetType() == Type.GetType("Hetwork.FolderNode"))
                 {
                     FolderNode node = mainGraph.selectedNode as FolderNode;
-                    node.title = nodeMenu1.tb.Text;
+                    if (!node.isMain)
+                    {
+                        node.title = nodeMenu1.tb.Text;
+                    }
                     mainGraph.Invalidate();
                 }
             }
@@ -180,11 +195,21 @@ namespace Hetwork
         {
             if(e.ClickedItem == ts0)
             {
+                var ib = Interaction.InputBox("New Project Name", "Create Project");
+                if (ib != "")
+                {
+                    if (!Directory.Exists(Program.projectPath + ib))
+                        Directory.CreateDirectory(Program.projectPath + ib);
+                    string newPath = Program.projectPath + ib;
+                    Program.selectedProject = new Project(0, 0);
+                    Program.selectedProject.Load(newPath.Split('\\')[newPath.Split('\\').Length - 1]);
+                    LoadData(Program.selectedProject, true);
 
+                }
             }
             else if(e.ClickedItem == ts1)
             {
-                ProjectSelectionForm psf = new ProjectSelectionForm(this);
+                ProjectSelectionForm psf = new ProjectSelectionForm(this, false);
                 psf.ShowDialog();
                 //Hide();
                 
@@ -205,7 +230,10 @@ namespace Hetwork
         private void NodeForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (currentProject != null)
+            {
+                Debug.WriteLine(currentProject.zoom);
                 Serializer.SaveProject(currentProject);
+            }
         }
     }
 }

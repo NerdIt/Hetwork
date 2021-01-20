@@ -413,6 +413,7 @@ namespace Hetwork
                             selectedNodes.Clear();
                         }
                         selectedNodes.Add(nv);
+                        
                     }
                     else if(ModifierKeys != Keys.Shift)
                     {
@@ -766,7 +767,7 @@ namespace Hetwork
                                         else
                                             break;
 
-                                        if (processingNode.connection.n2 == editingNodeConnection)
+                                        if (processingNode?.connection?.n2 == editingNodeConnection)
                                         {
                                             canLink = false;
                                             break;
@@ -1043,13 +1044,13 @@ namespace Hetwork
                         selectedNodes[i].Dispose();
                         nodes.Remove(selectedNodes[i]);
                         nodes.Remove(selectedNode);
-                        if (selectedNodes.Contains(selectedNode))
-                            selectedNodes.Remove(selectedNode);
-                        selectedNode = null;
+                        
+                        
                         NodeEdited_Event(this, e);
                     }
                 }
                 selectedNodes.Clear();
+                selectedNode = null;
                 needRepaint = true;
             }
             else if(ModifierKeys == Keys.Control && e.KeyCode == Keys.S)

@@ -40,6 +40,7 @@ namespace Hetwork
 
         public int id;
 
+
         public virtual void DrawShadow(Graphics g)
         {
 

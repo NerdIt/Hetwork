@@ -166,240 +166,249 @@ namespace Hetwork
             List<string> data = new List<string>();
             List<object> tasks = new List<object>();
 
-
-            using (StreamReader sr = new StreamReader(p.path + "savedata.data"))
+            if (File.Exists(p.path + "savedata.data"))
             {
-                string line;
-                while((line = sr.ReadLine()) != null)
+                using (StreamReader sr = new StreamReader(p.path + "savedata.data"))
                 {
-                    //data.Add(BinaryToString(line));
-
-                    data.Add(line);
-                    //Console.WriteLine(data[data.Count - 1]);
-                }
-            }
-
-            GraphLog.WriteToLog("Serializer", "Load Data Read");
-
-            for (int i = 0; i < data.Count; i++)
-            {
-                string[] lineSplit = data[i].Split(' ');
-                try
-                {
-                    switch (lineSplit[0])
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
                     {
-                        case "[meta]":
-                            switch (lineSplit[1])
-                            {
-                                case "nodeIDValue":
-                                    p.nodeGlobalId = int.Parse(lineSplit[2]);
-                                    break;
-                                case "taskIDValue":
-                                    p.taskGlobalId = int.Parse(lineSplit[2]);
-                                    break;
-                                default:
-                                    //Console.WriteLine($"Corrupted Meta Save {i}");
-                                    GraphLog.WriteToLog("Serializer", $"Corrupted Meta Save {i}");
-                                    break;
-                            }
-                            break;
-                        case "[preset]":
-                            switch (lineSplit[1])
-                            {
-                                case "offset":
-                                    string[] splValue = lineSplit[2].Split(',');
-                                    p.offset = new Point(int.Parse(splValue[0]), int.Parse(splValue[1]));
-                                    break;
-                                case "zoom":
-                                    p.zoom = float.Parse(lineSplit[2]);
-                                    break;
-                                default:
-                                    //Console.WriteLine($"Corrupted Preset Save {i}");
-                                    GraphLog.WriteToLog("Serializer", $"Corrupted Preset Save {i}");
-                                    break;
-                            }
-                            break;
-                        case "[node]":
-                            switch (lineSplit[1])
-                            {
-                                case "folder":
-                                    FolderNode fnode = new FolderNode(lineSplit[8].Replace("§0xs000", " ").Replace("§0xn001", "\n").Replace("§0xt002", "\t"), int.Parse(lineSplit[3].Split(',')[0]), int.Parse(lineSplit[3].Split(',')[1]), int.Parse(lineSplit[4].Split(',')[0]), int.Parse(lineSplit[4].Split(',')[0]), 0, graph, int.Parse(lineSplit[2]));
-                                    if (lineSplit[5] != "null")
-                                    {
-                                        fnode.cachedParentID = int.Parse(lineSplit[5]);
-                                    }
-                                    else
-                                    {
-                                        fnode.cachedParentID = -1;
-                                    }
-                                    if (lineSplit[6] != "")
-                                    {
-                                        string[] splValue = lineSplit[6].Split(',');
-                                        for (int j = 0; j < splValue.Length; j++)
-                                        {
-                                            fnode.cachedChildrenIDs.Add(int.Parse(splValue[j]));
-                                        }
-                                    }
-                                    fnode.isMain = bool.Parse(lineSplit[7]);
-                                    p.nodes.Add(fnode);
-                                    break;
-                                case "single":
-                                    SingularTaskNode snode = new SingularTaskNode(lineSplit[7].Replace("§0xs000", " ").Replace("§0xn001", "\n").Replace("§0xt002", "\t"), int.Parse(lineSplit[3].Split(',')[0]), int.Parse(lineSplit[3].Split(',')[1]), int.Parse(lineSplit[4].Split(',')[0]), int.Parse(lineSplit[4].Split(',')[1]), graph, int.Parse(lineSplit[2]));
-                                    if (lineSplit[5] != "null")
-                                    {
-                                        snode.cachedParentID = int.Parse(lineSplit[5]);
-                                    }
-                                    else
-                                    {
-                                        snode.cachedParentID = -1;
-                                    }
-                                    snode.cachedTaskID = int.Parse(lineSplit[6]);
-                                    p.nodes.Add(snode);
-                                    break;
-                                case "list":
-                                    ListTaskNode lnode = new ListTaskNode(lineSplit[7].Replace("§0xs000", " ").Replace("§0xn001", "\n").Replace("§0xt002", "\t"), int.Parse(lineSplit[3].Split(',')[0]), int.Parse(lineSplit[3].Split(',')[1]), int.Parse(lineSplit[4].Split(',')[0]), int.Parse(lineSplit[4].Split(',')[1]), graph, int.Parse(lineSplit[2]));
-                                    if (lineSplit[5] != "null")
-                                    {
-                                        lnode.cachedParentID = int.Parse(lineSplit[5]);
-                                    }
-                                    else
-                                    {
-                                        lnode.cachedParentID = -1;
-                                    }
-                                    if (lineSplit[6] != "")
-                                    {
-                                        lnode.cachedListID = int.Parse(lineSplit[6]);
-                                    }
-                                    p.nodes.Add(lnode);
-                                    break;
-                                default:
-                                    //Console.WriteLine($"Corrupted Node Save {i}");
-                                    GraphLog.WriteToLog("Serializer", $"Corrupted Node Save {i}");
-                                    break;
-                            }
-                            break;
-                        case "[task]":
-                            switch (lineSplit[1])
-                            {
-                                case "single":
-                                    SingularTask stask = new SingularTask(lineSplit[4].Replace("§0xs000", " ").Replace("§0xn001", "\n").Replace("§0xt002", "\t"), lineSplit[5].Replace("§0xs000", " ").Replace("§0xn001", "\n").Replace("§0xt002", "\t"), bool.Parse(lineSplit[3]), int.Parse(lineSplit[2]));
-                                    tasks.Add(stask);
-                                    break;
-                                case "list":
-                                    ListTask ltask = new ListTask(lineSplit[5].Replace("§0xs000", " ").Replace("§0xn001", "\n").Replace("§0xt002", "\t"), new List<SingularTask>(), int.Parse(lineSplit[2]));
-                                    ltask.completed = bool.Parse(lineSplit[3]);
-                                    if (lineSplit[4] != "null")
-                                    {
-                                        string[] splValue = lineSplit[4].Split(',');
-                                        for (int j = 0; j < splValue.Length; j++)
-                                        {
-                                            //Debug.WriteLine(splValue[j]);
-                                            
-                                            ltask.cachedSingleIDs.Add(int.Parse(splValue[j]));
-                                        }
-                                    }
-                                    tasks.Add(ltask);
-                                    break;
-                                default:
-                                    //Console.WriteLine($"Corrupted Task Save {i}");
-                                    GraphLog.WriteToLog("Serializer", $"Corrupted Task Save {i}");
-                                    break;
-                            }
-                            break;
-                        default:
-                            //Console.WriteLine($"Corrupted Tag Save {i}");
-                            GraphLog.WriteToLog("Serializer", $"Corrupted Tag Save {i}");
-                            break;
+                        //data.Add(BinaryToString(line));
+
+                        data.Add(line);
+                        //Console.WriteLine(data[data.Count - 1]);
                     }
                 }
-                catch(Exception e)
-                {
-                    var st = new StackTrace(e, true);
-                    // Get the top stack frame
-                    var frame = st.GetFrame(0);
-                    // Get the line number from the stack frame
-                    var line = frame.GetFileLineNumber();
-                    //Console.WriteLine($"Corrupted Save {i} '{e.Message}' on line {line}");
-                    GraphLog.WriteToLog("Serializer", $"Corrupted Save {i} '{e.Message}' on line {line}");
-                }
-            }
 
-            for(int i = 0; i < tasks.Count; i++)
-            {
-                if(tasks[i].GetType() == Type.GetType("Hetwork.SingularTask"))
+                GraphLog.WriteToLog("Serializer", "Load Data Read");
+
+                for (int i = 0; i < data.Count; i++)
                 {
-                    
-                }
-                else if (tasks[i].GetType() == Type.GetType("Hetwork.ListTask"))
-                {
-                    for(int j = 0; j < (tasks[i] as ListTask).cachedSingleIDs.Count; j++)
+                    string[] lineSplit = data[i].Split(' ');
+                    try
                     {
-                        object task = GetTaskByID(tasks, (tasks[i] as ListTask).cachedSingleIDs[j]);
-                        if(task != null)
+                        switch (lineSplit[0])
                         {
-                            (tasks[i] as ListTask).elements.Add(task as SingularTask);
+                            case "[meta]":
+                                switch (lineSplit[1])
+                                {
+                                    case "nodeIDValue":
+                                        p.nodeGlobalId = int.Parse(lineSplit[2]);
+                                        break;
+                                    case "taskIDValue":
+                                        p.taskGlobalId = int.Parse(lineSplit[2]);
+                                        break;
+                                    default:
+                                        //Console.WriteLine($"Corrupted Meta Save {i}");
+                                        GraphLog.WriteToLog("Serializer", $"Corrupted Meta Save {i}");
+                                        break;
+                                }
+                                break;
+                            case "[preset]":
+                                switch (lineSplit[1])
+                                {
+                                    case "offset":
+                                        string[] splValue = lineSplit[2].Split(',');
+                                        p.offset = new Point(int.Parse(splValue[0]), int.Parse(splValue[1]));
+                                        break;
+                                    case "zoom":
+                                        p.zoom = float.Parse(lineSplit[2]);
+                                        break;
+                                    default:
+                                        //Console.WriteLine($"Corrupted Preset Save {i}");
+                                        GraphLog.WriteToLog("Serializer", $"Corrupted Preset Save {i}");
+                                        break;
+                                }
+                                break;
+                            case "[node]":
+                                switch (lineSplit[1])
+                                {
+                                    case "folder":
+                                        FolderNode fnode = new FolderNode(lineSplit[8].Replace("§0xs000", " ").Replace("§0xn001", "\n").Replace("§0xt002", "\t"), int.Parse(lineSplit[3].Split(',')[0]), int.Parse(lineSplit[3].Split(',')[1]), int.Parse(lineSplit[4].Split(',')[0]), int.Parse(lineSplit[4].Split(',')[0]), 0, graph, int.Parse(lineSplit[2]));
+                                        if (lineSplit[5] != "null")
+                                        {
+                                            fnode.cachedParentID = int.Parse(lineSplit[5]);
+                                        }
+                                        else
+                                        {
+                                            fnode.cachedParentID = -1;
+                                        }
+                                        if (lineSplit[6] != "" && lineSplit[6] != "null")
+                                        {
+                                            string[] splValue = lineSplit[6].Split(',');
+                                            for (int j = 0; j < splValue.Length; j++)
+                                            {
+                                                fnode.cachedChildrenIDs.Add(int.Parse(splValue[j]));
+                                            }
+                                        }
+                                        fnode.isMain = bool.Parse(lineSplit[7]);
+                                        p.nodes.Add(fnode);
+                                        break;
+                                    case "single":
+                                        SingularTaskNode snode = new SingularTaskNode(lineSplit[7].Replace("§0xs000", " ").Replace("§0xn001", "\n").Replace("§0xt002", "\t"), int.Parse(lineSplit[3].Split(',')[0]), int.Parse(lineSplit[3].Split(',')[1]), int.Parse(lineSplit[4].Split(',')[0]), int.Parse(lineSplit[4].Split(',')[1]), graph, int.Parse(lineSplit[2]));
+                                        if (lineSplit[5] != "null")
+                                        {
+                                            snode.cachedParentID = int.Parse(lineSplit[5]);
+                                        }
+                                        else
+                                        {
+                                            snode.cachedParentID = -1;
+                                        }
+                                        snode.cachedTaskID = int.Parse(lineSplit[6]);
+                                        p.nodes.Add(snode);
+                                        break;
+                                    case "list":
+                                        ListTaskNode lnode = new ListTaskNode(lineSplit[7].Replace("§0xs000", " ").Replace("§0xn001", "\n").Replace("§0xt002", "\t"), int.Parse(lineSplit[3].Split(',')[0]), int.Parse(lineSplit[3].Split(',')[1]), int.Parse(lineSplit[4].Split(',')[0]), int.Parse(lineSplit[4].Split(',')[1]), graph, int.Parse(lineSplit[2]));
+                                        if (lineSplit[5] != "null")
+                                        {
+                                            lnode.cachedParentID = int.Parse(lineSplit[5]);
+                                        }
+                                        else
+                                        {
+                                            lnode.cachedParentID = -1;
+                                        }
+                                        if (lineSplit[6] != "" && lineSplit[6] != null)
+                                        {
+                                            lnode.cachedListID = int.Parse(lineSplit[6]);
+                                        }
+                                        p.nodes.Add(lnode);
+                                        break;
+                                    default:
+                                        //Console.WriteLine($"Corrupted Node Save {i}");
+                                        GraphLog.WriteToLog("Serializer", $"Corrupted Node Save {i}");
+                                        break;
+                                }
+                                break;
+                            case "[task]":
+                                switch (lineSplit[1])
+                                {
+                                    case "single":
+                                        SingularTask stask = new SingularTask(lineSplit[4].Replace("§0xs000", " ").Replace("§0xn001", "\n").Replace("§0xt002", "\t"), lineSplit[5].Replace("§0xs000", " ").Replace("§0xn001", "\n").Replace("§0xt002", "\t"), bool.Parse(lineSplit[3]), int.Parse(lineSplit[2]));
+                                        tasks.Add(stask);
+                                        break;
+                                    case "list":
+                                        ListTask ltask = new ListTask(lineSplit[5].Replace("§0xs000", " ").Replace("§0xn001", "\n").Replace("§0xt002", "\t"), new List<SingularTask>(), int.Parse(lineSplit[2]));
+                                        ltask.completed = bool.Parse(lineSplit[3]);
+                                        if (lineSplit[4] != "null")
+                                        {
+                                            string[] splValue = lineSplit[4].Split(',');
+                                            for (int j = 0; j < splValue.Length; j++)
+                                            {
+                                                //Debug.WriteLine(splValue[j]);
+
+                                                ltask.cachedSingleIDs.Add(int.Parse(splValue[j]));
+                                            }
+                                        }
+                                        tasks.Add(ltask);
+                                        break;
+                                    default:
+                                        //Console.WriteLine($"Corrupted Task Save {i}");
+                                        GraphLog.WriteToLog("Serializer", $"Corrupted Task Save {i}");
+                                        break;
+                                }
+                                break;
+                            default:
+                                //Console.WriteLine($"Corrupted Tag Save {i}");
+                                GraphLog.WriteToLog("Serializer", $"Corrupted Tag Save {i}");
+                                break;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        var st = new StackTrace(e, true);
+                        // Get the top stack frame
+                        var frame = st.GetFrame(0);
+                        // Get the line number from the stack frame
+                        var line = frame.GetFileLineNumber();
+                        //Console.WriteLine($"Corrupted Save {i} '{e.Message}' on line {line}");
+                        GraphLog.WriteToLog("Serializer", $"Corrupted Save {i} '{e.Message}' on line {line}");
+                    }
+                }
+
+                for (int i = 0; i < tasks.Count; i++)
+                {
+                    if (tasks[i].GetType() == Type.GetType("Hetwork.SingularTask"))
+                    {
+
+                    }
+                    else if (tasks[i].GetType() == Type.GetType("Hetwork.ListTask"))
+                    {
+                        for (int j = 0; j < (tasks[i] as ListTask).cachedSingleIDs.Count; j++)
+                        {
+                            object task = GetTaskByID(tasks, (tasks[i] as ListTask).cachedSingleIDs[j]);
+                            if (task != null)
+                            {
+                                (tasks[i] as ListTask).elements.Add(task as SingularTask);
+                            }
                         }
                     }
                 }
+
+                GraphLog.WriteToLog("Serializer", "Data Processed");
+
+
+                for (int i = 0; i < p.nodes.Count; i++)
+                {
+                    if (p.nodes[i].GetType() == Type.GetType("Hetwork.SingularTaskNode"))
+                    {
+                        NodeVisual parent = GetNodeByID(p.nodes, p.nodes[i].cachedParentID);
+                        if (parent != null)
+                        {
+                            p.nodes[i].connection = new NodeConnection(p.nodes[i], parent, graph);
+                        }
+                        object task = GetTaskByID(tasks, (p.nodes[i] as SingularTaskNode).cachedTaskID);
+                        if (task.GetType() == Type.GetType("Hetwork.SingularTask"))
+                        {
+                            (p.nodes[i] as SingularTaskNode).taskElement = task as SingularTask;
+                        }
+                        else if (task.GetType() == Type.GetType("Hetwork.ListTask"))
+                        {
+                            GraphLog.WriteToLog("Serializer", $"Corrupted IDs on save line {i}");
+                        }
+                    }
+                    else if (p.nodes[i].GetType() == Type.GetType("Hetwork.ListTaskNode"))
+                    {
+                        NodeVisual parent = GetNodeByID(p.nodes, p.nodes[i].cachedParentID);
+                        if (parent != null)
+                        {
+                            p.nodes[i].connection = new NodeConnection(p.nodes[i], parent, graph);
+                        }
+                        object task = GetTaskByID(tasks, (p.nodes[i] as ListTaskNode).cachedListID);
+
+                        if (task != null && task.GetType() == Type.GetType("Hetwork.SingularTask"))
+                        {
+                            GraphLog.WriteToLog("Serializer", $"Corrupted IDs on save line {i}");
+                        }
+                        else if (task != null && task.GetType() == Type.GetType("Hetwork.ListTask"))
+                        {
+                            (p.nodes[i] as ListTaskNode).taskElement = task as ListTask;
+                        }
+                    }
+                    else if (p.nodes[i].GetType() == Type.GetType("Hetwork.FolderNode"))
+                    {
+                        NodeVisual parent = GetNodeByID(p.nodes, p.nodes[i].cachedParentID);
+                        if (parent != null)
+                        {
+                            p.nodes[i].connection = new NodeConnection(p.nodes[i], parent, graph);
+                        }
+
+                        //for(int j = 0; j < p.nodes[i].cachedChildrenIDs.Count; i++)
+                        //{
+
+                        //}
+                    }
+                }
+
+                GraphLog.WriteToLog("Serializer", "Object Parenting Complete");
+                GraphLog.WriteToLog("Serializer", "Project Loaded");
             }
-
-            GraphLog.WriteToLog("Serializer", "Data Processed");
-
-
-            for (int i = 0; i < p.nodes.Count; i++)
-            {
-                if(p.nodes[i].GetType() == Type.GetType("Hetwork.SingularTaskNode"))
-                {
-                    NodeVisual parent = GetNodeByID(p.nodes, p.nodes[i].cachedParentID);
-                    if(parent != null)
-                    {
-                        p.nodes[i].connection = new NodeConnection(p.nodes[i], parent, graph);
-                    }
-                    object task = GetTaskByID(tasks, (p.nodes[i] as SingularTaskNode).cachedTaskID);
-                    if(task.GetType() == Type.GetType("Hetwork.SingularTask"))
-                    {
-                        (p.nodes[i] as SingularTaskNode).taskElement = task as SingularTask;
-                    }
-                    else if (task.GetType() == Type.GetType("Hetwork.ListTask"))
-                    {
-                        GraphLog.WriteToLog("Serializer", $"Corrupted IDs on save line {i}");
-                    }
-                }
-                else if (p.nodes[i].GetType() == Type.GetType("Hetwork.ListTaskNode"))
-                {
-                    NodeVisual parent = GetNodeByID(p.nodes, p.nodes[i].cachedParentID);
-                    if (parent != null)
-                    {
-                        p.nodes[i].connection = new NodeConnection(p.nodes[i], parent, graph);
-                    }
-                    object task = GetTaskByID(tasks, (p.nodes[i] as ListTaskNode).cachedListID);
-                    
-                    if (task != null && task.GetType() == Type.GetType("Hetwork.SingularTask"))
-                    {
-                        GraphLog.WriteToLog("Serializer", $"Corrupted IDs on save line {i}");
-                    }
-                    else if (task != null && task.GetType() == Type.GetType("Hetwork.ListTask"))
-                    {
-                        (p.nodes[i] as ListTaskNode).taskElement = task as ListTask;
-                    }
-                }
-                else if (p.nodes[i].GetType() == Type.GetType("Hetwork.FolderNode"))
-                {
-                    NodeVisual parent = GetNodeByID(p.nodes, p.nodes[i].cachedParentID);
-                    if (parent != null)
-                    {
-                        p.nodes[i].connection = new NodeConnection(p.nodes[i], parent, graph);
-                    }
-
-                    //for(int j = 0; j < p.nodes[i].cachedChildrenIDs.Count; i++)
-                    //{
-                        
-                    //}
-                }
-            }
-
-            GraphLog.WriteToLog("Serializer", "Object Parenting Complete");
-            GraphLog.WriteToLog("Serializer", "Project Loaded");
+            //else
+            //{
+            //    GraphLog.WriteToLog("Serializer", "Save file not found! Treating as new project");
+            //    p.offset = new Point(0, 0);
+            //    p.zoom = 1;
+            //    (graph.ParentForm as NodeForm).LoadData(p, true);
+            //}
         }
 
         public static NodeVisual GetNodeByID(List<NodeVisual> nodes, int ID)
