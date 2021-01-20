@@ -17,7 +17,6 @@ namespace NodeIt
 
         private static string[] projectDirectories { get { return Directory.GetDirectories(projectPath); } }
 
-        public static Project selectedProject = null;
 
         public static List<string> projects = new List<string>();
 
@@ -71,11 +70,24 @@ namespace NodeIt
             }
         }
 
+        public static int GetProjectIndexByName(string name)
+        {
+            for(int i = 0; i < projects.Count; i++)
+            {
+                if(projects[i].Split('\\')[projects[i].Split('\\').Length - 1] == name)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
         public static void SaveSelectedProject()
         {
-            if(selectedProject != null)
+            if (Program.selectedProject != null)
             {
-                Serializer.SaveProject(selectedProject);
+                
+                Serializer.SaveProject(Program.selectedProject);
             }
         }
     }

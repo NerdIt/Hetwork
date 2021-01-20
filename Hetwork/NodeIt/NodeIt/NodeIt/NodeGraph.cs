@@ -1047,9 +1047,9 @@ namespace NodeIt
             }
             else if (ModifierKeys == Keys.Control && e.KeyCode == Keys.S)
             {
-                Debug.WriteLine("Save");
-                UpdateSelectedProject();
-                ProjectManager.SaveSelectedProject();
+                //Debug.WriteLine("Save");
+                //UpdateSelectedProject();
+                //ProjectManager.SaveSelectedProject();
             }
             else if (e.KeyCode == Keys.N)
             {

@@ -28,6 +28,7 @@ namespace NodeIt
         void LoadProjects()
         {
             projs = ProjectManager.projects;
+            projectPanel.Items.Clear();
             for (int i = 0; i < projs.Count; i++)
             {
                 projectPanel.Items.Add(projs[i].Split('\\')[projs[i].Split('\\').Length - 1]);

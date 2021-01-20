@@ -1,0 +1,7 @@
+[meta] nodeIDValue 2
+[meta] taskIDValue 1
+[preset] offset 0,0
+[preset] zoom 1
+[node] folder 0 81,220 45,45 null 1 True epic§0xs000new§0xs000one
+[node] list 1 387,139 100,35 0 0 New§0xs000List
+[task] list 0 False null New§0xs000List

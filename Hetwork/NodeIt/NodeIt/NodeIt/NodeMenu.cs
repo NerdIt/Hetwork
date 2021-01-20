@@ -69,6 +69,7 @@ namespace NodeIt
             tb.MouseWheel += Mouse_Scroll;
             tb.TextChanged += TextChange;
             tb.Font = editingFont;
+            tb.KeyDown += KeyDown_Event;
             Controls.Add(tb);
 
             ectb = new RichTextBox();
@@ -77,6 +78,7 @@ namespace NodeIt
             ectb.ScrollBars = RichTextBoxScrollBars.Vertical;
             ectb.TextChanged += TextChange;
             ectb.Font = editingFont;
+            ectb.KeyDown += KeyDown_Event;
             Controls.Add(ectb);
 
             ettb = new RichTextBox();
@@ -85,6 +87,7 @@ namespace NodeIt
             ettb.Multiline = false;
             ettb.TextChanged += TextChange;
             ettb.Font = editingFont;
+            ettb.KeyDown += KeyDown_Event;
             Controls.Add(ettb);
 
             dbtn = new Button();
@@ -96,7 +99,10 @@ namespace NodeIt
             dbtn.BackColor = Color.LightGray;
             dbtn.Click += Delete;
             dbtn.Paint += PaintDeleteBtn;
+            dbtn.KeyDown += KeyDown_Event;
             Controls.Add(dbtn);
+
+            KeyDown += KeyDown_Event;
 
         }
 
@@ -500,6 +506,18 @@ namespace NodeIt
             if (ControlUpdated != null)
             {
                 ControlUpdated(this, e);
+            }
+        }
+
+        [Browsable(true)]
+        [Category("Action")]
+        [Description("Invoked when key down")]
+        public event KeyEventHandler MenuKeyDown;
+        public void KeyDown_Event(object sender, KeyEventArgs e)
+        {
+            if(MenuKeyDown != null)
+            {
+                MenuKeyDown(this, e);
             }
         }
 

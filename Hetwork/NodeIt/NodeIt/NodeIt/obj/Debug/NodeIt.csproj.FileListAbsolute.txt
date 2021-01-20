@@ -8,5 +8,5 @@ C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeI
 C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeIt.csproj.CoreCompileInputs.cache
 C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeIt.exe
 C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeIt.pdb
-C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeIt.csprojAssemblyReference.cache
 C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeIt.ProjectSelectionForm.resources
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Debug\NodeIt.csprojAssemblyReference.cache

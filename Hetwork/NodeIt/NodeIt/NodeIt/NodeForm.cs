@@ -155,47 +155,127 @@ namespace NodeIt
 
         private void FileMenu_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            //if(e.ClickedItem == ts0)
-            //{
-            //    var ib = Interaction.InputBox("New Project Name", "Create Project");
-            //    if (ib != "")
-            //    {
-            //        if (!Directory.Exists(Program.projectPath + ib))
-            //            Directory.CreateDirectory(Program.projectPath + ib);
-            //        string newPath = Program.projectPath + ib;
-            //        Program.selectedProject = new Project(0, 0);
-            //        Program.selectedProject.Load(newPath.Split('\\')[newPath.Split('\\').Length - 1]);
-            //        LoadData(Program.selectedProject, true);
+            if (e.ClickedItem == ts0)
+            {
+                var ib = Interaction.InputBox("New Project Name", "Create Project");
+                if (ib != "")
+                {
+                    //if (!Directory.Exists(Program.projectPath + ib))
+                    //    Directory.CreateDirectory(Program.projectPath + ib);
+                    mainGraph.UpdateSelectedProject();
+                    ProjectManager.SaveSelectedProject();
+                    ib = ib.Replace("\\", "-").Replace("/", "-").Replace(":", "-").Replace("*", "-").Replace("?", "-").Replace("\"", "-").Replace("<", "-").Replace(">", "-").Replace("|", "-");
+                    ProjectManager.CreateProject(ib);
+                    Project selectedProject = ProjectManager.GetProjectData(ProjectManager.GetProjectIndexByName(ib));
+                    Program.SetSelectedProject(selectedProject);
+                    LoadProject();
 
-            //    }
-            //}
-            //else if(e.ClickedItem == ts1)
-            //{
-            //    ProjectSelectionForm psf = new ProjectSelectionForm(this, false);
-            //    psf.ShowDialog();
-            //    //Hide();
-                
-            //}
-            //else if (e.ClickedItem == ts2)
-            //{
-            //    if (currentProject != null)
-            //        Serializer.SaveProject(currentProject);
-            //}
-            //else if (e.ClickedItem == ts3)
-            //{
-            //    if(currentProject != null)
-            //        Serializer.SaveProject(currentProject);
-            //    Environment.Exit(0);
-            //}
+                }
+            }
+            else if (e.ClickedItem == ts1)
+            {
+                mainGraph.UpdateSelectedProject();
+                ProjectManager.SaveSelectedProject();
+
+                ProjectSelectionForm psf = new ProjectSelectionForm();
+                DialogResult dr = psf.ShowDialog();
+                if(dr == DialogResult.OK)
+                {
+                    LoadProject();
+                }
+                else if (dr == DialogResult.Cancel)
+                {
+
+                }
+            }
+            else if (e.ClickedItem == ts2)
+            {
+                mainGraph.UpdateSelectedProject();
+                ProjectManager.SaveSelectedProject();
+            }
+            else if (e.ClickedItem == ts3)
+            {
+                Environment.Exit(0);
+            }
         }
 
         private void NodeForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //if (currentProject != null)
-            //{
-            //    Debug.WriteLine(currentProject.zoom);
-            //    Serializer.SaveProject(currentProject);
-            //}
+            SaveProject();
+        }
+
+        private void mainGraph_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.S && ModifierKeys == Keys.Control)
+            {
+                SaveProject();
+            }
+            else if (e.KeyCode == Keys.O && ModifierKeys == Keys.Control)
+            {
+                OpenProject();
+            }
+            else if (e.KeyCode == Keys.N && ModifierKeys == Keys.Control)
+            {
+                NewProject();
+            }
+        }
+
+        private void nodeMenu1_MenuKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.S && ModifierKeys == Keys.Control)
+            {
+                SaveProject();
+            }
+            else if (e.KeyCode == Keys.O && ModifierKeys == Keys.Control)
+            {
+                OpenProject();
+            }
+            else if (e.KeyCode == Keys.N && ModifierKeys == Keys.Control)
+            {
+                NewProject();
+            }
+        }
+
+        void SaveProject()
+        {
+            mainGraph.UpdateSelectedProject();
+            ProjectManager.SaveSelectedProject();
+            Debug.WriteLine("SAVING");
+        }
+
+        void OpenProject()
+        {
+            mainGraph.UpdateSelectedProject();
+            ProjectManager.SaveSelectedProject();
+
+            ProjectSelectionForm psf = new ProjectSelectionForm();
+            DialogResult dr = psf.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                LoadProject();
+            }
+            else if (dr == DialogResult.Cancel)
+            {
+
+            }
+        }
+
+        void NewProject()
+        {
+            var ib = Interaction.InputBox("New Project Name", "Create Project");
+            if (ib != "")
+            {
+                //if (!Directory.Exists(Program.projectPath + ib))
+                //    Directory.CreateDirectory(Program.projectPath + ib);
+                mainGraph.UpdateSelectedProject();
+                ProjectManager.SaveSelectedProject();
+                ib = ib.Replace("\\", "-").Replace("/", "-").Replace(":", "-").Replace("*", "-").Replace("?", "-").Replace("\"", "-").Replace("<", "-").Replace(">", "-").Replace("|", "-");
+                ProjectManager.CreateProject(ib);
+                Project selectedProject = ProjectManager.GetProjectData(ProjectManager.GetProjectIndexByName(ib));
+                Program.SetSelectedProject(selectedProject);
+                LoadProject();
+
+            }
         }
     }
 }

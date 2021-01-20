@@ -33,6 +33,7 @@ namespace NodeIt
             if(dr == DialogResult.OK)
             {
                 Console.WriteLine("Project Selected");
+                mainForm.StartPosition = FormStartPosition.CenterScreen;
                 mainForm.LoadProject();
                 Application.Run(mainForm);
             }
