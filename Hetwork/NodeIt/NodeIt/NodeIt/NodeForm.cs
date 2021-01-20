@@ -115,42 +115,7 @@ namespace NodeIt
 
         private void MenuUpdated(object sender, EventArgs e)
         {
-            if (mainGraph.selectedNode != null)
-            {
-                if (mainGraph.selectedNode.GetType() == Type.GetType("NodeIt.SingularTaskNode"))
-                {
-                    SingularTaskNode node = mainGraph.selectedNode as SingularTaskNode;
-                    node.title = nodeMenu1.tb.Text;
-                    mainGraph.RecalculateNodePercentages();
-                    mainGraph.Invalidate();
-                }
-                else if (mainGraph.selectedNode.GetType() == Type.GetType("NodeIt.ListTaskNode"))
-                {
-                    ListTaskNode node = mainGraph.selectedNode as ListTaskNode;
-                    node.title = nodeMenu1.tb.Text;
-                    bool completed = true;
-                    for(int i = 0; i < node.taskElement.elements.Count; i++)
-                    {
-                        if(!node.taskElement.elements[i].completed)
-                        {
-                            completed = false;
-                            break;
-                        }
-                    }
-                    node.taskElement.completed = completed;
-                    mainGraph.RecalculateNodePercentages();
-                    mainGraph.Invalidate();
-                }
-                else if (mainGraph.selectedNode.GetType() == Type.GetType("NodeIt.FolderNode"))
-                {
-                    FolderNode node = mainGraph.selectedNode as FolderNode;
-                    if (!node.isMain)
-                    {
-                        node.title = nodeMenu1.tb.Text;
-                    }
-                    mainGraph.Invalidate();
-                }
-            }
+            
         }
 
         private void FileMenu_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -275,6 +240,46 @@ namespace NodeIt
                 Program.SetSelectedProject(selectedProject);
                 LoadProject();
 
+            }
+        }
+
+        private void nodeMenu1_ControlUpdated(object sender, EventArgs e)
+        {
+            if (mainGraph.selectedNode != null)
+            {
+                if (mainGraph.selectedNode.GetType() == Type.GetType("NodeIt.SingularTaskNode"))
+                {
+                    SingularTaskNode node = mainGraph.selectedNode as SingularTaskNode;
+                    node.title = nodeMenu1.tb.Text;
+                    mainGraph.RecalculateNodePercentages();
+                    mainGraph.Invalidate();
+                }
+                else if (mainGraph.selectedNode.GetType() == Type.GetType("NodeIt.ListTaskNode"))
+                {
+                    ListTaskNode node = mainGraph.selectedNode as ListTaskNode;
+                    node.title = nodeMenu1.tb.Text;
+                    bool completed = true;
+                    for (int i = 0; i < node.taskElement.elements.Count; i++)
+                    {
+                        if (!node.taskElement.elements[i].completed)
+                        {
+                            completed = false;
+                            break;
+                        }
+                    }
+                    node.taskElement.completed = completed;
+                    mainGraph.RecalculateNodePercentages();
+                    mainGraph.Invalidate();
+                }
+                else if (mainGraph.selectedNode.GetType() == Type.GetType("NodeIt.FolderNode"))
+                {
+                    FolderNode node = mainGraph.selectedNode as FolderNode;
+                    if (!node.isMain)
+                    {
+                        node.title = nodeMenu1.tb.Text;
+                    }
+                    mainGraph.Invalidate();
+                }
             }
         }
     }

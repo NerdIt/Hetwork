@@ -164,6 +164,7 @@
             this.nodeMenu1.Name = "nodeMenu1";
             this.nodeMenu1.Size = new System.Drawing.Size(111, 410);
             this.nodeMenu1.TabIndex = 0;
+            this.nodeMenu1.ControlUpdated += new System.EventHandler(this.nodeMenu1_ControlUpdated);
             this.nodeMenu1.MenuKeyDown += new System.Windows.Forms.KeyEventHandler(this.nodeMenu1_MenuKeyDown);
             // 
             // NodeForm

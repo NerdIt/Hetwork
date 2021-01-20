@@ -428,38 +428,38 @@ namespace NodeIt
                 }
                 if (!foundSelectTask)
                 {
-                    //selectedTask = -1;
-                    //if (new Rectangle(1, ((int)fontHeight + 20 + 3) * tasks.Count + 25 - offset, Width - 5, 40).Contains(e.Location) && canAdd)
-                    //{
-                    //    SingularTask newTask = new SingularTask("New Item", "", Program.selectedProject.GetTaskId());
-                    //    tasks.Add(newTask);
+                    selectedTask = -1;
+                    if (new Rectangle(1, ((int)fontHeight + 20 + 3) * tasks.Count + 25 - offset, Width - 5, 40).Contains(e.Location) && canAdd)
+                    {
+                        SingularTask newTask = new SingularTask("New Item", "", Program.selectedProject.GetTaskId());
+                        tasks.Add(newTask);
 
-                    //    if (selectedNode.GetType() == Type.GetType("NodeIt.SingularTaskNode"))
-                    //    {
-                    //        (selectedNode as SingularTaskNode).taskElement = newTask;
-                    //    }
-                    //    else if (selectedNode.GetType() == Type.GetType("NodeIt.ListTaskNode"))
-                    //    {
-                    //        (selectedNode as ListTaskNode).taskElement.elements.Add(newTask);
-                    //    }
-                    //    NodeSelected_Event(this, e);
-                    //}
+                        if (selectedNode.GetType() == Type.GetType("NodeIt.SingularTaskNode"))
+                        {
+                            (selectedNode as SingularTaskNode).taskElement = newTask;
+                        }
+                        else if (selectedNode.GetType() == Type.GetType("NodeIt.ListTaskNode"))
+                        {
+                            (selectedNode as ListTaskNode).taskElement.elements.Add(newTask);
+                        }
+                        NodeSelected_Event(this, e);
+                    }
 
                 }
 
                 if (selectedTask != -1 && hoverTask != -1)
                 {
-                    //if (hoverTask != selectedTask)
-                    //{
-                    //    if (selectedNode.GetType() == Type.GetType("NodeIt.ListTaskNode"))
-                    //    {
-                    //        ListTaskNode listNode = selectedNode as ListTaskNode;
-                    //        listNode.taskElement.elements.Rearrange(listNode.taskElement.elements.IndexOf(tasks[selectedTask]), listNode.taskElement.elements.IndexOf(tasks[hoverTask]));
-                    //    }
-                    //    tasks.Rearrange(selectedTask, hoverTask);
-                    //    selectedTask = hoverTask;
-                    //}
-                    //NodeSelected_Event(this, e);
+                    if (hoverTask != selectedTask)
+                    {
+                        if (selectedNode.GetType() == Type.GetType("NodeIt.ListTaskNode"))
+                        {
+                            ListTaskNode listNode = selectedNode as ListTaskNode;
+                            listNode.taskElement.elements.Rearrange(listNode.taskElement.elements.IndexOf(tasks[selectedTask]), listNode.taskElement.elements.IndexOf(tasks[hoverTask]));
+                        }
+                        tasks.Rearrange(selectedTask, hoverTask);
+                        selectedTask = hoverTask;
+                    }
+                    NodeSelected_Event(this, e);
                 }
             }
         }
@@ -500,6 +500,9 @@ namespace NodeIt
             ectb.TextChanged += TextChange;
         }
 
+        [Browsable(true)]
+        [Category("Action")]
+        [Description("Invoked when control is updated")]
         public event EventHandler ControlUpdated;
         public void NodeSelected_Event(object sender, EventArgs e)
         {

@@ -98,7 +98,7 @@ namespace NodeIt
         public void AddList(object sender, System.EventArgs e)
         {
             var n = new ListTaskNode("New List", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 100, 35, Program.selectedProject.GetNodeId());
-            n.taskElement = new ListTask(n.title, new List<SingularTask>(), Program.selectedProject.GetTaskId());
+            n.taskElement = new ListTask(n.title, new List<SingularTask>() { new SingularTask("New Task", "", Program.selectedProject.GetTaskId())}, Program.selectedProject.GetTaskId());
             nodes.Add(n);
         }
 
