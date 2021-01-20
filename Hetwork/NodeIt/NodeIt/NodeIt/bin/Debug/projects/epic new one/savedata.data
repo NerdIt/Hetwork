@@ -2,7 +2,7 @@
 [meta] taskIDValue 7
 [preset] offset 0,0
 [preset] zoom 1
-[node] folder 0 81,220 45,45 null 2,1,3 True epic§0xs000new§0xs000one
+[node] folder 0 81,220 45,45 null 1,2,3 True epic§0xs000new§0xs000one
 [node] list 1 327,121 100,35 0 0 New§0xs000List
 [node] list 2 327,269 100,35 0 1 Monsters
 [node] list 3 333,199 100,35 0 6 New§0xs000List

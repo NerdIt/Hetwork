@@ -282,5 +282,10 @@ namespace NodeIt
                 }
             }
         }
+
+        private void helpBtn_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://1saacdev.github.io/NodeIt/Help.html");
+        }
     }
 }

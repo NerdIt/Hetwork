@@ -32,7 +32,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NodeForm));
             this.primaryTable = new System.Windows.Forms.TableLayoutPanel();
+            this.mainGraph = new NodeIt.NodeGraph();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.nodeMenu1 = new NodeIt.NodeMenu();
             this.nodeFormMenu = new System.Windows.Forms.ToolStrip();
             this.FileMenu = new System.Windows.Forms.ToolStripDropDownButton();
             this.ts0 = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,8 +42,6 @@
             this.ts2 = new System.Windows.Forms.ToolStripMenuItem();
             this.ts3 = new System.Windows.Forms.ToolStripMenuItem();
             this.helpBtn = new System.Windows.Forms.ToolStripButton();
-            this.mainGraph = new NodeIt.NodeGraph();
-            this.nodeMenu1 = new NodeIt.NodeMenu();
             this.primaryTable.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.nodeFormMenu.SuspendLayout();
@@ -66,6 +66,23 @@
             this.primaryTable.TabIndex = 1;
             this.primaryTable.Paint += new System.Windows.Forms.PaintEventHandler(this.primaryTable_Paint);
             // 
+            // mainGraph
+            // 
+            this.mainGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mainGraph.BackColor = System.Drawing.Color.Transparent;
+            this.mainGraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mainGraph.ForeColor = System.Drawing.Color.Black;
+            this.mainGraph.Location = new System.Drawing.Point(3, 3);
+            this.mainGraph.Name = "mainGraph";
+            this.mainGraph.Size = new System.Drawing.Size(671, 416);
+            this.mainGraph.TabIndex = 0;
+            this.mainGraph.NodeSelected += new System.EventHandler(this.nodeGraph1_NodeSelected);
+            this.mainGraph.NodeEdited += new System.EventHandler(this.mainGraph_NodeEdited);
+            this.mainGraph.Load += new System.EventHandler(this.nodeGraph1_Load);
+            this.mainGraph.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mainGraph_KeyDown);
+            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
@@ -78,6 +95,17 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(117, 416);
             this.tableLayoutPanel1.TabIndex = 1;
+            // 
+            // nodeMenu1
+            // 
+            this.nodeMenu1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.nodeMenu1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nodeMenu1.Location = new System.Drawing.Point(3, 3);
+            this.nodeMenu1.Name = "nodeMenu1";
+            this.nodeMenu1.Size = new System.Drawing.Size(111, 410);
+            this.nodeMenu1.TabIndex = 0;
+            this.nodeMenu1.ControlUpdated += new System.EventHandler(this.nodeMenu1_ControlUpdated);
+            this.nodeMenu1.MenuKeyDown += new System.Windows.Forms.KeyEventHandler(this.nodeMenu1_MenuKeyDown);
             // 
             // nodeFormMenu
             // 
@@ -138,34 +166,7 @@
             this.helpBtn.Name = "helpBtn";
             this.helpBtn.Size = new System.Drawing.Size(36, 22);
             this.helpBtn.Text = "Help";
-            // 
-            // mainGraph
-            // 
-            this.mainGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.mainGraph.BackColor = System.Drawing.Color.Transparent;
-            this.mainGraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.mainGraph.ForeColor = System.Drawing.Color.Black;
-            this.mainGraph.Location = new System.Drawing.Point(3, 3);
-            this.mainGraph.Name = "mainGraph";
-            this.mainGraph.Size = new System.Drawing.Size(671, 416);
-            this.mainGraph.TabIndex = 0;
-            this.mainGraph.NodeSelected += new System.EventHandler(this.nodeGraph1_NodeSelected);
-            this.mainGraph.NodeEdited += new System.EventHandler(this.mainGraph_NodeEdited);
-            this.mainGraph.Load += new System.EventHandler(this.nodeGraph1_Load);
-            this.mainGraph.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mainGraph_KeyDown);
-            // 
-            // nodeMenu1
-            // 
-            this.nodeMenu1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.nodeMenu1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.nodeMenu1.Location = new System.Drawing.Point(3, 3);
-            this.nodeMenu1.Name = "nodeMenu1";
-            this.nodeMenu1.Size = new System.Drawing.Size(111, 410);
-            this.nodeMenu1.TabIndex = 0;
-            this.nodeMenu1.ControlUpdated += new System.EventHandler(this.nodeMenu1_ControlUpdated);
-            this.nodeMenu1.MenuKeyDown += new System.Windows.Forms.KeyEventHandler(this.nodeMenu1_MenuKeyDown);
+            this.helpBtn.Click += new System.EventHandler(this.helpBtn_Click);
             // 
             // NodeForm
             // 
