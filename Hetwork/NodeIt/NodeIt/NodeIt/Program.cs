@@ -28,7 +28,7 @@ namespace NodeIt
 
             mainForm = new NodeForm();
             ProjectSelectionForm ps = new ProjectSelectionForm();
-            ps.ShowInTaskbar = false;
+            ps.ShowInTaskbar = true;
             DialogResult dr = ps.ShowDialog();
             if(dr == DialogResult.OK)
             {

@@ -139,19 +139,10 @@ namespace NodeIt
             }
             else if (e.ClickedItem == ts1)
             {
-                mainGraph.UpdateSelectedProject();
-                ProjectManager.SaveSelectedProject();
+                //mainGraph.UpdateSelectedProject();
+                //ProjectManager.SaveSelectedProject();
 
-                ProjectSelectionForm psf = new ProjectSelectionForm();
-                DialogResult dr = psf.ShowDialog();
-                if(dr == DialogResult.OK)
-                {
-                    LoadProject();
-                }
-                else if (dr == DialogResult.Cancel)
-                {
-
-                }
+                OpenProject();
             }
             else if (e.ClickedItem == ts2)
             {
@@ -214,6 +205,7 @@ namespace NodeIt
             ProjectManager.SaveSelectedProject();
 
             ProjectSelectionForm psf = new ProjectSelectionForm();
+            psf.ShowInTaskbar = false;
             DialogResult dr = psf.ShowDialog();
             if (dr == DialogResult.OK)
             {

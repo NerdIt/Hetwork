@@ -1,7 +1,6 @@
 C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\bin\Release\NodeIt.exe.config
 C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\bin\Release\NodeIt.exe
 C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\bin\Release\NodeIt.pdb
-C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Release\NodeIt.csprojAssemblyReference.cache
 C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Release\NodeIt.NodeForm.resources
 C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Release\NodeIt.NodeGraph.resources
 C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Release\NodeIt.NodeMenu.resources
