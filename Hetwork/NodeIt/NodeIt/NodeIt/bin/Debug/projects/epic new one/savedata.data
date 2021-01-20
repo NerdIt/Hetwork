@@ -2,14 +2,14 @@
 [meta] taskIDValue 7
 [preset] offset 0,0
 [preset] zoom 1
-[node] folder 0 81,220 45,45 null 2,1,3 True epic§0xs000new§0xs000one
-[node] list 1 327,121 100,35 0 0 New§0xs000List
-[node] list 2 327,269 100,35 0 1 Monsters
-[node] list 3 333,199 100,35 0 6 New§0xs000List
+[node] folder 0 81,220 45,45 null 1,2,3 True epic§0xs000new§0xs000one
+[node] list 1 346,100 100,35 0 0 New§0xs000List
+[node] list 3 369,190 100,35 0 6 New§0xs000List
+[node] list 2 354,274 100,35 0 1 Monsters
+[task] single 5 False New§0xs000Task 
 [task] single 4 True Potato orange§0xs000circle
 [task] single 3 False Creeper green§0xs000pig
 [task] single 2 True Zombie dead§0xs000person
-[task] single 5 False New§0xs000Task 
 [task] list 0 True null New§0xs000List
-[task] list 1 False 4,3,2 New§0xs000List
 [task] list 6 False 5 New§0xs000List
+[task] list 1 False 4,3,2 New§0xs000List
