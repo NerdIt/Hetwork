@@ -30,6 +30,7 @@ namespace NodeIt
         public NodeVisual selectedNode;
         public Point CursorLocation = new Point(0, 0);
 
+
         public NodeGraph()
         {
             InitializeComponent();
@@ -40,6 +41,7 @@ namespace NodeIt
             timer.Start();
             DoubleBuffered = true;
             MouseWheel += ScrollWheelEvent;
+
 
             PopulateNewMenu();
         }
@@ -289,7 +291,7 @@ namespace NodeIt
             {
                 nv.DrawShadow(e.Graphics, graphOffset);
             }
-
+            
             foreach (NodeVisual nc in nodes)
             {
                 if (nc.connection != null)
@@ -299,10 +301,39 @@ namespace NodeIt
                 }
             }
 
+
+            int countNode = 0;
             //  DRAW NODES
             foreach (NodeVisual nv in nodes)
             {
                 nv.Draw(e.Graphics, graphOffset);
+
+
+
+
+                if (nv.isHover && nv.GetType() == Type.GetType("NodeIt.FolderNode"))
+                {
+                    PercentageComplete pc = nv.GetPercentage(nv);
+                    toolTip1.ToolTipTitle = nv.title;
+                    toolTip1.SetToolTip(this, $"{pc.complete} Complete\n{pc.total} Total\n{(nv as FolderNode).percentage}%");
+                    countNode++;
+                }
+                else if (nv.isHover && nv.GetType() == Type.GetType("NodeIt.SingularTaskNode"))
+                {
+                    toolTip1.ToolTipTitle = nv.title;
+                    toolTip1.SetToolTip(this, $"Singular Task\nIs Completed: {(nv as SingularTaskNode).taskElement.completed}");
+                    countNode++;
+                }
+                else if (nv.isHover && nv.GetType() == Type.GetType("NodeIt.ListTaskNode"))
+                {
+                    toolTip1.ToolTipTitle = nv.title;
+                    toolTip1.SetToolTip(this, $"List Task\nIs Completed: {(nv as ListTaskNode).taskElement.completed}\nTasks: {(nv as ListTaskNode).taskElement.elements.Count}");
+                    countNode++;
+                }
+            }
+            if(countNode == 0)
+            {
+                toolTip1.Hide(this);
             }
 
             #endregion
@@ -367,6 +398,8 @@ namespace NodeIt
 
         private void NodeGraph_MouseDown(object sender, MouseEventArgs e)
         {
+            toolTip1.Hide(this);
+
             CursorLocation = new Point((int)(PointToClient(Cursor.Position).X / zoomFactor), (int)(PointToClient(Cursor.Position).Y / zoomFactor));
             mouseDownPoint = CursorLocation;
             if (e.Button == MouseButtons.Middle)

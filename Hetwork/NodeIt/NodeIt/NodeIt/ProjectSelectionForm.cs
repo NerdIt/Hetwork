@@ -21,6 +21,7 @@ namespace NodeIt
             InitializeComponent();
 
             openBtn.Enabled = false;
+            deleteBtn.Enabled = false;
 
             LoadProjects();
         }
@@ -33,6 +34,7 @@ namespace NodeIt
             {
                 projectPanel.Items.Add(projs[i].Split('\\')[projs[i].Split('\\').Length - 1]);
             }
+
         }
 
         private void openBtn_Click(object sender, EventArgs e)
@@ -48,10 +50,12 @@ namespace NodeIt
             if(projectPanel.SelectedIndex != -1)
             {
                 openBtn.Enabled = true;
+                deleteBtn.Enabled = true;
             }
             else
             {
                 openBtn.Enabled = false;
+                deleteBtn.Enabled = false;
             }
         }
 
@@ -77,6 +81,14 @@ namespace NodeIt
         private void ProjectSelectionForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             
+        }
+
+        private void deleteBtn_Click(object sender, EventArgs e)
+        {
+            ProjectManager.DeleteProject(projectPanel.SelectedIndex);
+            LoadProjects();
+            openBtn.Enabled = false;
+            deleteBtn.Enabled = false;
         }
     }
 }

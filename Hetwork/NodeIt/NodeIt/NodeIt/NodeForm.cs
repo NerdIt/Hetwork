@@ -20,6 +20,8 @@ namespace NodeIt
         public NodeForm()
         {
             InitializeComponent();
+            nodeMenu1.canAdd = false;
+            nodeMenu1.Enabled = false;
         }
 
 

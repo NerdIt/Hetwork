@@ -35,6 +35,7 @@ namespace NodeIt
             this.newBtn = new System.Windows.Forms.Button();
             this.openBtn = new System.Windows.Forms.Button();
             this.cancelBtn = new System.Windows.Forms.Button();
+            this.deleteBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // title
@@ -66,7 +67,7 @@ namespace NodeIt
             this.newBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.newBtn.Location = new System.Drawing.Point(12, 349);
             this.newBtn.Name = "newBtn";
-            this.newBtn.Size = new System.Drawing.Size(75, 23);
+            this.newBtn.Size = new System.Drawing.Size(97, 23);
             this.newBtn.TabIndex = 3;
             this.newBtn.Text = "New Project";
             this.newBtn.UseVisualStyleBackColor = true;
@@ -77,7 +78,7 @@ namespace NodeIt
             this.openBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.openBtn.Location = new System.Drawing.Point(12, 415);
             this.openBtn.Name = "openBtn";
-            this.openBtn.Size = new System.Drawing.Size(75, 23);
+            this.openBtn.Size = new System.Drawing.Size(97, 23);
             this.openBtn.TabIndex = 4;
             this.openBtn.Text = "Open";
             this.openBtn.UseVisualStyleBackColor = true;
@@ -86,19 +87,31 @@ namespace NodeIt
             // cancelBtn
             // 
             this.cancelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cancelBtn.Location = new System.Drawing.Point(93, 415);
+            this.cancelBtn.Location = new System.Drawing.Point(115, 415);
             this.cancelBtn.Name = "cancelBtn";
-            this.cancelBtn.Size = new System.Drawing.Size(75, 23);
+            this.cancelBtn.Size = new System.Drawing.Size(95, 23);
             this.cancelBtn.TabIndex = 5;
             this.cancelBtn.Text = "Cancel";
             this.cancelBtn.UseVisualStyleBackColor = true;
             this.cancelBtn.Click += new System.EventHandler(this.cancelBtn_Click);
+            // 
+            // deleteBtn
+            // 
+            this.deleteBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.deleteBtn.Location = new System.Drawing.Point(115, 349);
+            this.deleteBtn.Name = "deleteBtn";
+            this.deleteBtn.Size = new System.Drawing.Size(95, 23);
+            this.deleteBtn.TabIndex = 6;
+            this.deleteBtn.Text = "Delete Project";
+            this.deleteBtn.UseVisualStyleBackColor = true;
+            this.deleteBtn.Click += new System.EventHandler(this.deleteBtn_Click);
             // 
             // ProjectSelectionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(301, 450);
+            this.Controls.Add(this.deleteBtn);
             this.Controls.Add(this.cancelBtn);
             this.Controls.Add(this.openBtn);
             this.Controls.Add(this.newBtn);
@@ -121,5 +134,6 @@ namespace NodeIt
         private System.Windows.Forms.Button newBtn;
         private System.Windows.Forms.Button openBtn;
         private System.Windows.Forms.Button cancelBtn;
+        private System.Windows.Forms.Button deleteBtn;
     }
 }

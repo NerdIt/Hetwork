@@ -28,7 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.AutoPopDelay = 500;
+            this.toolTip1.BackColor = System.Drawing.Color.White;
+            this.toolTip1.InitialDelay = 500;
+            this.toolTip1.ReshowDelay = 500;
             // 
             // NodeGraph
             // 
@@ -49,5 +58,7 @@
         }
 
         #endregion
+
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
