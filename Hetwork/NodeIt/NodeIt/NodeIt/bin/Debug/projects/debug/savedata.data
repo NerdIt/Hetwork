@@ -1,7 +1,0 @@
-[meta] nodeIDValue 2
-[meta] taskIDValue 1
-[preset] offset 0,0
-[preset] zoom 1
-[node] folder 0 164,173 45,45 null 1 True debug
-[node] single 1 297,54 100,35 0 0 New§0xs000Task
-[task] single 0 False New§0xs000Task 

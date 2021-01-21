@@ -1,0 +1,11 @@
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\bin\Release\NodeIt.exe.config
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\bin\Release\NodeIt.exe
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\bin\Release\NodeIt.pdb
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Release\NodeIt.NodeForm.resources
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Release\NodeIt.NodeGraph.resources
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Release\NodeIt.NodeMenu.resources
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Release\NodeIt.ProjectSelectionForm.resources
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Release\NodeIt.csproj.GenerateResource.cache
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Release\NodeIt.csproj.CoreCompileInputs.cache
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Release\NodeIt.exe
+C:\Users\quant\source\repos\Hetwork\Hetwork\NodeIt\NodeIt\NodeIt\obj\Release\NodeIt.pdb

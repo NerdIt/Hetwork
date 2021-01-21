@@ -20,6 +20,8 @@ namespace NodeIt
         public NodeForm()
         {
             InitializeComponent();
+            nodeMenu1.canAdd = false;
+            nodeMenu1.Enabled = false;
         }
 
 
@@ -139,19 +141,10 @@ namespace NodeIt
             }
             else if (e.ClickedItem == ts1)
             {
-                mainGraph.UpdateSelectedProject();
-                ProjectManager.SaveSelectedProject();
+                //mainGraph.UpdateSelectedProject();
+                //ProjectManager.SaveSelectedProject();
 
-                ProjectSelectionForm psf = new ProjectSelectionForm();
-                DialogResult dr = psf.ShowDialog();
-                if(dr == DialogResult.OK)
-                {
-                    LoadProject();
-                }
-                else if (dr == DialogResult.Cancel)
-                {
-
-                }
+                OpenProject();
             }
             else if (e.ClickedItem == ts2)
             {
@@ -214,6 +207,7 @@ namespace NodeIt
             ProjectManager.SaveSelectedProject();
 
             ProjectSelectionForm psf = new ProjectSelectionForm();
+            psf.ShowInTaskbar = false;
             DialogResult dr = psf.ShowDialog();
             if (dr == DialogResult.OK)
             {
@@ -281,6 +275,11 @@ namespace NodeIt
                     mainGraph.Invalidate();
                 }
             }
+        }
+
+        private void helpBtn_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://1saacdev.github.io/NodeIt/Help.html");
         }
     }
 }

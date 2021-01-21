@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace NodeIt
 {
@@ -27,6 +28,7 @@ namespace NodeIt
 
         public static void LoadProjects()
         {
+            projects.Clear();
             for(int i = 0; i < projectDirectories.Length; i++)
             {
                 if(File.Exists(projectDirectories[i] + @"\savedata.data"))
@@ -90,6 +92,26 @@ namespace NodeIt
                 Serializer.SaveProject(Program.selectedProject);
             }
         }
+
+        public static void DeleteProject(int index)
+        {
+            if(index < projects.Count)
+            {
+                DialogResult dialogResult = MessageBox.Show("You sure you want to delete project?", "Delete Confirmation", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    Directory.Delete(projects[index], true);
+                    LoadProjects();
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    
+                }
+
+                
+            }
+        }
+
     }
 
 

@@ -31,8 +31,12 @@ namespace Hetwork
 
         static void Main(string[] args)
         {
-            var handle = GetConsoleWindow();
-            ShowWindow(handle, SW_HIDE);
+
+            Application.Run(new VisualDesign());
+
+
+            //var handle = GetConsoleWindow();
+            //ShowWindow(handle, SW_HIDE);
 
             //Application.Run(new VisualDesign());
 
@@ -79,8 +83,8 @@ namespace Hetwork
             //}
 
 
-            NodeForm nf = new NodeForm(true);
-            Application.Run(nf);
+            //NodeForm nf = new NodeForm(true);
+            //Application.Run(nf);
             
             
             //ps.ShowDialog();

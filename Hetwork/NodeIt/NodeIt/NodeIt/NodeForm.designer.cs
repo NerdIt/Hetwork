@@ -138,6 +138,7 @@
             this.helpBtn.Name = "helpBtn";
             this.helpBtn.Size = new System.Drawing.Size(36, 22);
             this.helpBtn.Text = "Help";
+            this.helpBtn.Click += new System.EventHandler(this.helpBtn_Click);
             // 
             // mainGraph
             // 
@@ -175,6 +176,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.nodeFormMenu);
             this.Controls.Add(this.primaryTable);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "NodeForm";
             this.Tag = "MainForm";
             this.Text = "NodeForm";
