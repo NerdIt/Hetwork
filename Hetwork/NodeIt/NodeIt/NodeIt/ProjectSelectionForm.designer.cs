@@ -61,6 +61,7 @@ namespace NodeIt
             this.projectPanel.Size = new System.Drawing.Size(277, 292);
             this.projectPanel.TabIndex = 2;
             this.projectPanel.SelectedIndexChanged += new System.EventHandler(this.projectPanel_SelectedIndexChanged);
+            this.projectPanel.DoubleClick += new System.EventHandler(this.projectPanel_DoubleClick);
             // 
             // newBtn
             // 

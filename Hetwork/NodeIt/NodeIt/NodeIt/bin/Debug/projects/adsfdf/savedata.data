@@ -1,0 +1,10 @@
+[meta] nodeIDValue 6
+[meta] taskIDValue 1
+[preset] offset -11,136
+[preset] zoom 1
+[node] folder 0 41,57 45,45 null 4 True adsfdf
+[node] folder 1 214,-92 45,45 4 2 False A
+[node] folder 2 230,160 45,45 1 3 False New§0xs000Folder
+[node] folder 4 328,33 45,45 0 1 False B
+[node] single 3 529,28 100,35 2 0 Task
+[task] single 0 False New§0xs000Task 

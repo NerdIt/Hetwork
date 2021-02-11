@@ -1,20 +1,23 @@
-[meta] nodeIDValue 13
-[meta] taskIDValue 17
-[preset] offset 174,131
-[preset] zoom 0.5999999
-[node] folder 7 429,449 45,45 4 null False New§0xs000Folder
-[node] folder 6 449,358 45,45 4 9,8 False New§0xs000Folder
-[node] folder 0 9,309 45,45 null 1,4 True GamePlan
-[node] folder 1 236,232 45,45 0 5,3,12 False New§0xs000Folder
-[node] folder 4 201,363 45,45 0 7,6 False New§0xs000Folder
-[node] single 9 627,426 100,35 6 11 New§0xs000Task
-[node] single 5 483,127 100,35 1 9 New§0xs000Task
-[node] single 8 650,354 100,35 6 10 New§0xs000Task
-[node] list 12 524,255 100,35 1 14 New§0xs000List
-[node] list 3 469,32 100,35 1 2 New§0xs000List
+[meta] nodeIDValue 17
+[meta] taskIDValue 18
+[preset] offset 99,183
+[preset] zoom 0.6999996
+[node] folder 7 416,386 45,45 4 null False New§0xs000Folder
+[node] folder 0 -26,184 45,45 null 4,1 True GamePlan
+[node] folder 4 149,231 45,45 0 7,6 False New§0xs000Folder
+[node] folder 6 383,239 45,45 4 9,8 False New§0xs000Folder
+[node] folder 1 151,88 45,45 0 13,5,12,3 False New§0xs000Folder
+[node] folder 14 -18,-245 45,45 null null False New§0xs000Folder
+[node] single 9 623,299 100,35 6 11 New§0xs000Task
+[node] single 8 629,202 100,35 6 10 New§0xs000Task
+[node] single 13 587,120 100,35 1 17 New§0xs000Task
+[node] single 5 563,-31 100,35 1 9 New§0xs000Task
+[node] list 12 576,52 100,35 1 14 New§0xs000List
+[node] list 3 579,-137 100,35 1 2 New§0xs000List
 [task] single 11 False New§0xs000Task 
-[task] single 9 True New§0xs000Task 
 [task] single 10 True New§0xs000Task 
+[task] single 17 False New§0xs000Task 
+[task] single 9 True New§0xs000Task 
 [task] single 13 True Database§0xs0001 
 [task] single 15 True Database§0xs0002 
 [task] single 16 False Database§0xs0003 

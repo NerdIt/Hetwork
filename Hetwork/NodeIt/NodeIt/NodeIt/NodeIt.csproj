@@ -84,6 +84,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskElements.cs" />
+    <Compile Include="UndoManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

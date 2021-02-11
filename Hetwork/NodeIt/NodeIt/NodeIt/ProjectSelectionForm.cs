@@ -90,5 +90,16 @@ namespace NodeIt
             openBtn.Enabled = false;
             deleteBtn.Enabled = false;
         }
+
+        private void projectPanel_DoubleClick(object sender, EventArgs e)
+        {
+            if (projectPanel.SelectedIndex != -1 && projectPanel.SelectedIndex < projectPanel.Items.Count)
+            {
+                this.DialogResult = DialogResult.OK;
+                Project selectedProject = ProjectManager.GetProjectData(projectPanel.SelectedIndex);
+                Program.SetSelectedProject(selectedProject);
+                Close();
+            }
+        }
     }
 }

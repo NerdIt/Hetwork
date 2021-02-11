@@ -63,8 +63,9 @@ namespace NodeIt
         public List<NodeVisual> nodes = new List<NodeVisual>();
         public float zoom = 1;
         public Point offset = new Point(0,0);
-
         public string title = "";
+
+        public Size graphSize = new Size(50, 50);
 
         public string path { get { return Program.projectPath + title + @"\"; } }
 

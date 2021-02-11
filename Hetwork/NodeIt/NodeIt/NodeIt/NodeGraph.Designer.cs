@@ -34,7 +34,7 @@
             // 
             // toolTip1
             // 
-            this.toolTip1.AutoPopDelay = 500;
+            this.toolTip1.AutoPopDelay = 0;
             this.toolTip1.BackColor = System.Drawing.Color.White;
             this.toolTip1.InitialDelay = 500;
             this.toolTip1.ReshowDelay = 500;

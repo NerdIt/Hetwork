@@ -160,9 +160,12 @@ namespace NodeIt
 
             dataString.Add($"[meta] nodeIDValue {p.nodeGlobalId}");
             dataString.Add($"[meta] taskIDValue {p.taskGlobalId}");
-
+            FolderNode f = folders.FirstOrDefault(x => x.isMain);
+            //dataString.Add($"[preset] offset {p.offset.X / p.zoom},{p.offset.Y / p.zoom}");
             dataString.Add($"[preset] offset {p.offset.X},{p.offset.Y}");
             dataString.Add($"[preset] zoom {p.zoom}");
+            
+
 
             for (int i = 0; i < folders.Count; i++)
             {
@@ -215,7 +218,6 @@ namespace NodeIt
 
                 dataString.Add($"[task] list {listTasks[i].id} {listTasks[i].completed} {childId} {listTasks[i].taskTitle.Replace(" ", "§0xs000").Replace("\n", "§0xn001").Replace("\t", "§0xt002")}");
             }
-
 
 
 
@@ -509,6 +511,8 @@ namespace NodeIt
                 GraphLog.WriteToLog("Serializer", "Object Parenting Complete", p);
                 GraphLog.WriteToLog("Serializer", "Project Loaded", p);
             }
+
+            UndoManager.Clear();
             //else
             //{
             //    GraphLog.WriteToLog("Serializer", "Save file not found! Treating as new project");

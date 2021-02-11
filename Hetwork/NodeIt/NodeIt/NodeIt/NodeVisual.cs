@@ -89,7 +89,6 @@ namespace NodeIt
             float total = 0;
             if(node.GetType() == Type.GetType("NodeIt.FolderNode") && node.children.Count > 0)
             {
-
                 foreach (NodeVisual nv in node.children)
                 {
                     if (nv.GetType() != Type.GetType("NodeIt.FolderNode"))
@@ -203,17 +202,21 @@ namespace NodeIt
             g.FillEllipse(pthGrBrush, (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
 
             //  DRAW BORDER
-            if (!isMain)
+            //if (!isMain)
                 g.DrawEllipse(new Pen(Color.FromArgb(255,215,215,215)), new Rectangle(new Point((int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom)), new Size((int)(Width * zoom), (int)(Height * zoom))));
-            else if(isMain)
-                g.DrawEllipse(new Pen(Color.FromArgb(255, 215, 215, 215), 3), new Rectangle(new Point((int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom)), new Size((int)(Width * zoom), (int)(Height * zoom))));
+            //else if(isMain)
+            //    g.DrawEllipse(new Pen(Color.FromArgb(255, 215, 215, 215), 3), new Rectangle(new Point((int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom)), new Size((int)(Width * zoom), (int)(Height * zoom))));
 
 
 
 
             //  DRAW PERCENTAGE TEXT
             string percText = percentage + "%";
-            Font stringFont = new Font("Andale Mono", 9 * 1 * zoom, FontStyle.Bold);
+            Font stringFont;
+            if (!isMain)
+                 stringFont = new Font("Andale Mono", 9 * 1 * zoom, FontStyle.Bold);
+            else
+                stringFont = new Font("Andale Mono", 9 * 1 * zoom, FontStyle.Bold);
             SizeF stringSize = new SizeF();
             stringSize = g.MeasureString(percText, stringFont);
             while (stringSize.Width > 55 && stringFont.Size > 1)
@@ -224,7 +227,10 @@ namespace NodeIt
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            g.DrawString(percText, stringFont, new SolidBrush(Color.FromArgb(255, 195, 195, 195)), new PointF((int)((X + offset.X) * zoom), (int)((Y + offset.Y) * zoom)), sf);
+            if(!isMain)
+                g.DrawString(percText, stringFont, new SolidBrush(Color.FromArgb(255, 195, 195, 195)), new PointF((int)((X + offset.X) * zoom), (int)((Y + offset.Y) * zoom)), sf);
+            else
+                g.DrawString(percText, stringFont, new SolidBrush(Color.FromArgb(255, 63, 63, 63)), new PointF((int)((X + offset.X) * zoom), (int)((Y + offset.Y) * zoom)), sf);
 
             string nameText = title;
             Font titleFont = new Font("Andale Mono", 7 * 1 * zoom, FontStyle.Bold);
@@ -388,11 +394,11 @@ namespace NodeIt
 
 
             //  DRAW NAME TEXT
-            string nText = title;
+            //string nText = title;
             Font stringFont = new Font("Andale Mono", 9 * zoom * 1, FontStyle.Bold);
             SizeF stringSize = new SizeF();
-            stringSize = g.MeasureString(nText, stringFont);
-            if (stringSize.Width > 180)
+            stringSize = g.MeasureString("|", stringFont);
+            /*if (stringSize.Width > 180)
             {
                 string newText = "";
                 int inc = 0;
@@ -406,15 +412,15 @@ namespace NodeIt
                         stringFont = new Font("Andale Mono", stringFont.Size - 1 * 1 * zoom, FontStyle.Bold);
                         inc += 10;
                     }
-                    
+
                 }
                 nText = newText;
             }
-
+            */
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            g.DrawString(nText, stringFont, new SolidBrush(Color.FromArgb(255, 195, 195, 195)), new PointF((int)((X + offset.X) * zoom), (int)((Y + offset.Y) * zoom)), sf);
+            g.DrawString(taskElement.completed == true ? "Complete" : "Incomplete", stringFont, new SolidBrush(Color.FromArgb(255, 195, 195, 195)), new PointF((int)((X + offset.X) * zoom), (int)((Y + offset.Y) * zoom)), sf);
 
 
 
@@ -492,6 +498,10 @@ namespace NodeIt
             {
                 g.DrawRectangle(new Pen(Color.FromArgb(255, 150, 150, 150), 1.5f), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
             }
+
+            if (taskElement.completed)
+                g.FillRectangle(new SolidBrush(Color.FromArgb(30, 0, 0, 0)), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
+
         }
 
 
@@ -626,33 +636,33 @@ namespace NodeIt
 
 
             //  DRAW NAME TEXT
-            string nText = title;
+            //string nText = title;
             Font stringFont = new Font("Andale Mono", 9 * zoom, FontStyle.Bold);
             SizeF stringSize = new SizeF();
-            stringSize = g.MeasureString(nText, stringFont);
-            if (stringSize.Width > 180)
-            {
-                string newText = "";
-                int inc = 0;
-                Debug.WriteLine("Loop");
-                for (int i = 0; i < nText.Length; i++)
-                {
-                    newText += nText[i];
-                    if (i == inc + 10)
-                    {
-                        newText += "\n";
-                        stringFont = new Font("Andale Mono", stringFont.Size - 1 * zoom, FontStyle.Bold);
-                        inc += 10;
-                    }
+            stringSize = g.MeasureString("|", stringFont);
+            //if (stringSize.Width > 180)
+            //{
+            //    string newText = "";
+            //    int inc = 0;
+            //    Debug.WriteLine("Loop");
+            //    for (int i = 0; i < nText.Length; i++)
+            //    {
+            //        newText += nText[i];
+            //        if (i == inc + 10)
+            //        {
+            //            newText += "\n";
+            //            stringFont = new Font("Andale Mono", stringFont.Size - 1 * zoom, FontStyle.Bold);
+            //            inc += 10;
+            //        }
 
-                }
-                nText = newText;
-            }
+            //    }
+            //    nText = newText;
+            //}
 
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            g.DrawString(nText, stringFont, new SolidBrush(Color.FromArgb(255, 195, 195, 195)), new PointF((int)((X + offset.X) * zoom), (int)((Y + offset.Y) * zoom)), sf);
+            g.DrawString(taskElement.completed == true ? "Complete" : "Incomplete", stringFont, new SolidBrush(Color.FromArgb(255, 195, 195, 195)), new PointF((int)((X + offset.X) * zoom), (int)((Y + offset.Y) * zoom)), sf);
 
 
 
@@ -731,6 +741,9 @@ namespace NodeIt
             {
                 g.DrawRectangle(new Pen(Color.FromArgb(255, 150, 150, 150), 1.5f), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
             }
+
+            if (taskElement.completed)
+                g.FillRectangle(new SolidBrush(Color.FromArgb(30,0,0,0)), (int)((X - Width / 2 + offset.X) * zoom), (int)((Y - Height / 2 + offset.Y) * zoom), (int)(Width * zoom), (int)(Height * zoom));
         }
 
 

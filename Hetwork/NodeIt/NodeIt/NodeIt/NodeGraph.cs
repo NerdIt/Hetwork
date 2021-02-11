@@ -18,7 +18,7 @@ namespace NodeIt
     public partial class NodeGraph : UserControl
     {
         public Timer timer = new Timer();
-        bool needRepaint = true;
+        public bool needRepaint = true;
         public Point graphOffset = new Point(0, 0);
         public float graphZoom = 1f;
         public List<NodeVisual> nodes = new List<NodeVisual>();
@@ -39,7 +39,6 @@ namespace NodeIt
             timer.Interval = 30;
             timer.Tick += TimerOnTick;
             timer.Start();
-            DoubleBuffered = true;
             MouseWheel += ScrollWheelEvent;
 
 
@@ -87,21 +86,27 @@ namespace NodeIt
 
         public void AddFolder(object sender, System.EventArgs e)
         {
+            UndoManager.BackUp(nodes);
             nodes.Add(new FolderNode("New Folder", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 45, 45, 0, Program.selectedProject.GetNodeId()));
+            //UndoManager.BackUp(nodes);
         }
 
         public void AddTask(object sender, System.EventArgs e)
         {
+            UndoManager.BackUp(nodes);
             var n = new SingularTaskNode("New Task", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 100, 35, Program.selectedProject.GetNodeId());
             n.taskElement = new SingularTask(n.title, "", Program.selectedProject.GetTaskId());
             nodes.Add(n);
+            //UndoManager.BackUp(nodes);
         }
 
         public void AddList(object sender, System.EventArgs e)
         {
+            UndoManager.BackUp(nodes);
             var n = new ListTaskNode("New List", mouseDownPoint.X - graphOffset.X, mouseDownPoint.Y - graphOffset.Y, 100, 35, Program.selectedProject.GetNodeId());
             n.taskElement = new ListTask(n.title, new List<SingularTask>() { new SingularTask("New Task", "", Program.selectedProject.GetTaskId())}, Program.selectedProject.GetTaskId());
             nodes.Add(n);
+            //UndoManager.BackUp(nodes);
         }
 
         public void RenameNode(object sender, System.EventArgs e)
@@ -109,6 +114,7 @@ namespace NodeIt
             var ib = Interaction.InputBox("New Node Name", "Rename", selectedNode.title);
             if (ib != "")
             {
+                UndoManager.BackUp(nodes);
                 selectedNode.title = ib;
                 if (selectedNode.GetType() == Type.GetType("NodeIt.SingularTaskNode"))
                 {
@@ -118,6 +124,7 @@ namespace NodeIt
                 {
                     (selectedNode as ListTaskNode).taskElement.taskTitle = ib;
                 }
+
 
                 NodeEdited_Event(this, e);
             }
@@ -129,6 +136,7 @@ namespace NodeIt
         {
             if (selectedNode != null)
             {
+                UndoManager.BackUp(nodes);
                 int ind = nodes.IndexOf(selectedNode);
                 if (ind != -1)
                 {
@@ -146,6 +154,8 @@ namespace NodeIt
                 }
             }
 
+            NodeSelected_Event(this, new MouseEventArgs(new MouseButtons(),0,CursorLocation.X, CursorLocation.Y, 0));
+
 
         }
 
@@ -153,6 +163,7 @@ namespace NodeIt
         {
             if (selectedNode != null)
             {
+                UndoManager.BackUp(nodes);
                 if (selectedNode.GetType() == Type.GetType("NodeIt.SingularTaskNode"))
                 {
                     (selectedNode as SingularTaskNode).taskElement.completed = !(selectedNode as SingularTaskNode).taskElement.completed;
@@ -164,6 +175,7 @@ namespace NodeIt
                     {
                         (selectedNode as ListTaskNode).taskElement.elements[i].completed = !(selectedNode as ListTaskNode).taskElement.completed;
                     }
+                    (selectedNode as ListTaskNode).taskElement.completed = !(selectedNode as ListTaskNode).taskElement.completed;
                 }
                 RecalculateNodePercentages();
                 Invalidate();
@@ -184,6 +196,8 @@ namespace NodeIt
                 Project p = Program.selectedProject;
                 nodes = p.nodes;
                 projectName = p.title;
+                zoomFactor = p.zoom;
+                graphOffset = p.offset;
                 needRepaint = true;
             }
         }
@@ -219,6 +233,9 @@ namespace NodeIt
 
         public NodeConnection connection;
 
+
+        string toolTipContent = "";
+
         public void RecalculateNodePercentages()
         {
             foreach (NodeVisual nv in nodes)
@@ -231,6 +248,7 @@ namespace NodeIt
                 }
             }
         }
+        public Rectangle selectionBox = new Rectangle();
 
         public void PaintControl(object sender, PaintEventArgs e)
         {
@@ -314,32 +332,66 @@ namespace NodeIt
                 if (nv.isHover && nv.GetType() == Type.GetType("NodeIt.FolderNode"))
                 {
                     PercentageComplete pc = nv.GetPercentage(nv);
-                    toolTip1.ToolTipTitle = nv.title;
-                    toolTip1.SetToolTip(this, $"{pc.complete} Complete\n{pc.total} Total\n{(nv as FolderNode).percentage}%");
+                    if (toolTipContent != $"{pc.complete} Complete\n{pc.total} Total\n{(nv as FolderNode).percentage}%")
+                    {
+                        toolTip1.ToolTipTitle = nv.title;
+                        toolTip1.SetToolTip(this, $"{pc.complete} Complete\n{pc.total} Total\n{(nv as FolderNode).percentage}%");
+                    }
                     countNode++;
                 }
                 else if (nv.isHover && nv.GetType() == Type.GetType("NodeIt.SingularTaskNode"))
                 {
-                    toolTip1.ToolTipTitle = nv.title;
-                    toolTip1.SetToolTip(this, $"Singular Task\nIs Completed: {(nv as SingularTaskNode).taskElement.completed}");
+                    if (toolTipContent != $"Singular Task\nIs Completed: {(nv as SingularTaskNode).taskElement.completed}")
+                    {
+                        toolTip1.ToolTipTitle = nv.title;
+                        toolTip1.SetToolTip(this, $"Singular Task\nIs Completed: {(nv as SingularTaskNode).taskElement.completed}");
+                    }
                     countNode++;
                 }
                 else if (nv.isHover && nv.GetType() == Type.GetType("NodeIt.ListTaskNode"))
                 {
-                    toolTip1.ToolTipTitle = nv.title;
-                    toolTip1.SetToolTip(this, $"List Task\nIs Completed: {(nv as ListTaskNode).taskElement.completed}\nTasks: {(nv as ListTaskNode).taskElement.elements.Count}");
+                    if (toolTipContent != $"List Task\nIs Completed: {(nv as ListTaskNode).taskElement.completed}\nTasks: {(nv as ListTaskNode).taskElement.elements.Count}")
+                    {
+                        toolTip1.ToolTipTitle = nv.title;
+                        toolTip1.SetToolTip(this, $"List Task\nIs Completed: {(nv as ListTaskNode).taskElement.completed}\nTasks: {(nv as ListTaskNode).taskElement.elements.Count}");
+                    }
                     countNode++;
                 }
             }
             if(countNode == 0)
             {
+                toolTip1.ToolTipTitle = "";
+                toolTip1.SetToolTip(this,"");
                 toolTip1.Hide(this);
             }
 
             #endregion
 
 
+            if(leftMouseDown && draggingNodes.Count <= 0 && dragConnection == null && editingNodeConnection == null)
+            {
+                Point startPoint = new Point(mouseDownPoint.X, mouseDownPoint.Y);
+                Size dragBoxSize = new Size(CursorLocation.X - mouseDownPoint.X, CursorLocation.Y - mouseDownPoint.Y);
+                if (CursorLocation.X < mouseDownPoint.X)
+                {
+                    int oldWidth = dragBoxSize.Width;
+                    startPoint.X = CursorLocation.X;
+                    dragBoxSize.Width = mouseDownPoint.X - CursorLocation.X;
+                }
+                if (CursorLocation.Y < mouseDownPoint.Y)
+                {
+                    int oldHeight = dragBoxSize.Height;
+                    startPoint.Y = CursorLocation.Y;
+                    dragBoxSize.Height = mouseDownPoint.Y - CursorLocation.Y;
+                }
+                selectionBox = new Rectangle(startPoint, dragBoxSize);
 
+                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(35, 0, 0, 0)), new Rectangle(startPoint, dragBoxSize));
+            }
+            else
+            {
+                selectionBox = new Rectangle();
+            }
 
 
 
@@ -566,6 +618,8 @@ namespace NodeIt
                 if (nv == null)
                     nv = nodes.LastOrDefault(x => x.IsWithinRect(CursorLocation, graphOffset));
 
+                editingNodeConnection = null;
+                dragConnection = null;
 
                 if (nv == null)
                 {
@@ -611,6 +665,34 @@ namespace NodeIt
                     editingNodeConnection.connection.isSelected = false;
                 }
 
+                if(draggingNodes.Count > 0)
+                {
+                    UndoManager.BackUp(nodes);
+                }
+
+
+                var foundInSelection = nodes.FindAll(x => selectionBox.Contains(new Point(x.X + graphOffset.X, x.Y + graphOffset.Y)));
+
+                
+
+                if (foundInSelection.Count > 0)
+                {
+                    if (ModifierKeys != Keys.Shift)
+                    {
+                        foreach (NodeVisual nodeV in selectedNodes)
+                        {
+                            nodeV.isSelected = false;
+                        }
+                        selectedNodes.Clear();
+                    }
+                    for (int i = 0; i < foundInSelection.Count; i++)
+                    {
+                        foundInSelection[i].isSelected = true;
+                        if(!selectedNodes.Contains(foundInSelection[i]))
+                            selectedNodes.Add(foundInSelection[i]);
+                    }
+                }
+
 
                 leftMouseDown = false;
                 draggingNodes.Clear();
@@ -641,50 +723,53 @@ namespace NodeIt
 
                                 if (editingNodeConnection.GetType() == Type.GetType("NodeIt.FolderNode") && nv.GetType() == Type.GetType("NodeIt.FolderNode"))
                                 {
+                                    //Debug.WriteLine("Folder To Folder if processing further connection");
                                     if (editingNodeConnection.connection != null)
                                     {
-
+                                        //Debug.WriteLine("Processing Node Has Connection");
                                         if (nv.connection == null)
                                         {
-                                            bool canLink = true;
-                                            NodeVisual processingNode = editingNodeConnection;
-                                            for (int i = 0; i < nodes.Count; i++)
-                                            {
-                                                if (processingNode.connection != null)
-                                                    processingNode = processingNode.connection.n2;
-                                                else
-                                                    break;
+                                            //Debug.WriteLine("Found Node Has No Connection");
+                                            //bool canLink = true;
+                                            //NodeVisual processingNode = editingNodeConnection;
+                                            //for (int i = 0; i < nodes.Count; i++)
+                                            //{
+                                            //    if (processingNode.connection != null)
+                                            //        processingNode = processingNode.connection.n2;
+                                            //    else
+                                            //        break;
 
-                                                if (processingNode.connection.n2 == editingNodeConnection)
-                                                {
-                                                    canLink = false;
-                                                    break;
-                                                }
+                                            //    if (processingNode.connection.n2 == editingNodeConnection)
+                                            //    {
+                                            //        canLink = false;
+                                            //        break;
+                                            //    }
 
-                                            }
-                                            if (canLink)
+                                            //}
+                                            if (ConnectionSafeGuard(nv, editingNodeConnection))
                                                 nv.connection = new NodeConnection(nv, editingNodeConnection);
                                         }
                                         else
                                         {
-                                            bool canLink = true;
-                                            NodeVisual processingNode = nv;
-                                            for (int i = 0; i < nodes.Count; i++)
-                                            {
-                                                if (processingNode.connection != null)
-                                                    processingNode = processingNode.connection.n2;
-                                                else
-                                                    break;
+                                            //Debug.WriteLine("Found Node Has Connection");
+                                            //bool canLink = true;
+                                            //NodeVisual processingNode = nv;
+                                            //for (int i = 0; i < nodes.Count; i++)
+                                            //{
+                                            //    if (processingNode.connection != null)
+                                            //        processingNode = processingNode.connection.n2;
+                                            //    else
+                                            //        break;
 
-                                                if (processingNode.connection.n2 == editingNodeConnection)
-                                                {
-                                                    canLink = false;
-                                                    break;
-                                                }
+                                            //    if (processingNode.connection.n2 == editingNodeConnection)
+                                            //    {
+                                            //        canLink = false;
+                                            //        break;
+                                            //    }
 
-                                            }
+                                            //}
 
-                                            if (canLink)
+                                            if (ConnectionSafeGuard(nv, editingNodeConnection))
                                             {
                                                 nv.connection.RemoveChild();
                                                 nv.connection = new NodeConnection(nv, editingNodeConnection);
@@ -693,45 +778,47 @@ namespace NodeIt
                                     }
                                     else if (!editingNodeConnection.isMain)
                                     {
-                                        bool canLink = true;
-                                        NodeVisual processingNode = editingNodeConnection;
-                                        for (int i = 0; i < nodes.Count; i++)
-                                        {
-                                            if (processingNode.connection != null)
-                                                processingNode = processingNode.connection.n2;
-                                            else
-                                                break;
+                                        //Debug.WriteLine("Processing Node Has No Connection and is not main");
+                                        //bool canLink = true;
+                                        //NodeVisual processingNode = editingNodeConnection;
+                                        //for (int i = 0; i < nodes.Count; i++)
+                                        //{
+                                        //    if (processingNode.connection != null)
+                                        //        processingNode = processingNode.connection.n2;
+                                        //    else
+                                        //        break;
 
-                                            if (processingNode.connection.n2 == editingNodeConnection)
-                                            {
-                                                canLink = false;
-                                                break;
-                                            }
+                                        //    if (processingNode.connection.n2 == editingNodeConnection)
+                                        //    {
+                                        //        canLink = false;
+                                        //        break;
+                                        //    }
 
-                                        }
-
-                                        if (canLink)
+                                        //}
+                                        //Debug.WriteLine(editingNodeConnection.title);
+                                        if (ConnectionSafeGuard(nv, editingNodeConnection))
                                             editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv);
                                     }
                                     else
                                     {
-                                        bool canLink = true;
-                                        NodeVisual processingNode = nv;
-                                        for (int i = 0; i < nodes.Count; i++)
-                                        {
-                                            if (processingNode.connection != null)
-                                                processingNode = processingNode.connection.n2;
-                                            else
-                                                break;
+                                        //Debug.WriteLine("Processing Node Has No Connection and is main");
+                                        //bool canLink = true;
+                                        //NodeVisual processingNode = nv;
+                                        //for (int i = 0; i < nodes.Count; i++)
+                                        //{
+                                        //    if (processingNode.connection != null)
+                                        //        processingNode = processingNode.connection.n2;
+                                        //    else
+                                        //        break;
 
-                                            if (processingNode.connection.n2 == editingNodeConnection)
-                                            {
-                                                canLink = false;
-                                                break;
-                                            }
+                                        //    if (processingNode.connection.n2 == editingNodeConnection)
+                                        //    {
+                                        //        canLink = false;
+                                        //        break;
+                                        //    }
 
-                                        }
-                                        if (canLink)
+                                        //}
+                                        if (ConnectionSafeGuard(nv, editingNodeConnection))
                                         {
                                             if (nv.connection != null)
                                                 nv.connection.RemoveChild();
@@ -741,7 +828,7 @@ namespace NodeIt
                                 }
                                 else if (editingNodeConnection.GetType() == Type.GetType("NodeIt.FolderNode") && nv.GetType() != Type.GetType("NodeIt.FolderNode"))
                                 {
-
+                                    //Debug.WriteLine("Folder to Task if processing Furthor Connection");
                                     if (nv.connection != null)
                                     {
                                         nv.connection.RemoveChild();
@@ -765,7 +852,7 @@ namespace NodeIt
                                 //Node Senarios
                                 if (editingNodeConnection.GetType() == Type.GetType("NodeIt.FolderNode") && nv.GetType() != Type.GetType("NodeIt.FolderNode"))
                                 {
-
+                                    //Debug.WriteLine("Folder to Task 2");
                                     if (nv.connection == null)
                                     {
                                         nv.connection = new NodeConnection(nv, editingNodeConnection);
@@ -778,33 +865,35 @@ namespace NodeIt
                                 }
                                 else if (editingNodeConnection.GetType() != Type.GetType("NodeIt.FolderNode") && nv.GetType() == Type.GetType("NodeIt.FolderNode"))
                                 {
-
+                                    //Debug.WriteLine("Task to Folder");
                                     editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv);
                                 }
-                                else if (editingNodeConnection.GetType() == Type.GetType("NodeIt.FolderNode") && nv.GetType() == Type.GetType("NodeIt.FolderNode") && !editingNodeConnection.isMain && !editingNodeConnection.isMain)
+                                else if (editingNodeConnection.GetType() == Type.GetType("NodeIt.FolderNode") && nv.GetType() == Type.GetType("NodeIt.FolderNode") && !editingNodeConnection.isMain)
                                 {
-                                    bool canLink = true;
-                                    NodeVisual processingNode = nv;
-                                    for (int i = 0; i < nodes.Count; i++)
-                                    {
-                                        if (processingNode.connection != null)
-                                            processingNode = processingNode.connection.n2;
-                                        else
-                                            break;
 
-                                        if (processingNode?.connection?.n2 == editingNodeConnection)
-                                        {
-                                            canLink = false;
-                                            break;
-                                        }
+                                    //bool canLink = true;
+                                    //NodeVisual processingNode = nv;
+                                    //for (int i = 0; i < nodes.Count; i++)
+                                    //{
+                                    //    if (processingNode.connection != null)
+                                    //        processingNode = processingNode.connection.n2;
+                                    //    else
+                                    //        break;
 
-                                    }
+                                    //    if (processingNode?.connection?.n2 == editingNodeConnection)
+                                    //    {
+                                    //        canLink = false;
+                                    //        break;
+                                    //    }
 
-                                    if (canLink)
+                                    //}
+                                    //Debug.WriteLine("Folder to Folder");
+                                    if (ConnectionSafeGuard(nv, editingNodeConnection))
                                         editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv);
                                 }
                                 else if (editingNodeConnection.isMain && nv.connection == null)
                                 {
+                                    //Debug.WriteLine("Main To Node");
                                     nv.connection = new NodeConnection(nv, editingNodeConnection);
                                 }
                                 else
@@ -812,7 +901,7 @@ namespace NodeIt
 
                                 }
                             }
-
+                            
                             //editingNodeConnection.connection = new NodeConnection(editingNodeConnection, nv, this);
                         }
                         else if (nv == null && editingNodeConnection != null && editingNodeConnection.connection != null)
@@ -820,6 +909,7 @@ namespace NodeIt
                             //processingConnection.n1.connection.RemoveChild();
                             //editingNodeConnection.connection = null;
                         }
+                        UndoManager.BackUp(nodes);
                         editingNodeConnection.isEditingConnection = false;
                         dragConnection = null;
                         editingNodeConnection = null;
@@ -835,6 +925,24 @@ namespace NodeIt
             }
 
             needRepaint = true;
+        }
+
+
+        bool ConnectionSafeGuard(NodeVisual secondaryNode, NodeVisual originalNode)
+        {
+            if (secondaryNode.connection == null)
+                return true;
+            //if (secondaryNode.connection.n2 == null)
+            //    return true;
+            if (secondaryNode.connection.n2.isMain)
+                return true;
+            if (secondaryNode.connection.n2 == originalNode)
+                return false;
+
+            if (ConnectionSafeGuard(secondaryNode.connection.n2, originalNode))
+                return true;
+
+            return false;
         }
 
         public float Distance(Point p1, Point p2)
@@ -879,25 +987,26 @@ namespace NodeIt
             }
             else if (leftMouseDown && draggingNodes.Count > 0)
             {
-                foreach (NodeVisual nv in draggingNodes)
+                if(draggingNodes.Count > 0)
                 {
                     if (ModifierKeys != Keys.Shift)
                     {
-
-                        nv.X += (int)(offset.X);
-                        nv.Y += (int)(offset.Y);
+                        foreach (NodeVisual nv in draggingNodes)
+                        {
+                            nv.X += (int)(offset.X);
+                            nv.Y += (int)(offset.Y);
+                        }
 
                     }
                     else
                     {
-                        if (graphZoom == 1)
+
+                        foreach (NodeVisual nodeVis in selectedNodes)
                         {
-                            foreach (NodeVisual nodeVis in selectedNodes)
-                            {
-                                nodeVis.X += (int)(offset.X);
-                                nodeVis.Y += (int)(offset.Y);
-                            }
+                            nodeVis.X += (int)(offset.X);
+                            nodeVis.Y += (int)(offset.Y);
                         }
+                        
                     }
                 }
             }
@@ -1046,6 +1155,7 @@ namespace NodeIt
 
             if (e.KeyCode == Keys.Delete && focused)
             {
+                UndoManager.BackUp(nodes);
                 for (int i = 0; i < selectedNodes.Count; i++)
                 {
                     if (!selectedNodes[i].isMain)
@@ -1068,15 +1178,26 @@ namespace NodeIt
                         }
                         selectedNodes[i].Dispose();
                         nodes.Remove(selectedNodes[i]);
-                        nodes.Remove(selectedNode);
+                        
 
-
+                        
                         NodeEdited_Event(this, e);
                     }
+
+                }
+
+                if(selectedNode != null && !selectedNode.isMain)
+                    nodes.Remove(selectedNode);
+
+                for(int i = 0; i < selectedNodes.Count; i++)
+                {
+                    if (selectedNodes[i] != null)
+                        selectedNodes[i].isSelected = false;
                 }
                 selectedNodes.Clear();
                 selectedNode = null;
                 needRepaint = true;
+                NodeSelected_Event(this, new MouseEventArgs(new MouseButtons(), 0, CursorLocation.X, CursorLocation.Y, 0));
             }
             else if (ModifierKeys == Keys.Control && e.KeyCode == Keys.S)
             {
@@ -1084,10 +1205,13 @@ namespace NodeIt
                 //UpdateSelectedProject();
                 //ProjectManager.SaveSelectedProject();
             }
-            else if (e.KeyCode == Keys.N)
+            else if (e.KeyCode == Keys.Z && ModifierKeys == Keys.Control)
             {
-
-
+                UndoManager.Undo(this);
+            }
+            else if (e.KeyCode == Keys.Y && ModifierKeys == Keys.Control)
+            {
+                UndoManager.Redo(this);
             }
 
 
@@ -1098,6 +1222,7 @@ namespace NodeIt
             Program.selectedProject.nodes = nodes;
             Program.selectedProject.zoom = zoomFactor;
             Program.selectedProject.offset = graphOffset;
+            Program.selectedProject.graphSize = new Size(Width, Height);
         }
 
 
@@ -1108,6 +1233,7 @@ namespace NodeIt
         public event EventHandler NodeSelected;
         public void NodeSelected_Event(object sender, MouseEventArgs e)
         {
+            UndoManager.BackUp(nodes);
             if (NodeSelected != null)
             {
                 NodeSelected(this, e);
@@ -1120,6 +1246,7 @@ namespace NodeIt
         public event EventHandler NodeEdited;
         public void NodeEdited_Event(object sender, EventArgs e)
         {
+            UndoManager.BackUp(nodes);
             RecalculateNodePercentages();
             if (NodeEdited != null)
             {
